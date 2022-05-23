@@ -1,7 +1,7 @@
-package controller;
+package com.pastaebasta.eist.controller;
 
-import model.*;
-import service.ReservationService;
+import com.pastaebasta.eist.model.*;
+import com.pastaebasta.eist.service.ReservationService;
 
 import java.awt.*;
 import java.time.LocalDate;

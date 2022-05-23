@@ -1,4 +1,4 @@
-package model;
+package com.pastaebasta.eist.model;
 
 import java.time.LocalDateTime;
 import java.util.Date;

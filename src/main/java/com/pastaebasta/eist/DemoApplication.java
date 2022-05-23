@@ -1,4 +1,4 @@
-package hello.world.demo;
+package com.pastaebasta.eist;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

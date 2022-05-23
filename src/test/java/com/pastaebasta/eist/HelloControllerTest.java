@@ -1,4 +1,4 @@
-package hello.world.demo;
+/*package com.pastaebasta.eist;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,5 +27,5 @@ class HelloControllerTest {
 
         assertEquals("Hello World!", result);
     }
-
 }
+*/

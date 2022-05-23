@@ -1,6 +1,8 @@
-import controller.ServerController;
-import model.Customer;
-import model.Reservation;
+package com.pastaebasta.eist;
+
+import com.pastaebasta.eist.controller.ServerController;
+import com.pastaebasta.eist.model.Customer;
+import com.pastaebasta.eist.model.Reservation;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class App {
         ServerController serverController = new ServerController();
         serverController.createReservation(dummyCustomer, 0, startTime, 1234);
 //        System.out.println(serverController.getReservationInformation(dummyCustomer, 1234));
+        System.out.println("Hi");
 
     }
 }

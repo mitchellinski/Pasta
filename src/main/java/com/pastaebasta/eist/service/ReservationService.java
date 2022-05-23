@@ -1,9 +1,9 @@
-package service;
+package com.pastaebasta.eist.service;
 
-import model.Customer;
-import model.DateTimeSlot;
-import model.Reservation;
-import model.Restaurant;
+import com.pastaebasta.eist.model.Customer;
+import com.pastaebasta.eist.model.DateTimeSlot;
+import com.pastaebasta.eist.model.Reservation;
+import com.pastaebasta.eist.model.Restaurant;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

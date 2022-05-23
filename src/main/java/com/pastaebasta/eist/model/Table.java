@@ -1,4 +1,4 @@
-package model;
+package com.pastaebasta.eist.model;
 
 public class Table {
     private long tableId;
