@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
-//@SpringBootTest
+@SpringBootTest
 public class FoundationTests {
 	@Test
 	public void testCreateReservation() {

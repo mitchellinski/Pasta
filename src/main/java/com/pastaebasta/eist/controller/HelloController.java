@@ -1,14 +1,15 @@
-/*
-package hello.world.demo;
+
+package com.pastaebasta.eist.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import model.Restaurant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import service.ReservationService;
+
+import com.pastaebasta.eist.model.Restaurant;
+import com.pastaebasta.eist.service.ReservationService;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,4 +33,3 @@ public class HelloController {
         return null;
     }
 }
-*/
