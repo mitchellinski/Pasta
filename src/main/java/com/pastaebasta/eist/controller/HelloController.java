@@ -14,7 +14,6 @@ import com.pastaebasta.eist.service.ReservationService;
 @RestController
 @RequiredArgsConstructor
 public class HelloController {
-    private final ReservationService reservationService;
 
 
     @GetMapping("sayHello")
@@ -24,12 +23,8 @@ public class HelloController {
 
 
     @GetMapping("/v1/restaurants/{id}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable long id) {
-        return null;//ResponseEntity.ok(reservationService.getRestaurants().get());
+    public ResponseEntity<Long> getRestaurant(@PathVariable long id) {
+        return ResponseEntity.ok(id);//ResponseEntity.ok(reservationService.getRestaurants().get());
     }
 
-    @GetMapping("/v1/restaurants/{id}/tables/{id}")
-    public ResponseEntity<Restaurant> getTable(@PathVariable long restaurantId, @PathVariable long tableId) {
-        return null;
-    }
 }
