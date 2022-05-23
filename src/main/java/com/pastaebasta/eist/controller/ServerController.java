@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ServerController {
     private ReservationService reservationService;
@@ -17,17 +18,21 @@ public class ServerController {
         reservationService = new ReservationService(customers,restaurants);
     }
 
-
-    public String getReservationInformation(Customer customer, int reservationId) {
+    public String getReservationInformation(long restaurantId, long reservationId) {
         //TODO: Replace with JSON or other method later
 
-        Reservation currentReservation = reservationService.getReservationById(reservationId);
+        Optional<Restaurant> restaurant = reservationService.getRestaurantFromId(restaurantId);
+        if(restaurant.isEmpty()) {
+            return "No restaurant with id " + restaurantId + " was found!";
+        }
+        Optional<Reservation> currentReservation = reservationService.getReservationByRestaurant(restaurant.get(), reservationId);
+        if(currentReservation.isEmpty()) {
+            return "No reservation with id " + restaurantId + " was found!";
+        }
 
-        return currentReservation.getEmail() + " has confirmed a reservation at "
-                + currentReservation.getStartDateTime() + " for " + currentReservation.getNumberOfVisitors()
-                + "with id: " + currentReservation.getReservationId();
-
-
+        return currentReservation.get().getEmail() + " has confirmed a reservation at "
+                + currentReservation.get().getStartDateTime() + " for " + currentReservation.get().getNumberOfVisitors()
+                + "with id: " + currentReservation.get().getReservationId();
     }
 
 
@@ -54,8 +59,8 @@ public class ServerController {
         return null;
     }
 
-    public void createReservation(Customer customer, long restaurantID, LocalDateTime startTime, long tableId) {
-        reservationService.addReservation(restaurantID, customer, startTime, tableId);
+    public Optional<Reservation> createReservation(Customer customer, long restaurantID, LocalDateTime startTime, long tableId) {
+        return reservationService.addReservation(restaurantID, customer, startTime, tableId);
     }
 
     public void createDummyRestaurants() {

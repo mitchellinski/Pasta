@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Reservation {
-    private long reservationId;
+    private final long reservationId;
     private String email;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
@@ -12,7 +12,6 @@ public class Reservation {
     private static int id = 0;
     private boolean confirmationStatus;
     private long tableId;
-
 
     public Reservation(String email, LocalDateTime startDateTime, LocalDateTime endDateTime, int numberOfVisitors, long tableId){
         this.reservationId = id;
@@ -23,7 +22,6 @@ public class Reservation {
         this.numberOfVisitors = numberOfVisitors;
         this.confirmationStatus = false;
         this.tableId = tableId;
-
     }
 
     public void confirmReservation(){
@@ -33,7 +31,18 @@ public class Reservation {
         confirmationStatus = false;
     }
 
-
+    @Override
+    public String toString() {
+        return "Reservation {" +
+                "\n\treservationId=" + reservationId +
+                ", \n\temail='" + email + '\'' +
+                ", \n\tstartDateTime=" + startDateTime +
+                ", \n\tendDateTime=" + endDateTime +
+                ", \n\tnumberOfVisitors=" + numberOfVisitors +
+                ", \n\tconfirmationStatus=" + confirmationStatus +
+                ", \n\ttableId=" + tableId +
+                "\n}";
+    }
 
     //Getters
     public LocalDateTime getEndDateTime() {

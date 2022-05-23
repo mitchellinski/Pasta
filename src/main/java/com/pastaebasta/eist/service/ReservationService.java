@@ -5,9 +5,11 @@ import com.pastaebasta.eist.model.DateTimeSlot;
 import com.pastaebasta.eist.model.Reservation;
 import com.pastaebasta.eist.model.Restaurant;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ReservationService {
 
@@ -35,42 +37,57 @@ public class ReservationService {
         //TODO
         return null;
     }
-    public void addReservation(long restaurantId, Customer customer, LocalDateTime startTime, long tableId){
-        //find Restaurant
+
+    public Optional<Restaurant> getRestaurantFromId(long restaurantId) {
         for(Restaurant restaurant : restaurants){
-            if(restaurant.getRestaurantId() != restaurantId){
-                continue;
+            if(restaurant.getRestaurantId() == restaurantId){
+                return Optional.of(restaurant);
             }
-
-            // TODO: Actually check to see if slot is busy
-            // public DateTimeSlot(int year, int month, int dayOfMonth, int hour, int minute){
-            //        reservations = new ArrayList<Reservation>();
-            //        dateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
-            //    }
-            Reservation reservation = new Reservation(
-
-                    customer.getEmail(),
-                    startTime,
-                    startTime,
-                    69,
-                    tableId
-            );
-
-            //restaurant.getReservationByTimeslot(new DateTimeSlot(startTime), 1337); // this depends on what we are currently discussing
-            // here
         }
+
+        return Optional.empty();
+    }
+
+    public Optional<Reservation> addReservation(long restaurantId, Customer customer, LocalDateTime startTime, long tableId){
+        Optional<Restaurant> restaurant = getRestaurantFromId(restaurantId);
+        if(restaurant.isEmpty()) {
+            System.err.println("There is no restaurant with id "+ restaurantId);
+            return Optional.empty();
+        }
+
+        // TODO: Implement proper verification of timeslot availability considering tables!!
+        if (!restaurant.get().isTimeSlotEmpty(startTime)) {
+            System.out.println("This timeslot is not empty!");
+            return Optional.empty();
+        }
+
+        Reservation newReservation = new Reservation(
+            customer.getEmail(),
+            startTime,
+            startTime,
+            69,
+            tableId
+        );
+
+        Optional<Reservation> createdReservation = restaurant.get().addReservation(newReservation, startTime);
+        createdReservation.ifPresent(customer::addReservation);
+        return createdReservation;
     }
     public List<Reservation> getReservationByCustomer(Customer customer){
         //TODO
         return null;
     }
-    public List<Reservation> getReservationByRestaurant(Restaurant restaurant){
-        //TODO
-        return null;
+    public Optional<Reservation> getReservationByRestaurant(Restaurant restaurant, long id){
+        return restaurant.getReservationById(id);
     }
-    public Reservation getReservationById(long id){
-        //TODO
-        return null;
+
+    /**
+     * TODO: temporary
+     * @param id
+     * @return
+     */
+    public Optional<Reservation> getReservationById(long id){
+        return Optional.empty();
     }
 
     //getters

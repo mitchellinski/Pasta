@@ -15,7 +15,6 @@ import com.pastaebasta.eist.service.ReservationService;
 @RequiredArgsConstructor
 public class HelloController {
 
-
     @GetMapping("sayHello")
     public String sayHello() {
         return "Hello World!";

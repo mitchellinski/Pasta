@@ -2,11 +2,11 @@ package com.pastaebasta.eist.model;
 
 import java.awt.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class Restaurant {
-    private static long restaurantId = 0;
+    private static long restaurantCount = 0;
+    private final long restaurantId;
     private String name;
     private String address;
     private String type;
@@ -19,13 +19,23 @@ public class Restaurant {
     private Point coordinates;
     private int numberOfTables;
     private ArrayList<DateTimeSlot> restaurantTimeSlots;
-    private HashMap<Integer, ArrayList<DateTimeSlot>> reservationMap;
+    private HashMap<LocalDateTime, Reservation> reservationMap;
+
+    public Restaurant(String name, String address, String type, ArrayList<Image> pictures,
+                      double ratingAverage, PriceCategory priceCategory, ArrayList<String> reviews, LocalDateTime openingTime,
+                      LocalDateTime closingTime, Point coordinates, int numberOfTables,
+                      ArrayList<DateTimeSlot> restaurantTimeSlots) {
+       this(restaurantCount++, name, address, type, pictures,
+            ratingAverage, priceCategory, reviews, openingTime,
+            closingTime, coordinates, numberOfTables
+            ,restaurantTimeSlots);
+    }
 
     public Restaurant(long restaurantId, String name, String address, String type, ArrayList<Image> pictures,
                       double ratingAverage, PriceCategory priceCategory, ArrayList<String> reviews, LocalDateTime openingTime,
                       LocalDateTime closingTime, Point coordinates, int numberOfTables,
                       ArrayList<DateTimeSlot> restaurantTimeSlots) {
-        restaurantId++;
+        this.restaurantId = restaurantId;
         this.name = name;
         this.address = address;
         this.type = type;
@@ -38,7 +48,11 @@ public class Restaurant {
         this.coordinates = coordinates;
         this.numberOfTables = numberOfTables;
         this.restaurantTimeSlots = restaurantTimeSlots;
+
+        // TODO: database access
+        this.reservationMap = new HashMap<>();
     }
+
 
 
     /*
@@ -49,17 +63,36 @@ public class Restaurant {
         return null;
     }
 
-    public void addReservation() {
-
+    /**
+     * TEMPORARY FUNCTION
+     * @param reservation
+     * @param localDateTime
+     * @return
+     */
+    public Optional<Reservation> addReservation(Reservation reservation, LocalDateTime localDateTime) {
+        return Optional.ofNullable(reservationMap.computeIfAbsent(localDateTime, x->reservation));
     }
 
+    /**
+     * TEMPORARY FUNCTION
+     * @param localDateTime
+     * @return
+     */
+    public Optional<Reservation> getReservation(LocalDateTime localDateTime) {
+        return Optional.ofNullable(reservationMap.get(localDateTime));
+    }
+
+    public Optional<Reservation> getReservationById(long id) {
+        for (Map.Entry<LocalDateTime, Reservation> entry : reservationMap.entrySet()) {
+            if (Objects.equals(id, entry.getValue().getReservationId())) {
+                return Optional.of(entry.getValue());
+            }
+        }
+        return Optional.empty();
+    }
 
     public long getRestaurantId() {
         return restaurantId;
-    }
-
-    public void setRestaurantId(int restaurantId) {
-        this.restaurantId = restaurantId;
     }
 
     public String getName() {
@@ -156,6 +189,16 @@ public class Restaurant {
     public Reservation getReservationByTimeslot(DateTimeSlot timeSlot, long id) {
         //TODO
         return null;
+    }
+
+    /**
+     * TODO Proper checking! This is a temporary function
+     * @param localDateTime
+     * @return
+     */
+    public boolean isTimeSlotEmpty(LocalDateTime localDateTime) {
+        Reservation reservation = this.reservationMap.get(localDateTime);
+        return reservation == null;
     }
 
     /*
