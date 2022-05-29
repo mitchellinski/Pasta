@@ -38,7 +38,7 @@ public class Restaurant {
         this.restaurantId = restaurantId;
         this.name = name;
         this.address = address;
-        this.type = type;
+        this.restaurantGenre = type;
         this.pictures = pictures;
         this.ratingAverage = ratingAverage;
         this.priceCategory = priceCategory;
@@ -111,12 +111,12 @@ public class Restaurant {
         this.address = address;
     }
 
-    public String getType() {
-        return type;
+    public String getRestaurantGenre() {
+        return restaurantGenre;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.restaurantGenre = type;
     }
 
     public ArrayList<Image> getPictures() {
@@ -209,5 +209,23 @@ public class Restaurant {
         return null;
     }
 
-
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "restaurantId=" + restaurantId + '\n' +
+                ", name='" + name + '\n' +
+                ", address='" + address + '\n' +
+                ", restaurantGenre='" + restaurantGenre + '\n' +
+//                ", pictures=" + pictures +
+                ", ratingAverage=" + ratingAverage + '\n' +
+                ", priceCategory=" + priceCategory + '\n' +
+//                ", reviews=" + reviews +
+//                ", openingTime=" + openingTime +
+//                ", closingTime=" + closingTime +
+//                ", coordinates=" + coordinates +
+//                ", numberOfTables=" + numberOfTables +
+//                ", restaurantTimeSlots=" + restaurantTimeSlots +
+//                ", reservationMap=" + reservationMap +
+                '}' + '\n' + '\n';
+    }
 }
