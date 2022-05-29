@@ -41,7 +41,7 @@ public class ServerController {
     }
 
     public void dummyQuery(QueryPlace queryParameters) {
-        createDummyRestaurants();
+//        createDummyRestaurants();
     }
 
     private PriceCategory getRandomPriceCategory(int i) {
@@ -63,7 +63,7 @@ public class ServerController {
         return reservationService.addReservation(restaurantID, customer, startTime, tableId);
     }
 
-    public void createDummyRestaurants() {
+    public void createDummyRestaurants(String query) {
         for (int i = 0; i < 50; i++) {
             LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 18, 00, 00);
             LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 19, 00, 00);
@@ -71,7 +71,7 @@ public class ServerController {
                     i,
                     "Name" + i,
                     "Address" + i,
-                    "Italian",
+                    query,
                     null,
                     3.3,
                     getRandomPriceCategory(i),

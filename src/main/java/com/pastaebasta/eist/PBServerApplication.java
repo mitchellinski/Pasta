@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PBServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PBServerApplication.class, args);
+//		SpringApplication.run(PBServerApplication.class, args);
 		System.out.println("""
 								
 																						   88
