@@ -9,7 +9,7 @@ public class Restaurant {
     private final long restaurantId;
     private String name;
     private String address;
-    private String type;
+    private String restaurantGenre;
     private ArrayList<Image> pictures;
     private double ratingAverage;
     private PriceCategory priceCategory;
@@ -21,11 +21,11 @@ public class Restaurant {
     private ArrayList<DateTimeSlot> restaurantTimeSlots;
     private HashMap<LocalDateTime, Reservation> reservationMap;
 
-    public Restaurant(String name, String address, String type, ArrayList<Image> pictures,
+    public Restaurant(String name, String address, String restaurantGenre, ArrayList<Image> pictures,
                       double ratingAverage, PriceCategory priceCategory, ArrayList<String> reviews, LocalDateTime openingTime,
                       LocalDateTime closingTime, Point coordinates, int numberOfTables,
                       ArrayList<DateTimeSlot> restaurantTimeSlots) {
-       this(restaurantCount++, name, address, type, pictures,
+       this(restaurantCount++, name, address, restaurantGenre, pictures,
             ratingAverage, priceCategory, reviews, openingTime,
             closingTime, coordinates, numberOfTables
             ,restaurantTimeSlots);
