@@ -15,14 +15,14 @@ public class FoundationTests {
 	@Test
 	public void testCreateReservation() {
 		ServerController serverController = new ServerController(); // Create Controller
-		serverController.createDummyRestaurants(); // Create restaurants
+		serverController.createDummyRestaurants("hi?"); // Create restaurants
 
 		// Create Customer
 		Customer dummyCustomer = new Customer("pastaebastaEIST@gmail.com");
 		LocalDateTime startTime = LocalDateTime.of(2022, 5, 20, 18, 0, 0);
 
 		// Attempt to create a new reservation for dummyCustomer at restaurant 0
-		Optional<Reservation> newReservation = serverController.createReservation(dummyCustomer, 0, startTime, 1234);
+		Optional<Reservation> newReservation = serverController.createReservation(dummyCustomer, "restaurant_0", startTime, 1234);
 		if(newReservation.isPresent()) {
 			System.out.println("Reservation " + newReservation.get().getReservationId() + " was created!");
 			// Attempt to retrieve the reservation

@@ -38,7 +38,7 @@ public class ReservationService {
         return null;
     }
 
-    public Optional<Restaurant> getRestaurantFromId(long restaurantId) {
+    public Optional<Restaurant> getRestaurantFromId(String restaurantId) {
         for(Restaurant restaurant : restaurants){
             if(restaurant.getRestaurantId() == restaurantId){
                 return Optional.of(restaurant);
@@ -48,7 +48,7 @@ public class ReservationService {
         return Optional.empty();
     }
 
-    public Optional<Reservation> addReservation(long restaurantId, Customer customer, LocalDateTime startTime, long tableId){
+    public Optional<Reservation> addReservation(String restaurantId, Customer customer, LocalDateTime startTime, long tableId){
         Optional<Restaurant> restaurant = getRestaurantFromId(restaurantId);
         if(restaurant.isEmpty()) {
             System.err.println("There is no restaurant with id "+ restaurantId);

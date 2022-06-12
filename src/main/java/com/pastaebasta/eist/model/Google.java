@@ -59,7 +59,7 @@ public class Google {
             LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 8, 00, 00);
             LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 20, 00, 00);
             Restaurant restaurant = new Restaurant(
-                    i,
+                    "restaurant_"+i,
                     "Name" + i,
                     "Address" + i,
                     getRandomGenre(i),

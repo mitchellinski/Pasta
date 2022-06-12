@@ -18,7 +18,7 @@ public class ServerController {
         reservationService = new ReservationService(customers,restaurants);
     }
 
-    public String getReservationInformation(long restaurantId, long reservationId) {
+    public String getReservationInformation(String restaurantId, long reservationId) {
         //TODO: Replace with JSON or other method later
 
         Optional<Restaurant> restaurant = reservationService.getRestaurantFromId(restaurantId);
@@ -59,7 +59,7 @@ public class ServerController {
         return null;
     }
 
-    public Optional<Reservation> createReservation(Customer customer, long restaurantID, LocalDateTime startTime, long tableId) {
+    public Optional<Reservation> createReservation(Customer customer, String restaurantID, LocalDateTime startTime, long tableId) {
         return reservationService.addReservation(restaurantID, customer, startTime, tableId);
     }
 
@@ -68,7 +68,7 @@ public class ServerController {
             LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 18, 00, 00);
             LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 19, 00, 00);
             Restaurant restaurant = new Restaurant(
-                    i,
+                    "restaurant_"+i,
                     "Name" + i,
                     "Address" + i,
                     query,

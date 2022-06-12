@@ -1,12 +1,18 @@
 package com.pastaebasta.eist.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
+
 public class Restaurant {
     private static long restaurantCount = 0;
-    private final long restaurantId;
+
+    private final String restaurantId;
+
     private String name;
     private String address;
     private String restaurantGenre;
@@ -21,20 +27,12 @@ public class Restaurant {
     private ArrayList<DateTimeSlot> restaurantTimeSlots;
     private HashMap<LocalDateTime, Reservation> reservationMap;
 
-    public Restaurant(String name, String address, String restaurantGenre, ArrayList<Image> pictures,
-                      double ratingAverage, PriceCategory priceCategory, ArrayList<String> reviews, LocalDateTime openingTime,
-                      LocalDateTime closingTime, Point coordinates, int numberOfTables,
-                      ArrayList<DateTimeSlot> restaurantTimeSlots) {
-       this(restaurantCount++, name, address, restaurantGenre, pictures,
-            ratingAverage, priceCategory, reviews, openingTime,
-            closingTime, coordinates, numberOfTables
-            ,restaurantTimeSlots);
-    }
 
-    public Restaurant(long restaurantId, String name, String address, String type, ArrayList<Image> pictures,
+    public Restaurant(String restaurantId, String name, String address, String type, ArrayList<Image> pictures,
                       double ratingAverage, PriceCategory priceCategory, ArrayList<String> reviews, LocalDateTime openingTime,
                       LocalDateTime closingTime, Point coordinates, int numberOfTables,
                       ArrayList<DateTimeSlot> restaurantTimeSlots) {
+        super();
         this.restaurantId = restaurantId;
         this.name = name;
         this.address = address;
@@ -91,7 +89,11 @@ public class Restaurant {
         return Optional.empty();
     }
 
-    public long getRestaurantId() {
+    public void setRestaurantGenre(String genre){
+        this.restaurantGenre = genre;
+    }
+
+    public String getRestaurantId() {
         return restaurantId;
     }
 
