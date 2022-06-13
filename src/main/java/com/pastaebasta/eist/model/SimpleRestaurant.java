@@ -8,8 +8,10 @@ import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
-@Document("restaurants")
+@Document("simple_restaurants")
+@AllArgsConstructor
 public class SimpleRestaurant {
 	@Id
 	private final String restaurantId;
@@ -20,16 +22,11 @@ public class SimpleRestaurant {
 	private double ratingAverage;
 	private PriceCategory priceCategory;
 	private int numberOfTables;
+	private ArrayList<String> reviews;
 
-	public SimpleRestaurant(String restaurantId, String name, String address, String restaurantGenre, double ratingAverage, PriceCategory priceCategory, int numberOfTables) {
-		this.restaurantId = restaurantId;
-		this.name = name;
-		this.address = address;
-		this.restaurantGenre = restaurantGenre;
-		this.ratingAverage = ratingAverage;
-		this.priceCategory = priceCategory;
-		this.numberOfTables = numberOfTables;
-	}
+	private LocalDateTime openingTime;
+	private LocalDateTime closingTime;
+
 
 	public String getRestaurantId() {
 		return restaurantId;
@@ -81,5 +78,9 @@ public class SimpleRestaurant {
 
 	public void setNumberOfTables(int numberOfTables) {
 		this.numberOfTables = numberOfTables;
+	}
+
+	public String getReviewsString() {
+		return String.join(",", reviews);
 	}
 }

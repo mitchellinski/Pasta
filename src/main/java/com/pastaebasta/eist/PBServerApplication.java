@@ -5,6 +5,7 @@ import com.pastaebasta.eist.model.PriceCategory;
 import com.pastaebasta.eist.model.Restaurant;
 import com.pastaebasta.eist.model.SimpleRestaurant;
 import com.pastaebasta.eist.repository.RestaurantRepository;
+import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +15,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -28,7 +31,6 @@ public class PBServerApplication implements CommandLineRunner {
 	RestaurantRepository restaurantRepository;
 
 	public static void main(String[] args) {
-		SpringApplication.run(PBServerApplication.class, args);
 		System.out.println("""
 								
 																						   88
@@ -42,27 +44,19 @@ public class PBServerApplication implements CommandLineRunner {
 				88
 				88
 				
-				> Pasta e Basta - Server Application successfully started.
+				> Pasta e Basta - Application Server
 				
 				
 				""");
+		SpringApplication.run(PBServerApplication.class, args);
 	}
 
 	//CREATE
-	void createGroceryItems() {
+	public ArrayList<SimpleRestaurant> createGroceryItems() {
 		System.out.println("Data creation started...");
-		LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 18, 00, 00);
-		LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 19, 00, 00);
-
-		for (int i = 0; i<10; i++) {
-			restaurantRepository.save(
-				new SimpleRestaurant("restaurant_"+i, "Nice Restaurant Name "+i, "Musterstraße " + i, "Italian", 5.0,
-						PriceCategory.EXPENSIVE,  2)
-			);
-		}
-
-
+		ArrayList<SimpleRestaurant> restaurants = new DatabaseSeeder(restaurantRepository).seed();
 		System.out.println("Data creation complete...");
+		return restaurants;
 	}
 
 	// READ
@@ -96,19 +90,21 @@ public class PBServerApplication implements CommandLineRunner {
 	// Print details in readable form
 
 	public String getItemDetails(SimpleRestaurant item) {
+		StringBuilder b = new StringBuilder();
+		b.append("Id: " + item.getRestaurantId() + "\n")
+		.append("Name: " + item.getName() + "\n")
+		.append("Address: " + item.getAddress() + "\n")
+		.append("Category: " + item.getRestaurantGenre() + "\n")
+		.append("Price Category: " + item.getPriceCategory() + "\n")
+		.append("Reviews: " + item.getReviewsString() + "\n");
 
-		System.out.println(
-				"Item Name: " + item.getName() +
-						", \nAddress: " + item.getAddress() +
-						", \nType: " + item.getRestaurantGenre()
-		);
 
-		return "";
+
+		return b.toString();
 	}
-	public void updateCategoryName(String category) {
+	public void updateCategoryName(String category, String newGenre) {
 
 		// Change to this new value
-		String newGenre = "Chinese";
 
 		// Find all the items with the category snacks
 		List<SimpleRestaurant> list = restaurantRepository.findAll(category);
@@ -132,36 +128,11 @@ public class PBServerApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) {
-
-		System.out.println("-------------CREATE GROCERY ITEMS-------------------------------\n");
-
-		createGroceryItems();
-
-		System.out.println("\n----------------SHOW ALL GROCERY ITEMS---------------------------\n");
-
+		//restaurantRepository.deleteAll();
+		if (restaurantRepository.count() == 0) {
+			createGroceryItems();
+		}
 		showAllGroceryItems();
-
-		System.out.println("\n--------------GET ITEM BY NAME-----------------------------------\n");
-
-		getGroceryItemByName("Nice Restaurant Name 3");
-
-		System.out.println("\n-----------GET ITEMS BY CATEGORY---------------------------------\n");
-
-		getItemsByCategory("Italian");
-
-		System.out.println("\n-----------UPDATE CATEGORY NAME OF SNACKS CATEGORY----------------\n");
-
-		updateCategoryName("Chinese");
-
-		System.out.println("\n----------DELETE A GROCERY ITEM----------------------------------\n");
-
-		deleteGroceryItem("restaurant_1");
-
-		System.out.println("\n------------FINAL COUNT OF GROCERY ITEMS-------------------------\n");
-
-		findCountOfGroceryItems();
-
-		System.out.println("\n-------------------THANK YOU---------------------------");
 
 	}
 
