@@ -1,61 +1,44 @@
 package com.pastaebasta.eist.model;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Customer Data Model
+ * Represents a single customer in the database.
+ *
+ * This class uses lombok to generate a constructor, getters and setters for the fields.
+ */
+@Document("customers")
+@Data
 public class Customer {
+    @Id
+    private String customerId;
+    private String customerUsername;
+    private String customerEmail;
 
-    private static long customerCount = 0;
-    private long customerId;
-    private String email;
+    @DocumentReference
     private ArrayList<Reservation> reservationList;
 
-    public Customer(String email, ArrayList<Reservation> customerReservations) {
-        this.customerId = customerCount;
-        customerCount++;
-        this.email = email;
-        this.reservationList = customerReservations;
-    }
-
-    public Customer(String email) {
-        this.customerId = customerCount;
-        customerCount++;
-        this.email = email;
-        this.reservationList = new ArrayList<>();
-    }
-
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
+    public Customer(String customerId, String customerUsername, String customerEmail) {
         this.customerId = customerId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Reservation> getReservationList() {
-        return reservationList;
-    }
-
-    public void setReservationList(ArrayList<Reservation> reservationList) {
-        this.reservationList = reservationList;
+        this.customerUsername = customerUsername;
+        this.customerEmail = customerEmail;
+        this.reservationList = new ArrayList<>();
     }
 
     public void addReservation(Reservation reservation) {
         this.reservationList.add(reservation);
     }
 
-    public Reservation getReservation(long id) {
+    public Reservation getReservation(String id) {
         for (Reservation reservation : reservationList) {
-            if (reservation.getReservationId() == id) {
+            if (id.equals(reservation.getReservationId())) {
                 return reservation;
             }
         }

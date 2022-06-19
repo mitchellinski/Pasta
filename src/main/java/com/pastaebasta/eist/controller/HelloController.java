@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pastaebasta.eist.model.Restaurant;
-import com.pastaebasta.eist.service.ReservationService;
-
+/**
+ * Test controller provided by Artemis.
+ * This is useless and can be deleted later on.
+ */
 @RestController
 @RequiredArgsConstructor
 public class HelloController {
@@ -21,9 +22,5 @@ public class HelloController {
     }
 
 
-    @GetMapping("/v1/restaurants/{id}")
-    public ResponseEntity<Long> getRestaurant(@PathVariable long id) {
-        return ResponseEntity.ok(id);//ResponseEntity.ok(reservationService.getRestaurants().get());
-    }
 
 }

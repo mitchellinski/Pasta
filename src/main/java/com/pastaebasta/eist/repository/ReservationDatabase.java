@@ -4,6 +4,9 @@ package com.pastaebasta.eist.repository;
 
 import java.util.HashMap;
 
+/**
+ * OUTDATED: Please use ReservationRepository instead.
+ */
 public class ReservationDatabase {
     private HashMap<Long,String> reservations;
 
@@ -12,7 +15,6 @@ public class ReservationDatabase {
     }
 
     private void loadReservations(){
-        //TODO
-    }
 
+    }
 }

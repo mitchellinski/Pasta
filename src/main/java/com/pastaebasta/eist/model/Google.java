@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static com.pastaebasta.eist.model.QueryType.*;
-
 public class Google {
-    private ArrayList<Restaurant> googleResult;
+    private ArrayList<OldRestaurant> googleResult;
 
     public Google() {
-        this.googleResult = new ArrayList<Restaurant>();
+        this.googleResult = new ArrayList<OldRestaurant>();
         createDummyRestaurants();
     }
 
@@ -58,7 +56,7 @@ public class Google {
         for (int i = 0; i < 1000; i++) {
             LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 8, 00, 00);
             LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 20, 00, 00);
-            Restaurant restaurant = new Restaurant(
+            OldRestaurant restaurant = new OldRestaurant(
                     "restaurant_"+i,
                     "Name" + i,
                     "Address" + i,

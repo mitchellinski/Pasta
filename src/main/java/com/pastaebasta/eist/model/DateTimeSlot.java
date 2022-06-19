@@ -2,36 +2,34 @@ package com.pastaebasta.eist.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+/**
+ * DateTimeSlot
+ * OUTDATED: Please do not use DateTimeSlots, as they are redundant when working with a database!
+ */
+@Document("date_time_slots")
 @Data
+@AllArgsConstructor
 public class DateTimeSlot {
-
-    private LocalDateTime dateTime;
+    @Id
+    private final String dateTimeSlotId;
+    @DocumentReference
     private ArrayList<Reservation> reservations;
 
-    public DateTimeSlot(int year, int month, int dayOfMonth, int hour, int minute){
-        reservations = new ArrayList<Reservation>();
-        dateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
-    }
-
-    public DateTimeSlot(LocalDateTime localDateTime) {
-        this.dateTime = localDateTime;
-
-    }
-
-    public List<Reservation> getReservations(){
-        return reservations;
-    }
+    private String restaurantId;
+    private LocalDateTime dateTime;
 
     public void addReservation(Reservation reservation){
         reservations.add(reservation);
     }
-
     public void removeReservation(Reservation reservation){
         reservations.remove(reservation);
     }
-
 }
