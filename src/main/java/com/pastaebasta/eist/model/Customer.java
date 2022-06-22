@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Customer Data Model
  * Represents a single customer in the database.
- *
+ * <p>
  * This class uses lombok to generate a constructor, getters and setters for the fields.
  */
 @Document("customers")
@@ -21,15 +21,21 @@ public class Customer {
     private String customerId;
     private String customerUsername;
     private String customerEmail;
+    private String password;
+    //TODO Encryption
 
     @DocumentReference
     private ArrayList<Reservation> reservationList;
 
-    public Customer(String customerId, String customerUsername, String customerEmail) {
+    public Customer() {
+    }
+
+    public Customer(String customerId, String customerUsername, String customerEmail, String password) {
         this.customerId = customerId;
         this.customerUsername = customerUsername;
         this.customerEmail = customerEmail;
         this.reservationList = new ArrayList<>();
+        this.password = password;
     }
 
     public void addReservation(Reservation reservation) {

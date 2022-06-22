@@ -1,7 +1,6 @@
 package com.pastaebasta.eist.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,11 +13,13 @@ import java.time.LocalDateTime;
  * This class uses lombok to generate a constructor, getters and setters for the fields.
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Document("reservations")
 public class Reservation {
     @Id
-    private final String reservationId;
+    private String reservationId;
 
     private String customerId;
     private String restaurantId;

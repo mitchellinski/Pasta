@@ -18,9 +18,7 @@ public class DatabaseSeeder {
 	private static final int DEFAULT_NUMBER_OF_RESTAURANTS = 10;
 	private static final int DEFAULT_NUMBER_OF_REVIEWS = 5;
 
-	private static final List<String> GENRES = List.of("" +
-		"Italian", "Chinese", "Japanese", "French", "American",
-		"Mexican", "Thai", "Indian", "Korean", "German", "Spanish");
+	private static final List<Genre> GENRES = List.of(Genre.values());
 	private static final List<String> ADDRESSES = List.of(
 		"Sidbury Street", "Hilltop Street", "St Anne's Ridings",
 		"Main Street", "York Street", "Goldcrest Limes");
@@ -86,7 +84,7 @@ public class DatabaseSeeder {
 	public ArrayList<Customer> generateCustomers(int numberOfCustomers) {
 		ArrayList<Customer> customers = new ArrayList<>();
 		for (int i = 0; i < numberOfCustomers; i++) {
-			customers.add(new Customer(UUID.randomUUID().toString(), "username" + i, "user" + i + "@gmail.com"));
+			customers.add(new Customer(UUID.randomUUID().toString(), "username" + i, "user" + i + "@gmail.com", "password" + i));
 		}
 		return customers;
 	}
@@ -121,7 +119,7 @@ public class DatabaseSeeder {
 	 * Uses a RNG to pick a random restaurant genre from GENRES.
 	 * @return a random restaurant genre
 	*/
-	private String getRandomRestaurantGenre() {
+	private Genre getRandomRestaurantGenre() {
 		return GENRES.get(RNG.nextInt(GENRES.size()));
 	}
 

@@ -26,7 +26,7 @@ public class Restaurant {
 
 	private String name;
 	private String address;
-	private String restaurantGenre;
+	private Genre restaurantGenre;
 	private String coordinates;
 
 	private PriceCategory priceCategory;

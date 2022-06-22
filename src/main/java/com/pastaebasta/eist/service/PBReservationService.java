@@ -26,6 +26,7 @@ public class PBReservationService {
     /**
      * Gets a customer from the database, if one exists, otherwise creates a new customer.
      * UNSAFE - Testing purposes only
+     *
      * @param customerId The customer's id
      * @return The customer
      */
@@ -35,11 +36,12 @@ public class PBReservationService {
             // UNSECURE WAY TO CREATE A CUSTOMER
             System.err.println(">>>> NOOOOOOOO");
             return customerRepository.save(
-                new Customer(
-                    customerId,
-                    "user_"+customerId,
-                    null
-                )
+                    new Customer(
+                            customerId,
+                            "user_" + customerId,
+                            null,
+                            "password"
+                    )
             );
         });
     }
@@ -47,6 +49,7 @@ public class PBReservationService {
     /**
      * Gets a customer from the database, if one exists, otherwise creates a new customer.
      * UNSAFE - Testing purposes only
+     *
      * @param customerId The customer's id
      * @return The customer
      */
@@ -60,19 +63,19 @@ public class PBReservationService {
     }
 
     public Reservation addReservation(Reservation reservation) throws IllegalArgumentException {
-        assert(reservation.getReservationId() != null);
-        assert(reservation.getRestaurantId() != null);
-        assert(reservation.getCustomerId() != null);
-        assert(reservation.getStartDateTime() != null);
-        assert(reservation.getEndDateTime() != null);
+        assert (reservation.getReservationId() != null);
+        assert (reservation.getRestaurantId() != null);
+        assert (reservation.getCustomerId() != null);
+        assert (reservation.getStartDateTime() != null);
+        assert (reservation.getEndDateTime() != null);
 
         // Check if the table is free
-        if(!isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
+        if (!isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
             return null;
         }
 
         Customer customer = getCustomer_FORCE_CREATE(reservation.getCustomerId());
-        if(customer.getReservationList().size() >= 3) {
+        if (customer.getReservationList().size() >= 3) {
             return null;
         }
 
@@ -81,7 +84,7 @@ public class PBReservationService {
         return reservationRepository.save(reservation);
     }
 
-        public List<Reservation> getReservationsDuringTimeSlot(String restaurantId, LocalDateTime start, LocalDateTime end) {
+    public List<Reservation> getReservationsDuringTimeSlot(String restaurantId, LocalDateTime start, LocalDateTime end) {
         return reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, start, end);
     }
 
@@ -100,6 +103,7 @@ public class PBReservationService {
     public Restaurant getRestaurant(String restaurantId) {
         return restaurantRepository.getByRestaurantId(restaurantId);
     }
+
     public Restaurant getRestaurant(long restaurantId) {
         return restaurantRepository.getByRestaurantId(restaurantId);
     }

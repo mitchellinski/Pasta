@@ -15,6 +15,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 
 /**
@@ -56,7 +61,7 @@ public class PBServerApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) {
-		/*
+/*
 		customerRepository.deleteAll();
 		reservationRepository.deleteAll();
 
@@ -65,6 +70,7 @@ public class PBServerApplication implements CommandLineRunner {
 		DatabaseSeeder seeder = new DatabaseSeeder(restaurantRepository, customerRepository, dateTimeSlotRepository);
 		ArrayList<Restaurant> restaurants = seeder.seedRestaurants(1, 10);
 
+//		ArrayList<Customer> customers = new ArrayList<>(List.of(new Customer("1", "myUsername", "e@mail.com", "123")));
 		ArrayList<Customer> customers = seeder.generateCustomers(1);
 		customerRepository.saveAll(customers);
 
@@ -115,6 +121,7 @@ public class PBServerApplication implements CommandLineRunner {
 				endDateTime);
 		for (Reservation reservation : r) {
 			System.out.println(reservation);
-		} */
+		}
+		System.out.println(customers.get(0));*/
 	}
 }
