@@ -1,12 +1,16 @@
 package com.pastaebasta.eist.model;
 
 import lombok.Data;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.ArrayList;
+
 
 /**
  * Customer Data Model
@@ -17,12 +21,13 @@ import java.util.ArrayList;
 @Document("customers")
 @Data
 public class Customer {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String customerId;
     private String customerUsername;
     private String customerEmail;
-    private String password;
-    //TODO Encryption
+    private String customerPassword;
 
     @DocumentReference
     private ArrayList<Reservation> reservationList;
@@ -30,12 +35,18 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String customerId, String customerUsername, String customerEmail, String password) {
+    public Customer(String username, String email, String password) {
+        this.customerUsername = username;
+        this.customerEmail = email;
+        this.customerPassword = password;
+    }
+
+    public Customer(String customerId, String username, String email, String password) {
         this.customerId = customerId;
-        this.customerUsername = customerUsername;
-        this.customerEmail = customerEmail;
+        this.customerUsername = username;
+        this.customerEmail = email;
+        this.customerPassword = password;
         this.reservationList = new ArrayList<>();
-        this.password = password;
     }
 
     public void addReservation(Reservation reservation) {
@@ -49,5 +60,9 @@ public class Customer {
             }
         }
         return null;
+    }
+
+    public String getCustomerUsername() {
+        return customerUsername;
     }
 }

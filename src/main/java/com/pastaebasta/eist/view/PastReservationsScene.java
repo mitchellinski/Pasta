@@ -1,7 +1,6 @@
 package com.pastaebasta.eist.view;
 
 import com.pastaebasta.eist.controller.ClientController;
-import com.pastaebasta.eist.controller.ServerController;
 import com.pastaebasta.eist.model.Reservation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -17,16 +16,14 @@ import java.util.List;
 
 public class PastReservationsScene extends Scene {
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
-
     private final ClientController clientController;
     private final ViewApplication application;
     private final ObservableList<Reservation> reservations;
     private final TableView<Reservation> table;
 
     public PastReservationsScene(ClientController clientController, ViewApplication application) {
-        super(new VBox(), WIDTH, HEIGHT);
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
+        int width = (int) application.getStage().getScene().getWidth();
         this.clientController = clientController;
         this.application = application;
         this.reservations = FXCollections.observableArrayList();
@@ -38,19 +35,19 @@ public class PastReservationsScene extends Scene {
 
         var idColumn = new TableColumn<Reservation, String>("ID");
         idColumn.setSortable(false);
-        idColumn.setPrefWidth(WIDTH / 5);
+        idColumn.setPrefWidth(width / 5);
         var dateColumn = new TableColumn<Reservation, String>("Date");
         dateColumn.setSortable(true);
-        dateColumn.setPrefWidth(WIDTH / 5);
+        dateColumn.setPrefWidth(width / 5);
         var nameColumn = new TableColumn<Reservation, String>("Restaurant");
         nameColumn.setSortable(true);
-        nameColumn.setPrefWidth(WIDTH / 5);
+        nameColumn.setPrefWidth(width / 5);
         var visitorColumn = new TableColumn<Reservation, String>("Visitors");
         visitorColumn.setSortable(true);
-        visitorColumn.setPrefWidth(WIDTH / 5);
+        visitorColumn.setPrefWidth(width / 5);
         var confirmedColumn = new TableColumn<Reservation, String>("Confirmed");
         confirmedColumn.setSortable(true);
-        confirmedColumn.setPrefWidth(WIDTH / 5);
+        confirmedColumn.setPrefWidth(width / 5);
 
         table.getColumns().addAll(idColumn, dateColumn, nameColumn, visitorColumn, confirmedColumn);
 

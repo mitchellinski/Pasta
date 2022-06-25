@@ -13,18 +13,17 @@ import javafx.scene.text.Font;
 import javafx.stage.Popup;
 
 public class HomeScene extends Scene {
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
 
     private final ViewApplication application;
 
     public HomeScene(ViewApplication application) {
-        super(new VBox(), WIDTH, HEIGHT);
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.application = application;
         var vBox = new VBox(10);
 
         Label headline = new Label("Welcome!");
         headline.setFont(new Font("Arial", 50));
+        headline.setAlignment(Pos.TOP_CENTER);
         vBox.getChildren().add(headline);
 
         if (!application.isLoggedIn()) {

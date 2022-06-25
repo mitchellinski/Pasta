@@ -16,14 +16,13 @@ import javafx.scene.text.Font;
 
 public class RegisterScene extends Scene {
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
-
     private final ClientController clientController;
     private final ViewApplication application;
 
     public RegisterScene(ClientController clientController, ViewApplication application) {
-        super(new VBox(), WIDTH, HEIGHT);
+
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
+
         this.clientController = clientController;
         this.application = application;
 
@@ -31,26 +30,26 @@ public class RegisterScene extends Scene {
         headline.setFont(new Font("Arial", 20));
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setPadding(new Insets(20));
         grid.setVgap(10);
         grid.setHgap(5);
 
         Label usernameLabel = new Label("Username");
-        usernameLabel.setFont(new Font("Arial", 10));
+        usernameLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(usernameLabel, 0, 0);
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
         GridPane.setConstraints(usernameField, 1, 0);
 
         Label emailLabel = new Label("E-Mail");
-        emailLabel.setFont(new Font("Arial", 10));
+        emailLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(emailLabel, 0, 1);
         TextField emailField = new TextField();
         emailField.setPromptText("E-Mail");
         GridPane.setConstraints(emailField, 1, 1);
 
         Label passwordLabel = new Label("Password");
-        passwordLabel.setFont(new Font("Arial", 10));
+        passwordLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(passwordLabel, 0, 2);
         TextField passwordField = new TextField();
         passwordField.setPromptText("Password");
@@ -62,9 +61,17 @@ public class RegisterScene extends Scene {
             @Override
             public void handle(ActionEvent event) {
                 if (usernameField.getText() != null && !usernameField.getText().isEmpty()) {
+                    //TODO check if username is taken
                     if (emailField.getText() != null && !emailField.getText().isEmpty()) {
                         if(passwordField.getText() != null && !passwordField.getText().isEmpty()) {
-                            // TODO create Customer
+                            String username = usernameField.getText().trim();
+                            String email = emailField.getText().trim();
+                            String password = passwordField.getText().trim();
+                            String encodedPassword = application.getArgon2PasswordEncoder().encode(password);
+                            Customer newCustomer = new Customer(username, email, encodedPassword);
+                            clientController.addCustomer(newCustomer);
+                            application.setCustomer(newCustomer);
+                            application.showHomeScene();
                         } else {
                             // No Password
                         }

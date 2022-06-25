@@ -4,7 +4,10 @@ import com.pastaebasta.eist.model.Customer;
 import com.pastaebasta.eist.model.DateTimeSlot;
 import com.pastaebasta.eist.model.Reservation;
 import com.pastaebasta.eist.model.Restaurant;
-import com.pastaebasta.eist.repository.*;
+import com.pastaebasta.eist.repository.CustomerRepository;
+import com.pastaebasta.eist.repository.DateTimeSlotRepository;
+import com.pastaebasta.eist.repository.ReservationRepository;
+import com.pastaebasta.eist.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -108,4 +111,16 @@ public class PBReservationService {
         return restaurantRepository.getByRestaurantId(restaurantId);
     }
 
+    //TODO delete before push
+    public Customer saveCustomer(Customer newCustomer) {
+        return customerRepository.save(newCustomer);
+    }
+
+    public Customer findCustomerByUsername(String username) {
+        return customerRepository.getItemByName(username).orElse(null);
+    }
+
+    public Iterable<Customer> findAllCustomers() {
+        return customerRepository.findAll();
+    }
 }

@@ -1,7 +1,6 @@
 package com.pastaebasta.eist.view;
 
 import com.pastaebasta.eist.controller.ClientController;
-import com.pastaebasta.eist.controller.ServerController;
 import com.pastaebasta.eist.model.Genre;
 import com.pastaebasta.eist.model.PriceCategory;
 import com.pastaebasta.eist.model.Restaurant;
@@ -13,10 +12,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class SearchScene extends Scene {
+import java.util.Arrays;
+import java.util.List;
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
+public class SearchScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
@@ -24,7 +23,8 @@ public class SearchScene extends Scene {
 
 
     public SearchScene(ClientController clientController, ViewApplication application) {
-        super(new VBox(), WIDTH, HEIGHT);
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
+        int width = (int) application.getStage().getScene().getWidth();
         this.clientController = clientController;
         this.application = application;
 
@@ -35,19 +35,19 @@ public class SearchScene extends Scene {
 
         var nameColumn = new TableColumn<Restaurant, String>("Name");
         nameColumn.setSortable(true);
-        nameColumn.setPrefWidth(WIDTH / 5);
+        nameColumn.setPrefWidth(width / 5);
         var addressColumn = new TableColumn<Restaurant, String>("Address");
         addressColumn.setSortable(true);
-        addressColumn.setPrefWidth(WIDTH / 5);
+        addressColumn.setPrefWidth(width / 5);
         var genreColumn = new TableColumn<Restaurant, String>("Genre");
         genreColumn.setSortable(true);
-        genreColumn.setPrefWidth(WIDTH / 5);
+        genreColumn.setPrefWidth(width / 5);
         var priceColumn = new TableColumn<Restaurant, String>("Price Category");
         priceColumn.setSortable(true);
-        priceColumn.setPrefWidth(WIDTH / 5);
+        priceColumn.setPrefWidth(width / 5);
         var ratingColumn = new TableColumn<Restaurant, String>("Rating");
         ratingColumn.setSortable(true);
-        ratingColumn.setPrefWidth(WIDTH / 5);
+        ratingColumn.setPrefWidth(width / 5);
 
         table.getColumns().addAll(nameColumn, addressColumn, genreColumn, priceColumn, ratingColumn);
 
@@ -58,12 +58,12 @@ public class SearchScene extends Scene {
 
     private GridPane createSearchBar() {
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
+        grid.setPadding(new Insets(20));
         grid.setVgap(5);
         grid.setHgap(5);
 
         Label searchLabel = new Label("Search for a Restaurant");
-        searchLabel.setFont(new Font("Arial", 10));
+        searchLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(searchLabel, 0, 0);
 
         TextField searchField = new TextField();
@@ -71,15 +71,20 @@ public class SearchScene extends Scene {
         GridPane.setConstraints(searchField, 0, 1);
 
         Label genreLabel = new Label("Type");
-        genreLabel.setFont(new Font("Arial", 10));
+        genreLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(genreLabel, 1, 0);
 
-        ChoiceBox<Genre> genreBox = new ChoiceBox<>();
-        genreBox.getItems().addAll(Genre.values());
+        ChoiceBox<String> genreBox = new ChoiceBox<>();
+        List<String> genres =
+                Arrays.stream(Genre.values())
+                        .map(genre -> genre.toString().replace('_', ' '))
+                        .map(genre -> genre.charAt(0) + genre.substring(1).toLowerCase())
+                        .toList();
+        genreBox.getItems().addAll(genres);
         GridPane.setConstraints(genreBox, 1, 1);
 
         Label priceLabel = new Label("Pice Category");
-        priceLabel.setFont(new Font("Arial", 10));
+        priceLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(priceLabel, 2, 0);
 
         ChoiceBox<PriceCategory> priceBox = new ChoiceBox<>();

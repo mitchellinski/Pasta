@@ -1,6 +1,9 @@
 package com.pastaebasta.eist.testing.Database;
 
-import com.pastaebasta.eist.model.*;
+import com.pastaebasta.eist.model.Customer;
+import com.pastaebasta.eist.model.Genre;
+import com.pastaebasta.eist.model.PriceCategory;
+import com.pastaebasta.eist.model.Restaurant;
 import com.pastaebasta.eist.repository.CustomerRepository;
 import com.pastaebasta.eist.repository.DateTimeSlotRepository;
 import com.pastaebasta.eist.repository.RestaurantRepository;

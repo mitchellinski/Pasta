@@ -14,56 +14,53 @@ import javafx.scene.text.Font;
 
 public class ProfileScene extends Scene {
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
-
     private final ClientController clientController;
     private final ViewApplication application;
 
-    public ProfileScene(ClientController clientController, ViewApplication viewApplication) {
-        super(new VBox(), WIDTH, HEIGHT);
+    public ProfileScene(ClientController clientController, ViewApplication application) {
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
-        this.application = viewApplication;
+        this.application = application;
 
         Customer customer = application.getCustomer();
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10));
-        grid.setVgap(5);
-        grid.setHgap(5);
-
         Label headline = new Label("My Profile");
-        headline.setFont(new Font("Arial", 20));
+        headline.setFont(new Font("Arial", 40));
 
-        Label username = new Label("Username");
-        username.setFont(new Font("Arial", 10));
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20));
+        grid.setVgap(10);
+        grid.setHgap(10);
+
+        Label username = new Label("Username:");
+        username.setFont(new Font("Arial", 20));
         GridPane.setConstraints(username, 0, 0);
         Label usernameValue = new Label(customer.getCustomerUsername());
-        usernameValue.setFont(new Font("Arial", 10));
+        usernameValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(usernameValue, 1, 0);
 
-        Label email = new Label("E-Mail");
-        email.setFont(new Font("Arial", 10));
+        Label email = new Label("E-Mail:");
+        email.setFont(new Font("Arial", 20));
         GridPane.setConstraints(email, 0, 1);
         Label emailValue = new Label(customer.getCustomerEmail());
-        emailValue.setFont(new Font("Arial", 10));
+        emailValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(emailValue, 1, 1);
 
-        Label password = new Label("Password");
-        password.setFont(new Font("Arial", 10));
+        Label password = new Label("Password:");
+        password.setFont(new Font("Arial", 20));
         GridPane.setConstraints(password, 0, 2);
         Label passwordValue = new Label("********");
-        passwordValue.setFont(new Font("Arial", 10));
+        passwordValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(passwordValue, 1, 2);
 
         Button changeButton = new Button("Change");
         changeButton.setOnAction(event -> application.showSettingsScene());
-        GridPane.setRowIndex(changeButton, 3);
+        changeButton.setAlignment(Pos.CENTER);
 
-        grid.getChildren().addAll(username, usernameValue, email, emailValue, password, passwordValue, changeButton);
+        grid.getChildren().addAll(username, usernameValue, email, emailValue, password, passwordValue);
         grid.setAlignment(Pos.CENTER);
 
-        var vBox = new VBox(10, headline, grid, application.createBackButton());
+        var vBox = new VBox(10, headline, grid, changeButton, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }

@@ -15,8 +15,9 @@ import java.util.Optional;
  * @author Hisashi
  */
 public interface CustomerRepository extends MongoRepository<Customer, String> {
+
 	@Query("{customerUsername:'?0'}")
-	Customer getItemByName(String name);
+	Optional<Customer> getItemByName(String name);
 
 	@Query("{customerId:'?0'}")
 	@Override
@@ -24,4 +25,5 @@ public interface CustomerRepository extends MongoRepository<Customer, String> {
 
 	@Query(value="{customerId:'?0'}", fields="{customerId:1, customerUsername:1, customerEmail:1, reservationList:1}")
 	List<Customer> getAll(String id);
+
 }

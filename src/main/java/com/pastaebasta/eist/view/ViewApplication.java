@@ -1,11 +1,15 @@
 package com.pastaebasta.eist.view;
 
 import com.pastaebasta.eist.controller.ClientController;
-import com.pastaebasta.eist.controller.ServerController;
 import com.pastaebasta.eist.model.Customer;
 import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class ViewApplication extends Application {
 
@@ -13,11 +17,19 @@ public class ViewApplication extends Application {
     private Stage stage;
     private Customer customer;
     private boolean loggedIn;
+    private int width;
+    private int height;
+
+    private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 
     @Override
     public void start(Stage primaryStage) {
+        width = (int) Screen.getPrimary().getBounds().getWidth();
+        height = (int) Screen.getPrimary().getBounds().getHeight();
         this.stage = primaryStage;
+        primaryStage.setScene(new Scene(new VBox()));
         primaryStage.setScene(new HomeScene(this));
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
@@ -73,6 +85,11 @@ public class ViewApplication extends Application {
     Button createBackButton() {
         Button backButton = new Button("Back");
         backButton.setOnAction(event -> showHomeScene());
+        backButton.setAlignment(Pos.BASELINE_CENTER);
         return backButton;
+    }
+
+    public Argon2PasswordEncoder getArgon2PasswordEncoder() {
+        return argon2PasswordEncoder;
     }
 }

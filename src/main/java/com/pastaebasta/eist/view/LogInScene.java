@@ -2,7 +2,6 @@ package com.pastaebasta.eist.view;
 
 import com.pastaebasta.eist.controller.ClientController;
 import com.pastaebasta.eist.model.Customer;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,24 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import reactor.core.publisher.Mono;
-
-import java.lang.management.PlatformLoggingMXBean;
-import java.util.Objects;
 
 
 public class LogInScene extends Scene {
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
-
     private final ClientController clientController;
     private final ViewApplication application;
-    private Customer customer;
 
     public LogInScene(ClientController clientController, ViewApplication application) {
-        super(new VBox(), WIDTH, HEIGHT);
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
         this.application = application;
 
@@ -38,64 +30,87 @@ public class LogInScene extends Scene {
         headline.setFont(new Font("Arial", 20));
 
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setPadding(new Insets(20));
         grid.setVgap(10);
         grid.setHgap(5);
 
         Label usernameLabel = new Label("Username");
-        usernameLabel.setFont(new Font("Arial", 10));
+        usernameLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(usernameLabel, 0, 0);
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
         GridPane.setConstraints(usernameField, 1, 0);
+        Label emptyUsername = new Label("Username cannot be empty");
+        emptyUsername.setFont(new Font("Arial", 20));
+        emptyUsername.setTextFill(Color.RED);
+        GridPane.setConstraints(emptyUsername, 1, 1);
+        emptyUsername.setVisible(false);
 
         Label passwordLabel = new Label("Password");
-        passwordLabel.setFont(new Font("Arial", 10));
-        GridPane.setConstraints(passwordLabel, 0, 1);
+        passwordLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(passwordLabel, 0, 2);
         TextField passwordField = new TextField();
         passwordField.setPromptText("Password");
-        GridPane.setConstraints(passwordField, 1, 1);
+        GridPane.setConstraints(passwordField, 1, 2);
+        Label emptyPassword = new Label("Password cannot be empty");
+        emptyPassword.setFont(new Font("Arial", 20));
+        emptyPassword.setTextFill(Color.RED);
+        GridPane.setConstraints(emptyPassword, 1, 3);
+        emptyPassword.setVisible(false);
+        Label wrongPassword = new Label("Wrong Password");
+        wrongPassword.setFont(new Font("Arial", 20));
+        wrongPassword.setTextFill(Color.RED);
+        GridPane.setConstraints(wrongPassword, 1, 3);
+        wrongPassword.setVisible(false);
 
 
         Button logInButton = new Button("Log In");
         logInButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (usernameField.getText() != null && !usernameField.getText().isEmpty()) {
-                    if(passwordField.getText() != null && !passwordField.getText().isEmpty()) {
-                        // TODO Log In
-                        Customer customer = clientController.getCustomer("1");
-                        if(Objects.equals(customer.getCustomerUsername(), usernameField.getText().trim()) && customer.getPassword().equals(passwordField.getText().trim())) {
+                emptyUsername.setVisible(false);
+                emptyPassword.setVisible(false);
+                wrongPassword.setVisible(false);
+                if (usernameField.getText() != null && passwordField.getText() != null) {
+                    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+                        if (usernameField.getText().isEmpty()) {
+                            emptyUsername.setVisible(true);
+                        }
+                        if (passwordField.getText().isEmpty()) {
+                            emptyPassword.setVisible(true);
+                        }
+                    } else {
+                        String username = usernameField.getText().trim();
+                        String password = passwordField.getText().trim();
+                        Customer customer = clientController.getCustomerByUsername(username);
+
+                        if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
                             application.setCustomer(customer);
                             application.showHomeScene();
+                        } else {
+                            wrongPassword.setVisible(true);
                         }
-
-                    } else {
-                        // No Password
                     }
-                } else {
-                    // No Username
                 }
-            }
 
-            private void setCustomer(Customer newCustomer) {
-                Platform.runLater(() -> customer = newCustomer);
+
             }
         });
 
         Label registerLabel = new Label("Not registered yet?");
-        registerLabel.setFont(new Font("Arial", 15));
+        registerLabel.setFont(new Font("Arial", 20));
         registerLabel.setPadding(new Insets(20, 0, 0, 0));
 
         Button registerButton = new Button("Register");
         registerButton.setOnAction(event -> application.showRegisterScene());
 
-        grid.getChildren().addAll(usernameLabel, usernameField, passwordLabel, passwordField);
+        grid.getChildren().addAll(usernameLabel, usernameField, emptyUsername, passwordLabel, passwordField, emptyPassword, wrongPassword);
         grid.setAlignment(Pos.CENTER);
 
         var vBox = new VBox(10, headline, grid, logInButton, registerLabel, registerButton, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
         vBox.setSpacing(10);
+
         setRoot(vBox);
     }
 }

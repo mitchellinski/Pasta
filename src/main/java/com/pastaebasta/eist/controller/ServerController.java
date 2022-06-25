@@ -1,6 +1,10 @@
 package com.pastaebasta.eist.controller;
 
-import com.pastaebasta.eist.model.*;
+
+import com.pastaebasta.eist.model.Customer;
+import com.pastaebasta.eist.model.QueryPlace;
+import com.pastaebasta.eist.model.Reservation;
+import com.pastaebasta.eist.model.Restaurant;
 import com.pastaebasta.eist.service.PBReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,6 +28,7 @@ import java.util.Optional;
  */
 @RestController
 @AllArgsConstructor
+@RequestMapping("/old")
 public class ServerController {
     private PBReservationService reservationService;
 
@@ -160,4 +165,22 @@ public class ServerController {
 //        createDummyRestaurants();
     }
 
+    @PostMapping("/api/v1/customers")
+    public ResponseEntity<?> newCustomer(@RequestBody Customer newCustomer) {
+        return new ResponseEntity<Customer>(reservationService.saveCustomer(newCustomer), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/v1/customers")
+    public ResponseEntity<?> findAllCustomers() {
+        return new ResponseEntity<Iterable<Customer>>(reservationService.findAllCustomers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/v1/customers/username/{username}")
+    public ResponseEntity<Customer> findCustomerByUsername(@PathVariable String username) {
+        Customer customer = reservationService.findCustomerByUsername(username);
+        if(customer == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(reservationService.findCustomerByUsername(username), HttpStatus.OK);
+    }
 }

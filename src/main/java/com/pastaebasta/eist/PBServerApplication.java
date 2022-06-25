@@ -1,6 +1,8 @@
 package com.pastaebasta.eist;
 
-import com.pastaebasta.eist.model.*;
+import com.pastaebasta.eist.model.Customer;
+import com.pastaebasta.eist.model.Reservation;
+import com.pastaebasta.eist.model.Restaurant;
 import com.pastaebasta.eist.repository.CustomerRepository;
 import com.pastaebasta.eist.repository.DateTimeSlotRepository;
 import com.pastaebasta.eist.repository.ReservationRepository;
@@ -8,8 +10,6 @@ import com.pastaebasta.eist.repository.RestaurantRepository;
 import com.pastaebasta.eist.service.PBReservationService;
 import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -61,7 +61,7 @@ public class PBServerApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) {
-/*
+
 		customerRepository.deleteAll();
 		reservationRepository.deleteAll();
 
@@ -122,6 +122,6 @@ public class PBServerApplication implements CommandLineRunner {
 		for (Reservation reservation : r) {
 			System.out.println(reservation);
 		}
-		System.out.println(customers.get(0));*/
+		System.out.println(customers.get(0));
 	}
 }

@@ -12,18 +12,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-public class SettingsScene extends Scene {
 
-    private static final int WIDTH = 640;
-    private static final int HEIGHT = 500;
+public class SettingsScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
-    public SettingsScene(ClientController clientController, ViewApplication viewApplication) {
-        super(new VBox(), WIDTH, HEIGHT);
+    public SettingsScene(ClientController clientController, ViewApplication application) {
+        super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
-        this.application = viewApplication;
+        this.application = application;
 
         Customer customer = application.getCustomer();
 
@@ -58,7 +56,15 @@ public class SettingsScene extends Scene {
 
         Button saveButton = new Button("Save");
         saveButton.setOnAction(event -> {
-
+            String newUsername = usernameValue.getText().trim();
+            String newEmail = emailValue.getText().trim();
+            String newPassword = passwordValue.getText().trim();
+            String encodedPassword = application.getArgon2PasswordEncoder().encode(newPassword);
+            customer.setCustomerUsername(newUsername);
+            customer.setCustomerEmail(newEmail);
+            customer.setCustomerPassword(encodedPassword);
+            clientController.updateCustomer(customer);
+            application.showProfileScene();
         });
         GridPane.setConstraints(saveButton, 0, 3);
 
