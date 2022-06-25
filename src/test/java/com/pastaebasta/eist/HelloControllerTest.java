@@ -1,6 +1,7 @@
 package com.pastaebasta.eist;
 
 import com.pastaebasta.eist.controller.HelloController;
+import com.pastaebasta.eist.security.SecurityConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(HelloController.class)
-@ContextConfiguration(classes = HelloController.class)
+@ContextConfiguration(classes = {HelloController.class, SecurityConfiguration.class})
 class HelloControllerTest {
 
     @Autowired
