@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
     implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+    implementation group: 'org.reactivestreams', name: 'reactive-streams', version: '1.0.4'
 }
 
 sourceSets {
