@@ -4,9 +4,11 @@ import com.pastaebasta.eist.model.Customer;
 import com.pastaebasta.eist.model.Reservation;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,15 @@ public class ClientController {
         return webClient.get()
                 .uri("customers/username/" + username)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new RuntimeException("Customer with username '" + username + "' doesn't exist!")))
+                .bodyToMono(Customer.class)
+                .block();
+    }
+
+    public Customer getCustomerByEmail(String email) {
+        return webClient.get()
+                .uri("customers/email/" + email)
+                .retrieve()
                 .bodyToMono(Customer.class)
                 .block();
     }
@@ -62,11 +73,25 @@ public class ClientController {
     }
 
     public void addCustomer(Customer customer) {
-                webClient.post()
-                        .uri("customers")
-                        .bodyValue(customer)
-                        .retrieve()
-                        .bodyToMono(Customer.class)
-                        .block();
+        webClient.post()
+                .uri("customers")
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
+    }
+
+    public void customerUsernameTaken(String username) {
+        webClient.get()
+                .uri("customers/username/" + username)
+                .retrieve()
+                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Username already taken")));
+    }
+
+    public void customerEmailTaken(String email) {
+        webClient.get()
+                .uri("customers/email/" + email)
+                .retrieve()
+                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Email already taken")));
     }
 }

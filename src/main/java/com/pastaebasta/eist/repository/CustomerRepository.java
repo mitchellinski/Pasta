@@ -16,14 +16,16 @@ import java.util.Optional;
  */
 public interface CustomerRepository extends MongoRepository<Customer, String> {
 
-	@Query("{customerUsername:'?0'}")
-	Optional<Customer> getItemByName(String name);
+	@Query(value="{customerId:'?0'}", fields="{customerId:1, customerUsername:1, customerEmail:1, reservationList:1}")
+	List<Customer> getAll(String id);
 
 	@Query("{customerId:'?0'}")
 	@Override
 	Optional<Customer> findById(String id);
 
-	@Query(value="{customerId:'?0'}", fields="{customerId:1, customerUsername:1, customerEmail:1, reservationList:1}")
-	List<Customer> getAll(String id);
+	@Query("{customerUsername:'?0'}")
+	Optional<Customer> getItemByName(String name);
 
+	@Query("{customerEmail:'?0'}")
+	Optional<Customer> getByEmail(String email);
 }

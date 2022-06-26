@@ -27,19 +27,23 @@ public class CustomerService {
         });
     }
 
-    public Customer getCustomerById(String customerId) {
-        return customerRepository.findById(customerId).orElse(null);
+    public Iterable<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
 
-    public Customer saveCustomer(Customer newCustomer) {
-        return customerRepository.save(newCustomer);
+    public Customer getCustomerById(String customerId) {
+        return customerRepository.findById(customerId).orElse(null);
     }
 
     public Customer getCustomerByUsername(String username) {
         return customerRepository.getItemByName(username).orElse(null);
     }
 
-    public Iterable<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public Customer getCustomerByEmail(String email) {
+        return customerRepository.getByEmail(email).orElse(null);
+    }
+
+    public Customer saveCustomer(Customer newCustomer) {
+        return customerRepository.save(newCustomer);
     }
 }

@@ -15,37 +15,46 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<Iterable<Customer>> findAllCustomers() {
+    public ResponseEntity<Iterable<Customer>> getAllCustomers() {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
     }
 
     /**
      * Returns a customer, if one exists
+     *
      * @param customerId the customerId of the reservation
      * @return the customer, if it exists
      */
     @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable String customerId) {
         Customer customer = customerService.getCustomerById(customerId);
-        if(customer == null) {
+        if (customer == null) {
             return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok().body(customer);
     }
 
-    @PostMapping
-    public ResponseEntity<Customer> newCustomer(@RequestBody Customer newCustomer) {
-        return new ResponseEntity<>(customerService.saveCustomer(newCustomer), HttpStatus.CREATED);
-    }
-
-
     @GetMapping("/username/{username}")
-    public ResponseEntity<Customer> findCustomerByUsername(@PathVariable String username) {
+    public ResponseEntity<Customer> getCustomerByUsername(@PathVariable String username) {
         Customer customer = customerService.getCustomerByUsername(username);
-        if(customer == null) {
+        if (customer == null) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(customerService.getCustomerByUsername(username), HttpStatus.OK);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Customer> getCustomerByEmail(@PathVariable String email) {
+        Customer customer = customerService.getCustomerByEmail(email);
+        if (customer == null) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Customer> saveCustomer(@RequestBody Customer newCustomer) {
+        return new ResponseEntity<>(customerService.saveCustomer(newCustomer), HttpStatus.CREATED);
     }
 }

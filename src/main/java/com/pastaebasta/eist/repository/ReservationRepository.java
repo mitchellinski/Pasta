@@ -24,7 +24,6 @@ public interface ReservationRepository extends PagingAndSortingRepository<Reserv
 	@Query("{'restaurantId' : '?0', 'tableId': ?1, 'startDateTime' : {$gte : ?2}, 'endDateTime' : {$lte : ?3}}")
 	Reservation getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(String restaurantId, long tableId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-
 	@Query("{reservationId:'?0'}")
 	Reservation getByReservationId(String reservationId);
 

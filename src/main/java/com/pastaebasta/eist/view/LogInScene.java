@@ -72,16 +72,17 @@ public class LogInScene extends Scene {
                 emptyPassword.setVisible(false);
                 wrongPassword.setVisible(false);
                 if (usernameField.getText() != null && passwordField.getText() != null) {
-                    if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
-                        if (usernameField.getText().isEmpty()) {
+                    String username = usernameField.getText().trim();
+                    String password = passwordField.getText().trim();
+                    if (username.isEmpty() || password.isEmpty()) {
+                        if (username.isEmpty()) {
                             emptyUsername.setVisible(true);
                         }
-                        if (passwordField.getText().isEmpty()) {
+                        if (password.isEmpty()) {
                             emptyPassword.setVisible(true);
                         }
                     } else {
-                        String username = usernameField.getText().trim();
-                        String password = passwordField.getText().trim();
+
                         Customer customer = clientController.getCustomerByUsername(username);
 
                         if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
