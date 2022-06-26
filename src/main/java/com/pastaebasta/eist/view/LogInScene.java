@@ -45,6 +45,11 @@ public class LogInScene extends Scene {
         emptyUsername.setTextFill(Color.RED);
         GridPane.setConstraints(emptyUsername, 1, 1);
         emptyUsername.setVisible(false);
+        Label notRegistered = new Label("Username isn't registered");
+        notRegistered.setFont(new Font("Arial", 20));
+        notRegistered.setTextFill(Color.RED);
+        GridPane.setConstraints(notRegistered, 1, 1);
+        notRegistered.setVisible(false);
 
         Label passwordLabel = new Label("Password");
         passwordLabel.setFont(new Font("Arial", 20));
@@ -69,6 +74,7 @@ public class LogInScene extends Scene {
             @Override
             public void handle(ActionEvent event) {
                 emptyUsername.setVisible(false);
+                notRegistered.setVisible(false);
                 emptyPassword.setVisible(false);
                 wrongPassword.setVisible(false);
                 if (usernameField.getText() != null && passwordField.getText() != null) {
@@ -82,19 +88,19 @@ public class LogInScene extends Scene {
                             emptyPassword.setVisible(true);
                         }
                     } else {
-
-                        Customer customer = clientController.getCustomerByUsername(username);
-
-                        if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
-                            application.setCustomer(customer);
-                            application.showHomeScene();
-                        } else {
-                            wrongPassword.setVisible(true);
+                        try {
+                            Customer customer = clientController.getCustomerByUsername(username);
+                            if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
+                                application.setCustomer(customer);
+                                application.showHomeScene();
+                            } else {
+                                wrongPassword.setVisible(true);
+                            }
+                        } catch (RuntimeException e) {
+                            notRegistered.setVisible(true);
                         }
                     }
                 }
-
-
             }
         });
 
@@ -105,7 +111,7 @@ public class LogInScene extends Scene {
         Button registerButton = new Button("Register");
         registerButton.setOnAction(event -> application.showRegisterScene());
 
-        grid.getChildren().addAll(usernameLabel, usernameField, emptyUsername, passwordLabel, passwordField, emptyPassword, wrongPassword);
+        grid.getChildren().addAll(usernameLabel, usernameField, emptyUsername, notRegistered, passwordLabel, passwordField, emptyPassword, wrongPassword);
         grid.setAlignment(Pos.CENTER);
 
         var vBox = new VBox(10, headline, grid, logInButton, registerLabel, registerButton, application.createBackButton());
