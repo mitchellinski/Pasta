@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class Google {
-    private ArrayList<OldRestaurant> googleResult;
+import static com.pastaebasta.eist.model.QueryType.*;
 
-    public Google() {
-        this.googleResult = new ArrayList<OldRestaurant>();
+public class GoogleDummy {
+    private ArrayList<Restaurant> googleResult;
+
+    public GoogleDummy() {
+        this.googleResult = new ArrayList<Restaurant>();
         createDummyRestaurants();
     }
 
@@ -53,27 +55,27 @@ public class Google {
     }
 
     public void createDummyRestaurants() {
-        for (int i = 0; i < 1000; i++) {
-            LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 8, 00, 00);
-            LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 20, 00, 00);
-            OldRestaurant restaurant = new OldRestaurant(
-                    "restaurant_"+i,
-                    "Name" + i,
-                    "Address" + i,
-                    getRandomGenre(i),
-                    null,
-                    getRandomRating(i),
-                    getRandomPriceCategory(i),
-                    null,
-                    startTime,
-                    endTime,
-                    new Point(i, i),
-                    i % 10,
-                    new ArrayList<DateTimeSlot>()
-            );
+//        for (int i = 0; i < 1000; i++) {
+//            LocalDateTime startTime = LocalDateTime.of(2022, 05, 20, 8, 00, 00);
+//            LocalDateTime endTime = LocalDateTime.of(2022, 05, 20, 20, 00, 00);
+//            Restaurant restaurant = new Restaurant(
+//                    "restaurant_"+i,
+//                    "Name" + i,
+//                    "Address" + i,
+//                    getRandomGenre(i),
+//                    null,
+//                    getRandomRating(i),
+//                    getRandomPriceCategory(i),
+//                    null,
+//                    startTime,
+//                    endTime,
+//                    new Point(i, i),
+//                    i % 10,
+//                    new ArrayList<DateTimeSlot>()
+//            );
 
-            googleResult.add(restaurant);
-        }
+//            googleResult.add(restaurant);
+//        }
     }
 
     public List queryGoogleResults(QueryType type, String query){

@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -37,4 +39,5 @@ public class Restaurant {
 	private int closingTime;
 
 	private ArrayList<String> pictures;
+
 }
