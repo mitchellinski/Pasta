@@ -17,8 +17,8 @@ public class Main {
 //        System.out.println((test.queryGoogleResults(QueryType.RESTAURANTGENRE, "Italian")).toString());
 
         try {
-            GeocodingService geoTrial = new GeocodingService("Arcisstrasse 21, 80333, Munich, DE");
-            FindPlaceService locationTrial = new FindPlaceService("Technische Universität München");
+//            GeocodingService geoTrial = new GeocodingService("Arcisstrasse 21, 80333, Munich, DE");
+//            FindPlaceService locationTrial = new FindPlaceService("Technische Universität München");
             NearbySearchService placesTrial = new NearbySearchService(new LatLng(48.148849, 11.568000));
             System.out.println("Success!");
         } catch (IOException e) {
