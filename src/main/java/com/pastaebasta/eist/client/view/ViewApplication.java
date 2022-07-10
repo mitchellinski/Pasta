@@ -27,6 +27,7 @@ public class ViewApplication extends Application {
         width = (int) Screen.getPrimary().getBounds().getWidth();
         height = (int) Screen.getPrimary().getBounds().getHeight();
         this.stage = primaryStage;
+
         primaryStage.setScene(new Scene(new VBox()));
         primaryStage.setScene(new HomeScene(this));
         primaryStage.setMaximized(true);
@@ -47,6 +48,10 @@ public class ViewApplication extends Application {
 
     public void showSearchScene() {
         stage.setScene(new SearchScene(clientController, this));
+    }
+
+    public void showRestaurantTableScene() {
+        stage.setScene(new RestaurantTableScene(clientController, this));
     }
 
     public void showRegisterScene() {
