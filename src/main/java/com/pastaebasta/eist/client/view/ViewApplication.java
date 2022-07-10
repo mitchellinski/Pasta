@@ -2,6 +2,7 @@ package com.pastaebasta.eist.client.view;
 
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class ViewApplication extends Application {
     private boolean loggedIn;
     private int width;
     private int height;
+    private Restaurant restaurant;
 
     private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 
@@ -27,6 +29,7 @@ public class ViewApplication extends Application {
         width = (int) Screen.getPrimary().getBounds().getWidth();
         height = (int) Screen.getPrimary().getBounds().getHeight();
         this.stage = primaryStage;
+
         primaryStage.setScene(new Scene(new VBox()));
         primaryStage.setScene(new HomeScene(this));
         primaryStage.setMaximized(true);
@@ -47,6 +50,10 @@ public class ViewApplication extends Application {
 
     public void showSearchScene() {
         stage.setScene(new SearchScene(clientController, this));
+    }
+
+    public void showRestaurantTableScene() {
+        stage.setScene(new RestaurantTableScene(clientController, this));
     }
 
     public void showRegisterScene() {
@@ -83,6 +90,14 @@ public class ViewApplication extends Application {
         backButton.setOnAction(event -> showHomeScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
         return backButton;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public Argon2PasswordEncoder getArgon2PasswordEncoder() {
