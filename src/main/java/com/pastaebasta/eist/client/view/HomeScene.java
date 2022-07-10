@@ -48,6 +48,9 @@ public class HomeScene extends Scene {
         logOutButton.setOnAction(event -> createPopup());
         vBox.getChildren().add(logOutButton);
     }
+        Button tables = new Button("Tables");
+        tables.setOnAction(event -> application.showRestaurantTableScene());
+        vBox.getChildren().add(tables);
 
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
