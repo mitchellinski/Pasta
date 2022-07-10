@@ -1,14 +1,6 @@
 package com.pastaebasta.eist;
 
-import com.pastaebasta.eist.controller.ServerController;
-import com.pastaebasta.eist.model.Customer;
-import com.pastaebasta.eist.model.Reservation;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 public class FoundationTests {
 	@Test

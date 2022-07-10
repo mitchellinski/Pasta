@@ -1,7 +1,7 @@
 package com.pastaebasta.eist;
 
-import com.pastaebasta.eist.controller.HelloController;
-import com.pastaebasta.eist.security.SecurityConfiguration;
+import com.pastaebasta.eist.server.controller.HelloController;
+import com.pastaebasta.eist.server.security.SecurityConfiguration;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,12 @@
 package com.pastaebasta.eist;
 
-import com.pastaebasta.eist.controller.ClientController;
-import com.pastaebasta.eist.model.Customer;
-import com.pastaebasta.eist.view.ViewApplication;
+import com.pastaebasta.eist.client.controller.ClientController;
+import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.client.view.ViewApplication;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 public class ClientControllerTest {
-    private ClientController clientController;
+    private final ClientController clientController;
     private Customer customer;
 
     public ClientControllerTest() {
