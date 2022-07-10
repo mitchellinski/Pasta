@@ -2,9 +2,9 @@ package com.pastaebasta.eist.testing;
 
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
-import com.pastaebasta.eist.service.FindPlaceService;
-import com.pastaebasta.eist.service.GeocodingService;
-import com.pastaebasta.eist.service.NearbySearchService;
+import com.pastaebasta.eist.server.service.FindPlaceService;
+import com.pastaebasta.eist.server.service.GeocodingService;
+import com.pastaebasta.eist.server.service.NearbySearchService;
 
 import java.io.IOException;
 

@@ -1,12 +1,12 @@
 package com.pastaebasta.eist.testing.Database;
 
-import com.pastaebasta.eist.model.Customer;
-import com.pastaebasta.eist.model.Genre;
-import com.pastaebasta.eist.model.PriceCategory;
-import com.pastaebasta.eist.model.Restaurant;
-import com.pastaebasta.eist.repository.CustomerRepository;
-import com.pastaebasta.eist.repository.DateTimeSlotRepository;
-import com.pastaebasta.eist.repository.RestaurantRepository;
+import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.Genre;
+import com.pastaebasta.eist.shared.model.PriceCategory;
+import com.pastaebasta.eist.shared.model.Restaurant;
+import com.pastaebasta.eist.server.repository.CustomerRepository;
+import com.pastaebasta.eist.server.repository.DateTimeSlotRepository;
+import com.pastaebasta.eist.server.repository.RestaurantRepository;
 
 import java.util.*;
 
