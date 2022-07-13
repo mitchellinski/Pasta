@@ -8,9 +8,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 public class ViewApplication extends Application {
 
@@ -18,16 +19,12 @@ public class ViewApplication extends Application {
     private Stage stage;
     private Customer customer;
     private boolean loggedIn;
-    private int width;
-    private int height;
     private Restaurant restaurant;
 
     private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 
     @Override
     public void start(Stage primaryStage) {
-        width = (int) Screen.getPrimary().getBounds().getWidth();
-        height = (int) Screen.getPrimary().getBounds().getHeight();
         this.stage = primaryStage;
 
         primaryStage.setScene(new Scene(new VBox()));
@@ -52,10 +49,6 @@ public class ViewApplication extends Application {
         stage.setScene(new SearchScene(clientController, this));
     }
 
-    public void showRestaurantTableScene() {
-        stage.setScene(new RestaurantTableScene(clientController, this));
-    }
-
     public void showRegisterScene() {
         stage.setScene(new RegisterScene(clientController, this));
     }
@@ -66,6 +59,14 @@ public class ViewApplication extends Application {
 
     public void showSettingsScene() {
         stage.setScene(new SettingsScene(clientController, this));
+    }
+
+    public void showRestaurantTableScene(Restaurant restaurant, boolean backToSearch) {
+        stage.setScene(new RestaurantTableScene(clientController, this, restaurant, backToSearch));
+    }
+
+    public void showRestaurantScene(Restaurant restaurant) {
+        stage.setScene(new RestaurantScene(clientController, this, restaurant));
     }
 
     public Stage getStage() {

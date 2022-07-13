@@ -1,5 +1,8 @@
 package com.pastaebasta.eist.client.view;
 
+import com.pastaebasta.eist.shared.model.Genre;
+import com.pastaebasta.eist.shared.model.PriceCategory;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
+
+import java.time.LocalDateTime;
 
 public class HomeScene extends Scene {
 
@@ -27,30 +32,42 @@ public class HomeScene extends Scene {
         vBox.getChildren().add(headline);
 
         if (!application.isLoggedIn()) {
-        Button logInButton = new Button("Log in");
-        logInButton.setOnAction(event -> application.showLogInScene());
+            Button logInButton = new Button("Log in");
+            logInButton.setOnAction(event -> application.showLogInScene());
             vBox.getChildren().add(logInButton);
         }
         Button searchButton = new Button("Search for Restaurants");
         searchButton.setOnAction(event -> application.showSearchScene());
-      vBox.getChildren().add(searchButton);
+        vBox.getChildren().add(searchButton);
 
         if (application.isLoggedIn()) {
-        Button reservationsButton = new Button("Show past Reservations");
-        reservationsButton.setOnAction(event -> application.showPastReservationsScene());
-        vBox.getChildren().add(reservationsButton);
+            Button reservationsButton = new Button("Show past Reservations");
+            reservationsButton.setOnAction(event -> application.showPastReservationsScene());
+            vBox.getChildren().add(reservationsButton);
 
-        Button profileButton = new Button("My Profile");
-        profileButton.setOnAction(event -> application.showProfileScene());
-        vBox.getChildren().add(profileButton);
+            Button profileButton = new Button("My Profile");
+            profileButton.setOnAction(event -> application.showProfileScene());
+            vBox.getChildren().add(profileButton);
 
-        Button logOutButton = new Button("Log Out");
-        logOutButton.setOnAction(event -> createPopup());
-        vBox.getChildren().add(logOutButton);
-    }
+            Button logOutButton = new Button("Log Out");
+            logOutButton.setOnAction(event -> createPopup());
+            vBox.getChildren().add(logOutButton);
+        }
+
+        //START TESTING!!!!!
+        Genre genre = Genre.AMERICAN;
+        PriceCategory priceCategory = PriceCategory.VERY_EXPENSIVE;
+        Restaurant testRestaurant = Restaurant.builder().restaurantId("restaurantId_1").name("Test Name").address("Test Address").restaurantGenre(genre).coordinates("0, 0").priceCategory(priceCategory)
+                .ratingAverage(5.0).numberOfTables(3).openingTime(8).closingTime(22).build();
+        //END TESTING!!!!
+
         Button tables = new Button("Tables");
-        tables.setOnAction(event -> application.showRestaurantTableScene());
+        tables.setOnAction(event -> application.showRestaurantTableScene(testRestaurant, false));
         vBox.getChildren().add(tables);
+
+        Button restaurant = new Button("Restaurant");
+        restaurant.setOnAction(event -> application.showRestaurantScene(testRestaurant));
+        vBox.getChildren().add(restaurant);
 
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
@@ -63,13 +80,10 @@ public class HomeScene extends Scene {
         confirmationMessage.setFont(new Font("Arial", 20));
 
         Button yesButton = new Button("Yes");
-        yesButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                application.setCustomer(null);
-                popup.hide();
-                application.showHomeScene();
-            }
+        yesButton.setOnAction(event -> {
+            application.setCustomer(null);
+            popup.hide();
+            application.showHomeScene();
         });
 
         Button noButton = new Button("No");

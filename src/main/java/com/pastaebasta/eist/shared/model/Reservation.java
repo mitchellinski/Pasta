@@ -1,5 +1,8 @@
 package com.pastaebasta.eist.shared.model;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,7 +21,9 @@ import java.time.LocalDateTime;
 @Builder
 @Document("reservations")
 public class Reservation {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String reservationId;
 
     private String customerId;
@@ -37,6 +42,17 @@ public class Reservation {
 
     public void cancelReservation(){
         confirmationStatus = false;
+    }
+
+    public Reservation(String customerId, String restaurantId, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                       int numberOfVisitors, long tableId) {
+        this.customerId = customerId;
+        this.restaurantId = restaurantId;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.numberOfVisitors = numberOfVisitors;
+        this.confirmationStatus = false;
+        this.tableId = tableId;
     }
 }
 
