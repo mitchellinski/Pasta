@@ -45,6 +45,38 @@ public class ReservationController {
         }
     }
 
+    @PutMapping("/confirm{reservationId}")
+    public ResponseEntity<?> confirmReservation(@PathVariable String id) {
+        try {
+            Reservation reservation = reservationService.getReservationById(id);
+            if (reservation == null) {
+                return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
+            }
+            reservationService.confirmReservation(reservation);
+
+            return ResponseEntity.ok("yes worked!!!");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @DeleteMapping("/cancel/{reservationId}")
+    public ResponseEntity<?> cancelReservation(@PathVariable String id) {
+        try {
+            Reservation reservation = reservationService.getReservationById(id);
+            if (reservation == null) {
+                return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
+            }
+            reservationService.cancelReservation(reservation);
+
+            return ResponseEntity.ok("yes worked!!!");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     /**
      * Returns a list of the customer's reservations
      * @param customerId the customerId of the reservation

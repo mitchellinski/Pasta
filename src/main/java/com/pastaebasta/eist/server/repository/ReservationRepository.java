@@ -12,7 +12,7 @@ import java.util.List;
  * Repository for the Reservation Data Model
  *
  * This class uses Spring Data MongoDB to generate a repository for the Reservation Data Model.
- * @author Hisashi
+ * @author Hisashi & Sebastian
  */
 public interface ReservationRepository extends PagingAndSortingRepository<Reservation, String> {
 	@Query("{email:'?0'}")

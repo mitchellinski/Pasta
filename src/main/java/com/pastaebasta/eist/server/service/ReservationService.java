@@ -43,6 +43,16 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+
+    public void confirmReservation(Reservation reservation) {
+        reservation.setConfirmationStatus(true);
+        reservationRepository.save(reservation);
+    }
+
+    public void cancelReservation(Reservation reservation) {
+        reservationRepository.deleteById(reservation.getReservationId());
+    }
+
     public List<Reservation> getReservationsDuringTimeSlot(String restaurantId, LocalDateTime start, LocalDateTime end) {
         return reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, start, end);
     }
