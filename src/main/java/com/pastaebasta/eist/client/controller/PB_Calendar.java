@@ -67,7 +67,7 @@ public class PB_Calendar {
 			.setSummary("Reservation at Restaurant 1")
 			.setLocation("Arcisstraße 21")
 			.setDescription("Please remember to confirm your reservation up to 24 hours before it begins at http://localhost:8080/confirm");
-		DateTime startDateTime = new DateTime("2022-07-12T21:00:00.000Z+02:00");
+		DateTime startDateTime = new DateTime("2022-07-17T21:00:00.000Z+02:00");
 
 		EventDateTime start = new EventDateTime()
 			.setTimeZone("Europe/Berlin")

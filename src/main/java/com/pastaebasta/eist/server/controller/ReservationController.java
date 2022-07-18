@@ -45,7 +45,7 @@ public class ReservationController {
         }
     }
 
-    @PutMapping("/confirm{reservationId}")
+    @PutMapping("/confirm/{reservationId}")
     public ResponseEntity<?> confirmReservation(@PathVariable String id) {
         try {
             Reservation reservation = reservationService.getReservationById(id);
