@@ -94,4 +94,13 @@ public class ClientController {
                 .retrieve()
                 .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Email already taken")));
     }
+
+    public void addReservation(Reservation reservation) {
+        webClient.post()
+                .uri("reservations")
+                .bodyValue(reservation)
+                .retrieve()
+                .bodyToMono(Reservation.class)
+                .block();
+    }
 }

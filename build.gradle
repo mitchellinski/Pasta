@@ -50,7 +50,7 @@ sourceSets {
             srcDir 'src/main/java'
         }
         resources {
-            srcDir 'src/main/resources'
+            srcDir 'resources'
         }
     }
     test {
@@ -73,7 +73,7 @@ tasks.named('test') {
 
 javafx {
     version = "16"
-    modules = ['javafx.controls', 'javafx.fxml']
+    modules = [ 'javafx.controls' ]
 }
 
 mainClassName = 'com.pastaebasta.eist.view.Start'

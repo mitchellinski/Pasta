@@ -2,14 +2,16 @@ package com.pastaebasta.eist.client.view;
 
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+
+import java.time.LocalDateTime;
 
 public class ViewApplication extends Application {
 
@@ -17,16 +19,14 @@ public class ViewApplication extends Application {
     private Stage stage;
     private Customer customer;
     private boolean loggedIn;
-    private int width;
-    private int height;
+    private Restaurant restaurant;
 
     private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 
     @Override
     public void start(Stage primaryStage) {
-        width = (int) Screen.getPrimary().getBounds().getWidth();
-        height = (int) Screen.getPrimary().getBounds().getHeight();
         this.stage = primaryStage;
+
         primaryStage.setScene(new Scene(new VBox()));
         primaryStage.setScene(new HomeScene(this));
         primaryStage.setMaximized(true);
@@ -61,6 +61,14 @@ public class ViewApplication extends Application {
         stage.setScene(new SettingsScene(clientController, this));
     }
 
+    public void showRestaurantTableScene(Restaurant restaurant, boolean backToSearch) {
+        stage.setScene(new RestaurantTableScene(clientController, this, restaurant, backToSearch));
+    }
+
+    public void showRestaurantScene(Restaurant restaurant) {
+        stage.setScene(new RestaurantScene(clientController, this, restaurant));
+    }
+
     public Stage getStage() {
         return stage;
     }
@@ -83,6 +91,14 @@ public class ViewApplication extends Application {
         backButton.setOnAction(event -> showHomeScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
         return backButton;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     public Argon2PasswordEncoder getArgon2PasswordEncoder() {

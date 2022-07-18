@@ -70,35 +70,32 @@ public class LogInScene extends Scene {
 
 
         Button logInButton = new Button("Log In");
-        logInButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                emptyUsername.setVisible(false);
-                notRegistered.setVisible(false);
-                emptyPassword.setVisible(false);
-                wrongPassword.setVisible(false);
-                if (usernameField.getText() != null && passwordField.getText() != null) {
-                    String username = usernameField.getText().trim();
-                    String password = passwordField.getText().trim();
-                    if (username.isEmpty() || password.isEmpty()) {
-                        if (username.isEmpty()) {
-                            emptyUsername.setVisible(true);
+        logInButton.setOnAction(event -> {
+            emptyUsername.setVisible(false);
+            notRegistered.setVisible(false);
+            emptyPassword.setVisible(false);
+            wrongPassword.setVisible(false);
+            if (usernameField.getText() != null && passwordField.getText() != null) {
+                String username = usernameField.getText().trim();
+                String password = passwordField.getText().trim();
+                if (username.isEmpty() || password.isEmpty()) {
+                    if (username.isEmpty()) {
+                        emptyUsername.setVisible(true);
+                    }
+                    if (password.isEmpty()) {
+                        emptyPassword.setVisible(true);
+                    }
+                } else {
+                    try {
+                        Customer customer = clientController.getCustomerByUsername(username);
+                        if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
+                            application.setCustomer(customer);
+                            application.showHomeScene();
+                        } else {
+                            wrongPassword.setVisible(true);
                         }
-                        if (password.isEmpty()) {
-                            emptyPassword.setVisible(true);
-                        }
-                    } else {
-                        try {
-                            Customer customer = clientController.getCustomerByUsername(username);
-                            if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
-                                application.setCustomer(customer);
-                                application.showHomeScene();
-                            } else {
-                                wrongPassword.setVisible(true);
-                            }
-                        } catch (RuntimeException e) {
-                            notRegistered.setVisible(true);
-                        }
+                    } catch (RuntimeException e) {
+                        notRegistered.setVisible(true);
                     }
                 }
             }
@@ -110,6 +107,10 @@ public class LogInScene extends Scene {
 
         Button registerButton = new Button("Register");
         registerButton.setOnAction(event -> application.showRegisterScene());
+
+        Label restaurantLabel = new Label("You want to register your Restaurant?");
+        restaurantLabel.setFont(new Font("Arial", 20));
+        restaurantLabel.setPadding(new Insets(20, 0, 0, 0));
 
         grid.getChildren().addAll(usernameLabel, usernameField, emptyUsername, notRegistered, passwordLabel, passwordField, emptyPassword, wrongPassword);
         grid.setAlignment(Pos.CENTER);
