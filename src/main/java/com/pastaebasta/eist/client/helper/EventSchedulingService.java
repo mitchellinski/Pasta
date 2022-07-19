@@ -19,22 +19,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class PB_Calendar {
-	private static final String APPLICATION_NAME = "Pasta e Basta Reservation Service";
+/**
+ * EventSchedulingService
+ * Acts as a wrapper for the Google Calendar API
+ *
+ * Requests authorization from user, then creates events in their calendar.
+ */
+public class EventSchedulingService {
+	// If modifying these scopes, delete your previously saved tokens/ folder.
+	private static final String APPLICATION_NAME = "Pasta e Basta Reservation Application";
 	private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 	private static final String TOKENS_DIRECTORY_PATH = "tokens";
-
-
-	/**
-	 * Global instance of the scopes required by this quickstart.
-	 * If modifying these scopes, delete your previously saved tokens/ folder.
-	 */
 	private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR);
 	private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+
+	public static Calendar calendar;
+
+	public EventSchedulingService() throws IOException, GeneralSecurityException {
+		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+		calendar = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+			.setApplicationName(APPLICATION_NAME)
+			.build();
+	}
 
 	/**
 	 * Creates an authorized Credential object.
@@ -44,7 +56,7 @@ public class PB_Calendar {
 	 */
 	private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
 		// Load client secrets.
-		InputStream in = PB_Calendar.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+		InputStream in = EventSchedulingService.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
 		if (in == null) {
 			throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
 		}
@@ -62,19 +74,18 @@ public class PB_Calendar {
 		return credential;
 	}
 
-	public static void createEvent(Calendar service) throws IOException {
+	public Event createEvent(String name, String location, String description, LocalDateTime localDateTimeStart) throws IOException {
 		Event event = new Event()
-			.setSummary("Reservation at Restaurant 1")
-			.setLocation("Arcisstraße 21")
-			.setDescription("Please remember to confirm your reservation up to 24 hours before it begins at http://localhost:8080/confirm");
-		DateTime startDateTime = new DateTime("2022-07-17T21:00:00.000Z+02:00");
-
+			.setSummary(name)
+			.setLocation(location)
+			.setDescription(description);
+		DateTime startDateTime = new DateTime(localDateTimeStart.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toString());
 		EventDateTime start = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(startDateTime);
 
 		event.setStart(start);
-		DateTime endDateTime = new DateTime("2022-07-12T22:00:00.000Z+02:00");
+		DateTime endDateTime = new DateTime(localDateTimeStart.plusHours(1).atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toString());
 		EventDateTime end = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(endDateTime);
@@ -89,14 +100,12 @@ public class PB_Calendar {
 			.setOverrides(Arrays.asList(reminderOverrides));
 		event.setReminders(reminders);
 		String calendarId = "primary";
-		event = service.events().insert(calendarId, event).execute();
-		System.out.printf("Event created: %s\n", event.getHtmlLink());
+		return calendar.events().insert(calendarId, event).execute();
 	}
 
-
-	public static void getUpcomingEvents(Calendar service) throws IOException {
+	public void getUpcomingEvents() throws IOException {
 		DateTime now = new DateTime(System.currentTimeMillis());
-		Events events = service.events().list("primary")
+		Events events = calendar.events().list("primary")
 				.setMaxResults(10)
 				.setTimeMin(now)
 				.setOrderBy("startTime")
@@ -115,17 +124,5 @@ public class PB_Calendar {
 				System.out.printf("%s (%s)\n", event.getSummary(), start);
 			}
 		}
-	}
-
-	public static void main(String... args) throws IOException, GeneralSecurityException {
-		// Build a new authorized API client service.
-		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-		Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-				.setApplicationName(APPLICATION_NAME)
-				.build();
-
-		getUpcomingEvents(service);
-		createEvent(service);
-		getUpcomingEvents(service);
 	}
 }

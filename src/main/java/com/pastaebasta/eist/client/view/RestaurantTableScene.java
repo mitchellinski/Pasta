@@ -1,6 +1,7 @@
 package com.pastaebasta.eist.client.view;
 
 import com.pastaebasta.eist.client.controller.ClientController;
+import com.pastaebasta.eist.client.helper.EventSchedulingService;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.event.ActionEvent;
@@ -17,12 +18,15 @@ import javafx.scene.text.Font;
 import javafx.stage.Popup;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class RestaurantTableScene extends Scene {
+
     private static final String[] RESTAURANT_MAPS = new String[]{
             ///src/main/resources/
             "Restaurant_1.png", //5
@@ -51,12 +55,19 @@ public class RestaurantTableScene extends Scene {
     private int numOfVisitors;
     private final boolean backToSearch;
 
+    private EventSchedulingService eventSchedulingService;
+
     public RestaurantTableScene(ClientController clientController, ViewApplication application, Restaurant restaurant, boolean backToSearch) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
         this.application = application;
         this.restaurant = restaurant;
         this.backToSearch = backToSearch;
+        try {
+            this.eventSchedulingService = new EventSchedulingService();
+        } catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace();
+        }
         settingsPopup();
     }
 
@@ -297,7 +308,17 @@ public class RestaurantTableScene extends Scene {
             long tableId = -1;
             Reservation newReservation = new Reservation(customerId, restaurantId, startTime, endDateTime,
                     numOfVisitors, tableId);
-            clientController.addReservation(newReservation);
+            Reservation persistedReservation = clientController.addReservation(newReservation);
+            try {
+                eventSchedulingService.createEvent(
+                        "Reservation for " + numOfVisitors + ", at " + restaurant.getName(),
+                        restaurant.getAddress(),
+                        "Please remember to confirm your reservation up to 12 hours before it begins at http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
+                        LocalDateTime.now()
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         Button cancelButton = new Button("Cancel");
