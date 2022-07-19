@@ -5,47 +5,42 @@ import com.pastaebasta.eist.shared.model.DateTimeSlot;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.server.repository.CustomerRepository;
-import com.pastaebasta.eist.server.repository.DateTimeSlotRepository;
 import com.pastaebasta.eist.server.repository.ReservationRepository;
 import com.pastaebasta.eist.server.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * PBReservationService
- * General service to handle reservations.
+ * PASTA E BASTA - Reservation Manager
+ * The reservation manager handles the high level creation and management of reservations
  */
 @Service
 @RequiredArgsConstructor
-public class PBReservationService {
-    private final DateTimeSlotRepository dateTimeSlotRepository;
+public class ReservationManager {
+    private static final int MAXIMUM_RESERVATION_AMOUNT_PER_CUSTOMER = 3;
+
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
     private final ReservationRepository reservationRepository;
 
-    /**
-     * Gets a customer from the database, if one exists, otherwise creates a new customer.
-     * UNSAFE - Testing purposes only
-     *
-     * @param customerId The customer's id
-     * @return The customer
-     */
-    public Customer getCustomer_FORCE_CREATE(String customerId) {
-        return customerRepository.findById(customerId).orElseGet(() -> {
-            // THIS IS FOR TESTING PURPOSES ONLY!
-            // UNSECURE WAY TO CREATE A CUSTOMER
-            System.err.println(">>>> NOOOOOOOO");
-            return customerRepository.save(
-                    new Customer(
-                            customerId,
-                            "user_" + customerId,
-                            null,
-                            "password"
-                    )
-            );
+    private final CustomerService customerService;
+    private final ReservationService reservationService;
+
+    @Scheduled(fixedRate = 5000)
+    public void notifyPendingReservations() {
+        var pendingReservations = reservationRepository.getReservationsBetween(
+            LocalDateTime.now().plusHours(12).minusSeconds(5),
+            LocalDateTime.now().plusHours(12).plusSeconds(5)
+        );
+
+        pendingReservations.forEach(reservation -> {
+            if (!reservation.isConfirmationStatus()) {
+                reservationService.cancelReservation(reservation);
+            }
         });
     }
 
@@ -57,12 +52,7 @@ public class PBReservationService {
      * @return The customer
      */
     public Customer getCustomer(String customerId) {
-        return customerRepository.findById(customerId).orElse(null);
-    }
-
-    public boolean isTableFree(String restaurantId, LocalDateTime start, LocalDateTime end, long tableId) {
-        Reservation reservation = reservationRepository.getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(restaurantId, tableId, start, end);
-        return reservation == null;
+        return customerService.getCustomerById(customerId);
     }
 
     public Reservation addReservation(Reservation reservation) throws IllegalArgumentException {
@@ -72,14 +62,13 @@ public class PBReservationService {
         assert (reservation.getStartDateTime() != null);
         assert (reservation.getEndDateTime() != null);
 
-        // Check if the table is free
-        if (!isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
-            return null;
+        if (!reservationService.isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
+            return null; // Table not free
         }
 
-        Customer customer = getCustomer_FORCE_CREATE(reservation.getCustomerId());
-        if (customer.getReservationList().size() >= 3) {
-            return null;
+        Customer customer = customerService.getCustomer_FORCE_CREATE(reservation.getCustomerId());
+        if (customer.getReservationList().size() >= MAXIMUM_RESERVATION_AMOUNT_PER_CUSTOMER) {
+            return null; // Customer has too many reservations
         }
 
         customer.addReservation(reservation);
@@ -91,12 +80,8 @@ public class PBReservationService {
         return reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, start, end);
     }
 
-    public List<DateTimeSlot> getDateTimeSlots(String restaurantId) {
-        return dateTimeSlotRepository.getAllByRestaurantId(restaurantId);
-    }
-
     public Reservation getReservation(String reservationId) {
-        return reservationRepository.getByReservationId(reservationId);
+        return reservationService.getReservationById(reservationId);
     }
 
     public Reservation getReservation(long reservationId) {

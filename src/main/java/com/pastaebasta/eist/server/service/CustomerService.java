@@ -11,6 +11,13 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    /**
+     * Gets a customer from the database, if one exists, otherwise creates a new customer.
+     * UNSAFE - Testing purposes only
+     *
+     * @param customerId The customer's id
+     * @return The customer
+     */
     public Customer getCustomer_FORCE_CREATE(String customerId) {
         return customerRepository.findById(customerId).orElseGet(() -> {
             // THIS IS FOR TESTING PURPOSES ONLY!

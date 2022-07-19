@@ -5,7 +5,6 @@ import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.server.repository.CustomerRepository;
-import com.pastaebasta.eist.server.repository.DateTimeSlotRepository;
 import com.pastaebasta.eist.server.repository.RestaurantRepository;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
@@ -40,14 +39,12 @@ public class DatabaseSeeder {
     private static final Random RNG = new Random();
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
-    private final DateTimeSlotRepository dateTimeSlotRepository;
 
     // --------------------------------------------------------------------------------------------- //
     // Constructor
-    public DatabaseSeeder(RestaurantRepository restaurantRepository, CustomerRepository customerRepository, DateTimeSlotRepository dateTimeSlotRepository) {
+    public DatabaseSeeder(RestaurantRepository restaurantRepository, CustomerRepository customerRepository) {
         this.restaurantRepository = restaurantRepository;
         this.customerRepository = customerRepository;
-        this.dateTimeSlotRepository = dateTimeSlotRepository;
     }
 
     /**

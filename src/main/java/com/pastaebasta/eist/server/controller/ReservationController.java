@@ -14,6 +14,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Reservation Controller
+ * Exposes API to the client, which is used to communicate with the server.
+ *
+ * This is used internally by Spring Boot to map requests automatically.
+ *
+ * @version 1.0
+ * @author Hisashi & Michael
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/reservations")
@@ -45,10 +54,10 @@ public class ReservationController {
         }
     }
 
-    @PutMapping("/confirm/{reservationId}")
-    public ResponseEntity<?> confirmReservation(@PathVariable String id) {
+    @PutMapping("/{reservationId}/confirm")
+    public ResponseEntity<?> confirmReservation(@PathVariable String reservationId) {
         try {
-            Reservation reservation = reservationService.getReservationById(id);
+            Reservation reservation = reservationService.getReservationById(reservationId);
             if (reservation == null) {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }
@@ -61,10 +70,10 @@ public class ReservationController {
         }
     }
 
-    @DeleteMapping("/cancel/{reservationId}")
-    public ResponseEntity<?> cancelReservation(@PathVariable String id) {
+    @DeleteMapping("/{reservationId}/cancel")
+    public ResponseEntity<?> cancelReservation(@PathVariable String reservationId) {
         try {
-            Reservation reservation = reservationService.getReservationById(id);
+            Reservation reservation = reservationService.getReservationById(reservationId);
             if (reservation == null) {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }

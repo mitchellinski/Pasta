@@ -7,6 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Customer Controller
+ * Exposes API to the client, which is used to communicate with the server.
+ *
+ * This is used internally by Spring Boot to map requests automatically.
+ *
+ * @version 1.0
+ * @author Hisashi & Michael
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/customers")

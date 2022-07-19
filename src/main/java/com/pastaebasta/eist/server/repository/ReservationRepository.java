@@ -12,11 +12,15 @@ import java.util.List;
  * Repository for the Reservation Data Model
  *
  * This class uses Spring Data MongoDB to generate a repository for the Reservation Data Model.
- * @author Hisashi & Sebastian
+ * @author Hisashi
+ * @author Sebastian
  */
 public interface ReservationRepository extends PagingAndSortingRepository<Reservation, String> {
 	@Query("{email:'?0'}")
 	Reservation getByEmail(String email);
+
+	@Query("{'startDateTime' : {$gte : ?1}, 'endDateTime' : {$lte : ?2}}")
+	List<Reservation> getReservationsBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
 	@Query("{'restaurantId' : '?0','startDateTime' : {$gte : ?1}, 'endDateTime' : {$lte : ?2}}")
 	List<Reservation> getByRestaurantIdAndStartDateTimeAndEndDateTime(String restaurantId, LocalDateTime startDateTime, LocalDateTime endDateTime);

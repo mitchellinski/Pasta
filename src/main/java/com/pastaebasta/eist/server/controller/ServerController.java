@@ -5,7 +5,7 @@ import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.QueryPlace;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
-import com.pastaebasta.eist.server.service.PBReservationService;
+import com.pastaebasta.eist.server.service.ReservationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/api/v0")
 public class ServerController {
-    private PBReservationService reservationService;
+    private ReservationManager reservationService;
 
     /**
      * Queries Google Maps API for nearby restaurants.
@@ -154,8 +154,6 @@ public class ServerController {
 
         return ResponseEntity.of(Optional.of(currentReservation));
     }
-
-
 
     public void query(QueryPlace queryParameters, String cursor) {
         //TODO - API Pull

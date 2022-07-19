@@ -43,7 +43,6 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-
     public void confirmReservation(Reservation reservation) {
         reservation.setConfirmationStatus(true);
         reservationRepository.save(reservation);

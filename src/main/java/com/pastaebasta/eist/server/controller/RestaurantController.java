@@ -11,6 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+/**
+ * Restaurant Controller
+ * Exposes API to the client, which is used to communicate with the server.
+ *
+ * This is used internally by Spring Boot to map requests automatically.
+ *
+ * @version 1.0
+ * @author Hisashi & Michael
+ */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/restaurants")
