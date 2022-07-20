@@ -1,12 +1,16 @@
 package com.pastaebasta.eist.server.controller;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
+import com.google.maps.model.PriceLevel;
+import com.pastaebasta.eist.server.service.NearbySearchService;
+import com.pastaebasta.eist.server.service.RestaurantService;
 import com.pastaebasta.eist.shared.model.Genre;
+import com.pastaebasta.eist.shared.model.GoogleRestaurant;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
-import com.pastaebasta.eist.server.service.RestaurantService;
 import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +39,33 @@ public class RestaurantController {
      * @return List of nearby restaurants.
      */
     @GetMapping("/search")
-    public ResponseEntity<?> searchRestaurants() {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<List<GoogleRestaurant>> searchRestaurants(@RequestParam(required = true) LatLng latLng,
+                                                                    @RequestParam(required = false) String name,
+                                                                    @RequestParam(required = false) String genre,
+                                                                    @RequestParam(required = false) PriceCategory min_price_category,
+                                                                    @RequestParam(required = false) PriceCategory max_price_category,
+                                                                    @RequestParam(required = false) long distance) throws IOException, InterruptedException, ApiException {
+        if (!genre.isBlank()) {
+            name = name + " " + genre;
+        }
+        PriceLevel minPriceLevel;
+        PriceLevel maxPriceLevel;
+        switch (min_price_category) {
+            case CHEAP -> minPriceLevel = PriceLevel.INEXPENSIVE;
+            case NORMAL -> minPriceLevel = PriceLevel.MODERATE;
+            case EXPENSIVE -> minPriceLevel = PriceLevel.EXPENSIVE;
+            case VERY_EXPENSIVE -> minPriceLevel = PriceLevel.VERY_EXPENSIVE;
+            default -> throw new IllegalStateException("Unexpected value: " + min_price_category);
+        }
+        switch (max_price_category) {
+            case CHEAP -> maxPriceLevel = PriceLevel.INEXPENSIVE;
+            case NORMAL -> maxPriceLevel = PriceLevel.MODERATE;
+            case EXPENSIVE -> maxPriceLevel = PriceLevel.EXPENSIVE;
+            case VERY_EXPENSIVE -> maxPriceLevel = PriceLevel.VERY_EXPENSIVE;
+            default -> throw new IllegalStateException("Unexpected value: " + max_price_category);
+        }
+        var result = new NearbySearchService(latLng, name, (int) distance, minPriceLevel, maxPriceLevel);
+        return ResponseEntity.ok(result.getCleanedRestaurants());
     }
 
     /**
@@ -68,4 +97,16 @@ public class RestaurantController {
 
         return ResponseEntity.of(Optional.of(restaurant));
     }
+
+//    @GetMapping("/map")
+//    public ResponseEntity<BufferedImage> getMap(String query) {
+//        BufferedImage image;
+//        try{
+//            image = new DynamicMapsService(query).getImage();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.internalServerError().build();
+//        }
+//        return ResponseEntity.ok(image);
+//    }
 }

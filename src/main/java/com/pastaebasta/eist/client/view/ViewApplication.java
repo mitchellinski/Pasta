@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.client.view;
 
+import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Restaurant;
@@ -45,8 +46,12 @@ public class ViewApplication extends Application {
         stage.setScene(new PastReservationsScene(clientController, this));
     }
 
-    public void showSearchScene() {
-        stage.setScene(new SearchScene(clientController, this));
+    public void showSearchScene(LatLng latLng) {
+        stage.setScene(new SearchScene(clientController, this, latLng));
+    }
+
+    public void showMapsScene(LatLng latLng) throws IOException {
+        stage.setScene(new MapsScene(clientController, this, latLng));
     }
 
     public void showRegisterScene() {

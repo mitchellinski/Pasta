@@ -259,7 +259,7 @@ public class RestaurantTableScene extends Scene {
             popup.hide();
 
             if (backToSearch) {
-                application.showSearchScene();
+                application.showSearchScene(null);
                 return;
             }
 
