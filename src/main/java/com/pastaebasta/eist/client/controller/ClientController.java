@@ -146,4 +146,14 @@ public class ClientController {
             .bodyToMono(Reservation.class)
             .block();
     }
+
+    public void confirmReservation(Reservation reservation) {
+         webClient.patch()
+            .uri("reservations/"+reservation.getReservationId()+"/confirm");
+    }
+
+    public void cancelReservation(Reservation reservation) {
+        webClient.patch()
+                .uri("reservations/"+reservation.getReservationId()+"/cancel");
+    }
 }

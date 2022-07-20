@@ -97,6 +97,7 @@ public class PastReservationsScene extends Scene {
         Button confirmButton = new Button("Confirm reservation");
         confirmButton.setOnAction(event -> {
             if (LocalDateTime.now().plusHours(12).isBefore(reservation.getStartDateTime())) {
+                clientController.confirmReservation(reservation);
                 reservation.setConfirmed(true);
                 warning.setVisible(false);
                 popup.hide();
@@ -117,6 +118,7 @@ public class PastReservationsScene extends Scene {
             }
 
             if (LocalDateTime.now().plusHours(12).isBefore(reservation.getStartDateTime())) {
+                clientController.cancelReservation(reservation);
                 reservation.setConfirmed(false);
                 warning.setVisible(false);
                 popup.hide();
