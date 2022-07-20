@@ -431,7 +431,7 @@ public class RestaurantTableScene extends Scene {
                     e.printStackTrace();
                 }
             }
-            application.showSearchScene();
+            application.showSearchScene(null);
         });
 
         Button cancelButton = new Button("Cancel");
