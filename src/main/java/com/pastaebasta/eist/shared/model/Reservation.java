@@ -34,16 +34,8 @@ public class Reservation {
     private LocalDateTime endDateTime;
 
     private int numberOfVisitors;
-    private boolean confirmationStatus;
+    private boolean confirmed;
     private long tableId;
-
-    public void confirmReservation(){
-        confirmationStatus = true;
-    }
-
-    public void cancelReservation(){
-        confirmationStatus = false;
-    }
 
     public Reservation(String customerId, String restaurantId, LocalDateTime startDateTime, LocalDateTime endDateTime,
                        int numberOfVisitors, long tableId) {
@@ -52,7 +44,7 @@ public class Reservation {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.numberOfVisitors = numberOfVisitors;
-        this.confirmationStatus = false;
+        this.confirmed = false;
         this.tableId = tableId;
     }
 }

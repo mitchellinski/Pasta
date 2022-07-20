@@ -15,9 +15,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,35 +45,76 @@ public class SearchScene extends Scene {
         clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
         this.table = new TableView<>(restaurants);
 
+        double w = width / 6.0;
+
         var nameColumn = new TableColumn<Restaurant, String>("Name");
         nameColumn.setSortable(true);
-        nameColumn.setPrefWidth(width / 5);
+        nameColumn.setPrefWidth(w);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         var addressColumn = new TableColumn<Restaurant, String>("Address");
         addressColumn.setSortable(true);
-        addressColumn.setPrefWidth(width / 5);
+        addressColumn.setPrefWidth(w);
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         var genreColumn = new TableColumn<Restaurant, String>("Genre");
         genreColumn.setSortable(true);
-        genreColumn.setPrefWidth(width / 5);
+        genreColumn.setPrefWidth(w);
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantGenre"));
         var priceColumn = new TableColumn<Restaurant, String>("Price Category");
         priceColumn.setSortable(true);
-        priceColumn.setPrefWidth(width / 5);
+        priceColumn.setPrefWidth(w);
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("priceCategory"));
 
         var ratingColumn = new TableColumn<Restaurant, String>("Rating");
         ratingColumn.setSortable(true);
-        ratingColumn.setPrefWidth(width / 5);
+        ratingColumn.setPrefWidth(w);
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("ratingAverage"));
 
 
         table.getColumns().addAll(nameColumn, addressColumn, genreColumn, priceColumn, ratingColumn);
+        addButtonToTable(w);
 
         var vBox = new VBox(10, headline, createSearchBar(), table, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }
+
+    private void addButtonToTable(double width) {
+        TableColumn<Restaurant, Void> colBtn = new TableColumn("Reservation");
+        colBtn.setPrefWidth(width);
+
+        Callback<TableColumn<Restaurant, Void>, TableCell<Restaurant, Void>> cellFactory = new Callback<>() {
+            @Override
+            public TableCell<Restaurant, Void> call(final TableColumn<Restaurant, Void> param) {
+                final TableCell<Restaurant, Void> cell = new TableCell<>() {
+                    private final Button btn = new Button("Reserve");
+                    {
+                        btn.setPrefWidth(width);
+                        btn.setOnAction((ActionEvent event) -> {
+                            Restaurant restaurant = getTableView().getItems().get(getIndex());
+                            application.setRestaurant(restaurant);
+                            application.showRestaurantScene(restaurant);
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        colBtn.setCellFactory(cellFactory);
+
+        table.getColumns().add(colBtn);
+    }
+
 
     private GridPane createSearchBar() {
         GridPane grid = new GridPane();
@@ -112,6 +155,11 @@ public class SearchScene extends Scene {
         searchButton.setOnAction(event ->
             clientController.search(searchField.getText(), Genre.GERMAN, priceBox.getValue(), 5000, this::setRestaurants)
         );
+        searchField.setOnKeyPressed( event -> {
+            if( event.getCode() == KeyCode.ENTER ) {
+                clientController.search(searchField.getText(), Genre.GERMAN, priceBox.getValue(), 5000, this::setRestaurants);
+            }
+        });
         GridPane.setConstraints(searchButton, 3, 1);
 
         grid.getChildren().addAll(searchLabel, searchField, genreLabel, genreBox, priceLabel, priceBox, searchButton);

@@ -15,17 +15,23 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class RestaurantTableScene extends Scene {
+
+    private static final int MAXIMUM_AMOUNT_OF_VISITORS = 4;
+
 
     private static final String[] RESTAURANT_MAPS = new String[]{
             ///src/main/resources/
@@ -72,7 +78,6 @@ public class RestaurantTableScene extends Scene {
     }
 
     private void init() throws FileNotFoundException {
-
         Label headline = new Label("Choose a Table");
         headline.setFont(new Font("Arial", 20));
 
@@ -95,10 +100,10 @@ public class RestaurantTableScene extends Scene {
         URL restaurantPathUrl = getClass().getClassLoader().getResource(RESTAURANT_MAPS[index]);
         if (restaurantPathUrl == null) {
             throw new IllegalArgumentException(
-                    "Please ensure that your resources folder contains the appropriate files for this exercise."
+                "Please ensure that your resources folder contains the appropriate files for this exercise."
             );
         }
-        Image image = new Image(((URL) restaurantPathUrl).toExternalForm());
+        Image image = new Image(restaurantPathUrl.toExternalForm());
         ImageView imageView = new ImageView(image);
         imageView.setX(application.getStage().getScene().getX());
         imageView.setY(application.getStage().getScene().getY());
@@ -122,12 +127,13 @@ public class RestaurantTableScene extends Scene {
 
     private void settingsPopup() {
         Popup popup = new Popup();
+        System.out.println(restaurant);
 
         Label visitorLabel = new Label("How many visitors?");
         visitorLabel.setFont(new Font("Arial", 20));
 
         final ChoiceBox<Integer>[] visitors = new ChoiceBox[]{new ChoiceBox<>()};
-        for (int i = 0; i < restaurant.getNumberOfTables() * 4; i++) {
+        for (int i = 0; i < MAXIMUM_AMOUNT_OF_VISITORS; i++) {
             visitors[0].getItems().add(i + 1);
         }
 
@@ -201,13 +207,14 @@ public class RestaurantTableScene extends Scene {
 
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction(event -> {
+            popup.hide();
+
             if (backToSearch) {
-                popup.hide();
                 application.showSearchScene();
-            } else {
-                popup.hide();
-                application.showRestaurantScene(restaurant);
+                return;
             }
+
+            application.showRestaurantScene(restaurant);
         });
 
         HBox buttonBox = new HBox(10, reservationButton, cancelButton);
@@ -246,6 +253,42 @@ public class RestaurantTableScene extends Scene {
         return timeSlots;
     }
 
+    public void resultPopup(Reservation reservation) {
+        Popup popup = new Popup();
+
+        Label headline = new Label(reservation  == null ? "An error occurred!" : "Reservation successfully created");
+        headline.setFont(new Font("Arial", 20));
+        Text text = new Text(reservation  == null ? "Something went wrong while we were trying to create your reservation. Please try again later."
+                : String.format("Successfully created reservation for %s, on %s. Table: %d. Visitors: %d.\nAddress:%s\nImportant: Please remember to confirm or cancel your reservation up to 12 hours before it begins in the app",
+                reservation.getRestaurantName(),
+                reservation.getStartDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' HH:mm")),
+                reservation.getTableId(),
+                reservation.getNumberOfVisitors(),
+                restaurant.getAddress()
+        ));
+        text.setVisible(true);
+        text.setFont(new Font("Arial", 12));
+
+        Button cancelButton = new Button("Close");
+        cancelButton.setOnAction(event -> popup.hide());
+
+        HBox buttonBox = new HBox(10, cancelButton);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        var vBox = new VBox(10, headline,text, buttonBox);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        vBox.setPrefWidth(600);
+        vBox.setPrefHeight(150);
+        vBox.setSpacing(50);
+        vBox.setPadding(new Insets(5));
+
+        popup.getContent().add(vBox);
+        popup.show(application.getStage());
+        popup.centerOnScreen();
+    }
+
     public void confirmationPopup(String tableName, int tableId) {
         Popup popup = new Popup();
 
@@ -260,7 +303,7 @@ public class RestaurantTableScene extends Scene {
         Label restaurantLabel = new Label("Restaurant:");
         restaurantLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(restaurantLabel, 0, 0);
-        Label restaurantValue = new Label(restaurant.getName());
+        Label restaurantValue = new Label(restaurant.getName() + " " + restaurant.getRatingAverage() + "/5");
         restaurantValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(restaurantValue, 1, 0);
 
@@ -303,6 +346,7 @@ public class RestaurantTableScene extends Scene {
 
         Button confirmButton = new Button("Confirm");
         confirmButton.setOnAction(event -> {
+            popup.hide();
             String customerId = application.getCustomer().getCustomerId();
             String restaurantId = restaurant.getRestaurantId();
             LocalDateTime endDateTime = startTime.plusHours(1);
@@ -317,7 +361,7 @@ public class RestaurantTableScene extends Scene {
                 .build();
 
             Reservation persistedReservation = clientController.addReservation(newReservation);
-            System.out.println(persistedReservation);
+            resultPopup(persistedReservation);
             try {
                 eventSchedulingService.createEvent(
                     "Reservation at " + restaurant.getName(),
@@ -329,6 +373,8 @@ public class RestaurantTableScene extends Scene {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
         });
 
         Button cancelButton = new Button("Cancel");
@@ -341,7 +387,7 @@ public class RestaurantTableScene extends Scene {
         vBox.setAlignment(Pos.CENTER);
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
         vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
-        vBox.setPrefWidth(400);
+        vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
         vBox.setPadding(new Insets(5));

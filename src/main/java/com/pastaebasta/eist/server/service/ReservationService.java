@@ -1,6 +1,5 @@
 package com.pastaebasta.eist.server.service;
 
-import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.server.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class ReservationService {
 
 
     public void confirmReservation(Reservation reservation) {
-        reservation.setConfirmationStatus(true);
+        reservation.setConfirmed(true);
         reservationRepository.save(reservation);
     }
 

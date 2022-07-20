@@ -87,7 +87,7 @@ public class ViewApplication extends Application {
     }
 
     Button createBackButton() {
-        Button backButton = new Button("Back");
+        Button backButton = new Button("Home");
         backButton.setOnAction(event -> showHomeScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
         return backButton;

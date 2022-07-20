@@ -23,10 +23,12 @@ public class DatabaseSeeder {
 
     private static final List<Genre> GENRES = List.of(Genre.values());
     private static final List<String> ADDRESSES = List.of(
-        "Sidbury Street", "Hilltop Street", "St Anne's Ridings",
-        "Main Street", "York Street", "Goldcrest Limes");
+        "Sidbury Street", "Hilltop Street", "St Anne's Ridings", "Main Street", "York Street", "Goldcrest Limes",
+        "Art Row", "Starfall Passage", "Quarry Way", "Garnet Passage", "Central Row", "Arctic Street", "Grime Passage",
+        "Victory Boulevard", "Poplar Passage", "Auburn Row", "Royalty Passage", "Flax Passage", "King Passage", "Seacoast Row",
+        "Luna Lane", "Market Passage", "Theater Boulevard", "Aurora Street", "Bath Avenue", "Hazelnut Avenue");
     private static final List<String> REVIEWS = List.of(
-        "This restaurant is great!", "I think this restaurant is ok.", "OldRestaurant was terrible.",
+        "This restaurant is great!", "I think this restaurant is ok.", "Restaurant was terrible.",
         "Not a good restaurant.", "This restaurant is terrible.", "This restaurant is awesome!",
         "Staff was great.", "Staff was terrible.", "Staff was ok.", "Staff was terrible.");
     private static final ArrayList<String> IMAGES = new ArrayList<>(List.of(
@@ -108,13 +110,15 @@ public class DatabaseSeeder {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (int i = 0; i < numberOfRestaurants; i++) {
             Restaurant restaurant = Restaurant.builder()
-                    .restaurantId(UUID.randomUUID().toString())
-                    .name(RESTAURANT_NAMES.get(i % RESTAURANT_NAMES.size()) + " " + RNG.nextInt(1,100))
-                    .restaurantGenre(getRandomRestaurantGenre())
-                    .address(getRandomAddress())
-                    .priceCategory(getRandomPriceCategory())
-                    .ratingAverage(RNG.nextInt(1, 11))
-                    .build();
+                .restaurantId(UUID.randomUUID().toString())
+                .name(RESTAURANT_NAMES.get(i % RESTAURANT_NAMES.size()))
+                .restaurantGenre(getRandomRestaurantGenre())
+                .address(getRandomAddress() + " " + RNG.nextInt(1,100))
+                .priceCategory(getRandomPriceCategory())
+                .ratingAverage(RNG.nextInt(1, 6))
+                .openingTime(8)
+                .closingTime(22)
+                .build();
             restaurants.add(restaurant);
         }
         return restaurants;

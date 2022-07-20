@@ -15,8 +15,8 @@ import javafx.scene.text.Font;
 
 public class EditPasswordScene extends Scene {
 
-    private ClientController clientController;
-    private ViewApplication application;
+    private final ClientController clientController;
+    private final ViewApplication application;
 
     public EditPasswordScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
