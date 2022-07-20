@@ -141,8 +141,8 @@ public class PastReservationsScene extends Scene {
 
         var vBox = new VBox(10, headline,text, warning,buttonBox);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);

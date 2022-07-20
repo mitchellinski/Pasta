@@ -126,6 +126,5 @@ public class ReservationApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) {
-		reservationRepository.deleteAll();
 	}
 }

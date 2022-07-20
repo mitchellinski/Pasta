@@ -233,7 +233,8 @@ public class RestaurantTableScene extends Scene {
 
         var vBox = new VBox(10, visitorLabel, visitors[0], addVisitors, dateLabel, datePicker, addDate, timeSlot, timeSlotsBox, addTimeSlot, buttonBox);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         vBox.setPrefWidth(400);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -288,7 +289,8 @@ public class RestaurantTableScene extends Scene {
 
         var vBox = new VBox(10, headline,text, buttonBox);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -402,7 +404,8 @@ public class RestaurantTableScene extends Scene {
 
         var vBox = new VBox(10, headline, grid, buttonBox);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
