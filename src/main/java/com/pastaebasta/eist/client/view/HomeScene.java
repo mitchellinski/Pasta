@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Popup;
 
 import java.time.LocalDateTime;
@@ -26,21 +27,31 @@ public class HomeScene extends Scene {
         this.application = application;
         var vBox = new VBox(10);
 
-        Label headline = new Label("Welcome!");
+        Label headline = new Label("Pasta e Basta");
+        Label subtitle = new Label("Welcome!");
+        subtitle.setFont(new Font("Arial", 25));
+        subtitle.setAlignment(Pos.TOP_CENTER);
         headline.setFont(new Font("Arial", 50));
         headline.setAlignment(Pos.TOP_CENTER);
-        vBox.getChildren().add(headline);
+        vBox.getChildren().addAll(headline,subtitle);
 
         if (!application.isLoggedIn()) {
             Button logInButton = new Button("Log in");
             logInButton.setOnAction(event -> application.showLogInScene());
-            vBox.getChildren().add(logInButton);
+            Button registerButton = new Button("New user");
+            registerButton.setOnAction(event -> application.showRegisterScene());
+            Label warning = new Label("Please log-in or create a \nnew user to access reservations.");
+            warning.setFont(new Font("Arial", 12));
+            warning.setTextAlignment(TextAlignment.CENTER);
+            warning.setVisible(true);
+            vBox.getChildren().addAll(logInButton, registerButton, warning);
         }
-        Button searchButton = new Button("Search for Restaurants");
-        searchButton.setOnAction(event -> application.showSearchScene());
-        vBox.getChildren().add(searchButton);
 
         if (application.isLoggedIn()) {
+            Button searchButton = new Button("Search for Restaurants");
+            searchButton.setOnAction(event -> application.showSearchScene(null));
+            vBox.getChildren().add(searchButton);
+
             Button reservationsButton = new Button("Show past Reservations");
             reservationsButton.setOnAction(event -> application.showPastReservationsScene());
             vBox.getChildren().add(reservationsButton);
@@ -53,7 +64,7 @@ public class HomeScene extends Scene {
             logOutButton.setOnAction(event -> createPopup());
             vBox.getChildren().add(logOutButton);
         }
-
+        /*
         //START TESTING!!!!!
         Genre genre = Genre.AMERICAN;
         PriceCategory priceCategory = PriceCategory.VERY_EXPENSIVE;
@@ -68,6 +79,9 @@ public class HomeScene extends Scene {
         Button restaurant = new Button("Restaurant");
         restaurant.setOnAction(event -> application.showRestaurantScene(testRestaurant));
         vBox.getChildren().add(restaurant);
+         */
+
+
 
         Button registerRestaurant = new Button("Restaurant Registration");
         registerRestaurant.setOnAction(event -> application.showRegisterRestaurantScene());
@@ -98,8 +112,8 @@ public class HomeScene extends Scene {
 
         var vBox = new VBox(10, confirmationMessage, buttonBox);
         vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         vBox.setPrefWidth(400);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);

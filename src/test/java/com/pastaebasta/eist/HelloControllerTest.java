@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {HelloController.class, SecurityConfiguration.class})
 class HelloControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Test
-    public void testSayHello() throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sayHello/");
-        String result = mockMvc.perform(requestBuilder).andReturn().getResponse().getContentAsString();
-
-        assertEquals("Hello World!", result);
-    }
+//    @Autowired
+//    private MockMvc mockMvc;
+//
+//    @Test
+//    public void testSayHello() throws Exception {
+////        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sayHello/");
+////        String result = mockMvc.perform(requestBuilder).andReturn().getResponse().getContentAsString();
+////
+////        assertEquals("Hello World!", result);
+//    }
 }

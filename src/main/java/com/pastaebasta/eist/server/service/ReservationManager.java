@@ -1,7 +1,6 @@
 package com.pastaebasta.eist.server.service;
 
 import com.pastaebasta.eist.shared.model.Customer;
-import com.pastaebasta.eist.shared.model.DateTimeSlot;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.server.repository.CustomerRepository;
@@ -39,7 +38,7 @@ public class ReservationManager {
         );
 
         pendingReservations.forEach(reservation -> {
-            if (!reservation.isConfirmationStatus()) {
+            if (!reservation.isConfirmed()) {
                 reservationService.cancelReservation(reservation);
             }
         });
@@ -64,11 +63,10 @@ public class ReservationManager {
             System.out.println("Too many reservations");
             return null;
         }
-
-        customer.addReservation(reservation);
-        System.out.println(customer);
+        Reservation persisted = reservationRepository.save(reservation);
+        customer.addReservation(persisted);
         customerService.saveCustomer(customer);
-        return reservationRepository.save(reservation);
+        return persisted;
     }
 
     /**

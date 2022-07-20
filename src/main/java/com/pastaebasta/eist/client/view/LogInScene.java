@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -45,7 +46,7 @@ public class LogInScene extends Scene {
         emptyUsername.setTextFill(Color.RED);
         GridPane.setConstraints(emptyUsername, 1, 1);
         emptyUsername.setVisible(false);
-        Label notRegistered = new Label("Username isn't registered");
+        Label notRegistered = new Label("User not found or no connection to the server");
         notRegistered.setFont(new Font("Arial", 20));
         notRegistered.setTextFill(Color.RED);
         GridPane.setConstraints(notRegistered, 1, 1);
@@ -97,6 +98,39 @@ public class LogInScene extends Scene {
                         }
                     } catch (RuntimeException e) {
                         notRegistered.setVisible(true);
+                    }
+                }
+            }
+        });
+        passwordField.setOnKeyPressed( event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                emptyUsername.setVisible(false);
+                notRegistered.setVisible(false);
+                emptyPassword.setVisible(false);
+                wrongPassword.setVisible(false);
+                if (usernameField.getText() != null && passwordField.getText() != null) {
+                    String username = usernameField.getText().trim();
+                    String password = passwordField.getText().trim();
+                    if (username.isEmpty() || password.isEmpty()) {
+                        if (username.isEmpty()) {
+                            emptyUsername.setVisible(true);
+                        }
+                        if (password.isEmpty()) {
+                            emptyPassword.setVisible(true);
+                        }
+                    } else {
+                        try {
+                            Customer customer = clientController.getCustomerByUsername(username);
+
+                            if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
+                                application.setCustomer(customer);
+                                application.showHomeScene();
+                            } else {
+                                wrongPassword.setVisible(true);
+                            }
+                        } catch (RuntimeException e) {
+                            notRegistered.setVisible(true);
+                        }
                     }
                 }
             }

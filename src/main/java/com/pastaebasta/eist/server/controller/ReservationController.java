@@ -55,7 +55,7 @@ public class ReservationController {
         }
     }
 
-    @PutMapping("/{reservationId}/confirm")
+    @PatchMapping("/{reservationId}/confirm")
     public ResponseEntity<?> confirmReservation(@PathVariable String reservationId) {
         try {
             Reservation reservation = reservationService.getReservationById(reservationId);
@@ -78,9 +78,9 @@ public class ReservationController {
             if (reservation == null) {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }
-            reservationService.cancelReservation(reservation);
 
-            return ResponseEntity.ok("yes worked!!!");
+            boolean cancelled = reservationService.cancelReservation(reservation);
+            return cancelled ? ResponseEntity.badRequest().build() : ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(null);

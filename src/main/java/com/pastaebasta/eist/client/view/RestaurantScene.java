@@ -30,7 +30,7 @@ public class RestaurantScene extends Scene {
         headline.setFont(new Font("Arial", 20));
 
         Label openHours = new Label("Open Hours: " + '\n'
-                + "Monday - Sunday: 8am - 10pm");
+                + "Monday - Sunday: "+restaurant.getOpeningTime() + " - " +restaurant.getClosingTime() + "pm");
         openHours.setFont(new Font("Arial", 20));
         GridPane.setConstraints(openHours, 0, 0);
 
@@ -38,8 +38,13 @@ public class RestaurantScene extends Scene {
         reservationButton.setOnAction(event -> application.showRestaurantTableScene(restaurant, false));
         GridPane.setConstraints(reservationButton, 0, 1);
 
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> application.showSearchScene(null));
+        backButton.setAlignment(Pos.BASELINE_CENTER);
+
         grid.getChildren().addAll(openHours, reservationButton);
-        var vBox = new VBox(10, headline, openHours, reservationButton, application.createBackButton());
+
+        var vBox = new VBox(10, headline, openHours, reservationButton, backButton);
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }
