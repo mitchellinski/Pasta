@@ -69,6 +69,10 @@ public class HomeScene extends Scene {
         restaurant.setOnAction(event -> application.showRestaurantScene(testRestaurant));
         vBox.getChildren().add(restaurant);
 
+        Button registerRestaurant = new Button("Restaurant Registration");
+        registerRestaurant.setOnAction(event -> application.showRegisterRestaurantScene());
+        vBox.getChildren().add(registerRestaurant);
+
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }

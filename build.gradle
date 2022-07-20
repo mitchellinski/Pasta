@@ -73,7 +73,7 @@ tasks.named('test') {
 
 javafx {
     version = "16"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls', 'javafx.swing']
 }
 
 mainClassName = 'com.pastaebasta.eist.view.Start'

@@ -1,12 +1,10 @@
 package com.pastaebasta.eist.server.controller;
 
 import com.pastaebasta.eist.server.service.ReservationManager;
-import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.server.service.ReservationService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,15 +12,16 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Reservation Controller
  * Exposes API to the client, which is used to communicate with the server.
- *
+ * <p>
  * This is used internally by Spring Boot to map requests automatically.
  *
- * @version 1.0
  * @author Hisashi & Michael
+ * @version 1.0
  */
 @RestController
 @AllArgsConstructor
@@ -35,6 +34,7 @@ public class ReservationController {
      * Create new reservation.
      * Checks DB to see if reservation slot and table are available.
      * If created, return persisted instance.
+     *
      * @param reservation Reservation to be added
      * @return Persisted reservation instance.
      */
@@ -94,8 +94,13 @@ public class ReservationController {
      * @return the customer, if it exists
      */
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Reservation>> getCustomerReservations(@PathVariable String customerId) {
+    public ResponseEntity<List<Reservation>> getCustomerReservations(@PathVariable String customerId, @RequestParam(required = false) boolean active) {
         List<Reservation> reservationList = reservationService.getReservationsByCustomerId(customerId);
+        if (active) {
+            reservationList = reservationList.stream().filter(r -> r.getEndDateTime().isAfter(LocalDateTime.now())).collect(Collectors.toList());
+        } else {
+            reservationList = reservationList.stream().filter(r -> r.getEndDateTime().isBefore(LocalDateTime.now())).collect(Collectors.toList());
+        }
         System.out.println("rs: " + reservationList);
         return ResponseEntity.ok().body(reservationList);
     }
@@ -103,13 +108,14 @@ public class ReservationController {
     /**
      * Returns a reservation, if one exists, with the provided reservationId
      * This uses the UUID rather than the sequential displayId!
+     *
      * @param reservationId the reservationId of the reservation
      * @return the reservation, if it exists
      */
     @GetMapping("/{reservationId}")
     public ResponseEntity<Reservation> getReservationById(@PathVariable String reservationId) {
         Reservation currentReservation = reservationService.getReservationById(reservationId);
-        if(currentReservation == null) {
+        if (currentReservation == null) {
             return ResponseEntity.notFound().build();
         }
 
@@ -119,9 +125,10 @@ public class ReservationController {
     /**
      * Checks database to see if there are any reservations during the given
      * start and end time, in the restaurant with given ID.
+     *
      * @param restaurantId ID of restaurant to check.
-     * @param start Start time of reservation.
-     * @param end End time of reservation.
+     * @param start        Start time of reservation.
+     * @param end          End time of reservation.
      * @return List of reservations during given time slot.
      */
     @GetMapping("/restaurant/{restaurantId}")

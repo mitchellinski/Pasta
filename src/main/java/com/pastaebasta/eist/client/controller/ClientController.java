@@ -38,7 +38,6 @@ public class ClientController {
                 .block();
     }
 
-
     public Customer getCustomerByUsername(String username) {
         return webClient.get()
                 .uri("customers/username/" + username)
@@ -59,12 +58,12 @@ public class ClientController {
     public void search(String query, Genre genre, PriceCategory priceCategory, long distance, Consumer<List<Restaurant>> restaurantsConsumer) {
         webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("restaurants/test_search")
-                    .queryParam("query", query)
-                    .queryParam("genre", genre)
-                    .queryParam("price_category", priceCategory)
-                    .queryParam("distance", distance)
-                    .build()
+                        .path("restaurants/test_search")
+                        .queryParam("query", query)
+                        .queryParam("genre", genre)
+                        .queryParam("price_category", priceCategory)
+                        .queryParam("distance", distance)
+                        .build()
                 )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Restaurant>>() {
@@ -92,16 +91,16 @@ public class ClientController {
     }
 
     public void updateCustomer(Customer customer) {
-
+        //TODO implement
     }
 
     public Customer addCustomer(Customer customer) {
         return webClient.post()
-            .uri("customers")
-            .bodyValue(customer)
-            .retrieve()
-            .bodyToMono(Customer.class)
-            .block();
+                .uri("customers")
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
     }
 
     public void customerUsernameTaken(String username) {
@@ -120,10 +119,10 @@ public class ClientController {
 
     public Reservation addReservation(Reservation reservation) {
         return webClient.post()
-            .uri("reservations")
-            .bodyValue(reservation)
-            .retrieve()
-            .bodyToMono(Reservation.class)
-            .block();
+                .uri("reservations")
+                .bodyValue(reservation)
+                .retrieve()
+                .bodyToMono(Reservation.class)
+                .block();
     }
 }

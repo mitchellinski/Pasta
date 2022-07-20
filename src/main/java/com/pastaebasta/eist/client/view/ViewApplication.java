@@ -69,6 +69,10 @@ public class ViewApplication extends Application {
         stage.setScene(new RestaurantScene(clientController, this, restaurant));
     }
 
+    public void showRegisterRestaurantScene() {
+        stage.setScene(new RegisterRestaurantScene(clientController, this));
+    }
+
     public Stage getStage() {
         return stage;
     }

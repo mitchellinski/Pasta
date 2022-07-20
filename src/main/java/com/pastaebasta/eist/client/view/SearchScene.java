@@ -30,7 +30,6 @@ public class SearchScene extends Scene {
     private final ObservableList<Restaurant> restaurants = FXCollections.observableArrayList();
 
 
-
     public SearchScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         int width = (int) application.getStage().getScene().getWidth();
@@ -104,13 +103,18 @@ public class SearchScene extends Scene {
         priceLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(priceLabel, 2, 0);
 
-        ChoiceBox<PriceCategory> priceBox = new ChoiceBox<>();
-        priceBox.getItems().addAll(PriceCategory.values());
+        ChoiceBox<String> priceBox = new ChoiceBox<>();
+        List<String> categories =
+                Arrays.stream(PriceCategory.values())
+                        .map(p -> p.toString().replace('_', ' '))
+                        .map(String::toLowerCase)
+                        .toList();
+        priceBox.getItems().addAll(categories);
         GridPane.setConstraints(priceBox, 2, 1);
 
         Button searchButton = new Button("Search");
         searchButton.setOnAction(event ->
-            clientController.search(searchField.getText(), Genre.GERMAN, priceBox.getValue(), 5000, this::setRestaurants)
+                clientController.search(searchField.getText(), Genre.GERMAN, PriceCategory.valueOf(priceBox.getValue()), 5000, this::setRestaurants)
         );
         GridPane.setConstraints(searchButton, 3, 1);
 
@@ -119,6 +123,7 @@ public class SearchScene extends Scene {
 
         return grid;
     }
+
     private void setRestaurants(List<Restaurant> restaurants) {
         Platform.runLater(() -> this.restaurants.setAll(restaurants));
     }
