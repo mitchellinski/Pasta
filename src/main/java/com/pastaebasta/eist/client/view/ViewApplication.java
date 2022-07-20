@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class ViewApplication extends Application {

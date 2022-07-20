@@ -14,17 +14,18 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Restaurant Controller
  * Exposes API to the client, which is used to communicate with the server.
- *
+ * <p>
  * This is used internally by Spring Boot to map requests automatically.
  *
- * @version 1.0
  * @author Hisashi & Michael
+ * @version 1.0
  */
 @RestController
 @AllArgsConstructor
@@ -33,9 +34,13 @@ public class RestaurantController {
 
     private RestaurantService restaurantService;
 
+
+    //       return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+
     /**
      * Queries Google Maps API for nearby restaurants.
      * TODO: implement method
+     *
      * @return List of nearby restaurants.
      */
     @GetMapping("/search")
@@ -71,6 +76,7 @@ public class RestaurantController {
     /**
      * Queries Google Maps API for nearby restaurants.
      * TODO: implement method properly
+     *
      * @return List of nearby restaurants.
      */
     @GetMapping("/test_search")
@@ -85,13 +91,14 @@ public class RestaurantController {
 
     /**
      * Returns a restaurant with the given displayId
+     *
      * @param restaurantId the displayId of the restaurant
      * @return the restaurant, if it exists
      */
     @GetMapping("/{restaurantId}")
     public ResponseEntity<Restaurant> getRestaurantById(@PathVariable String restaurantId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId);
-        if(restaurant == null) {
+        if (restaurant == null) {
             return ResponseEntity.notFound().build();
         }
 

@@ -1,6 +1,10 @@
 package com.pastaebasta.eist.client.view;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
+import com.pastaebasta.eist.server.service.GeocodingService;
+import com.pastaebasta.eist.server.service.NearbySearchService;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
@@ -24,6 +28,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Popup;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,7 +68,7 @@ public class SearchScene extends Scene {
             }
         });
 
-        clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
+//        clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
         this.table = new TableView<>(restaurants);
 
         double w = width / 6.0;

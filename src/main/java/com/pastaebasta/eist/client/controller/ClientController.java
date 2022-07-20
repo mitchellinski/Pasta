@@ -1,12 +1,16 @@
 package com.pastaebasta.eist.client.controller;
 
-import com.pastaebasta.eist.shared.model.*;
+import com.google.maps.model.LatLng;
+import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.PriceCategory;
+import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.awt.image.BufferedImage;
@@ -123,11 +127,11 @@ public class ClientController {
 
     public Customer addCustomer(Customer customer) {
         return webClient.post()
-            .uri("customers")
-            .bodyValue(customer)
-            .retrieve()
-            .bodyToMono(Customer.class)
-            .block();
+                .uri("customers")
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
     }
 
     public void customerUsernameTaken(String username) {
@@ -146,11 +150,11 @@ public class ClientController {
 
     public Reservation addReservation(Reservation reservation) {
         return webClient.post()
-            .uri("reservations")
-            .bodyValue(reservation)
-            .retrieve()
-            .bodyToMono(Reservation.class)
-            .block();
+                .uri("reservations")
+                .bodyValue(reservation)
+                .retrieve()
+                .bodyToMono(Reservation.class)
+                .block();
     }
 
     public BufferedImage getMap() {
