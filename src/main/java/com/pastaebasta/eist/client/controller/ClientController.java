@@ -106,9 +106,13 @@ public class ClientController {
             .block();
     }
 
-    public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer) {
+    public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer, boolean active) {
         webClient.get()
-                .uri("reservations/customer/" + id)
+                .uri(uriBuilder -> uriBuilder
+                        .path("reservations/customer/" + id)
+                        .queryParam("active", active)
+                        .build()
+                )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Reservation>>() {
                 })

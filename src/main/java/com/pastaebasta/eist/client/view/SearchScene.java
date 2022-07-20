@@ -189,11 +189,6 @@ public class SearchScene extends Scene {
         GridPane.setConstraints(maxPriceLabel, 3, 0);
 
         ChoiceBox<String> maxPriceBox = new ChoiceBox<>();
-        List<String> categories =
-                Arrays.stream(PriceCategory.values())
-                        .map(p -> p.toString().replace('_', ' '))
-                        .map(String::toLowerCase)
-                        .toList();
         maxPriceBox.getItems().addAll(categories);
         GridPane.setConstraints(maxPriceBox, 3, 1);
 
@@ -206,8 +201,10 @@ public class SearchScene extends Scene {
         Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
 //                clientController.search(searchField.getText(), Genre.GERMAN, minPriceBox.getValue(), 5000, this::setRestaurants)
-                clientController.search(this.latLng, searchField.getText(), genreBox.getValue(), minPriceBox.getValue(), maxPriceBox.getValue(),
-                        distanceField.getValue(), this::setRestaurants);
+            clientController.search(this.latLng, searchField.getText(), genreBox.getValue()
+                    , PriceCategory.valueOf(minPriceBox.getValue().replace(" ", "_").toUpperCase())
+                    , PriceCategory.valueOf(maxPriceBox.getValue().replace(" ", "_").toUpperCase())
+                    , distanceField.getValue(), this::setRestaurants);
         });
 //        searchField.setOnKeyPressed(event -> {
 //            if (event.getCode() == KeyCode.ENTER) {
