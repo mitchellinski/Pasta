@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationManager {
     private static final int MAXIMUM_RESERVATION_AMOUNT_PER_CUSTOMER = 3;
+    public static final int RESERVATION_CHECK_CYCLE_S = 5000;
 
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
@@ -30,11 +31,11 @@ public class ReservationManager {
     private final CustomerService customerService;
     private final ReservationService reservationService;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = RESERVATION_CHECK_CYCLE_S * 1000)
     public void notifyPendingReservations() {
-        var pendingReservations = reservationRepository.getReservationsBetween(
-            LocalDateTime.now().plusHours(12).minusSeconds(5),
-            LocalDateTime.now().plusHours(12).plusSeconds(5)
+        List<Reservation> pendingReservations = reservationRepository.getReservationsBetween(
+            LocalDateTime.now().plusHours(12).minusSeconds(RESERVATION_CHECK_CYCLE_S),
+            LocalDateTime.now().plusHours(12).plusSeconds(RESERVATION_CHECK_CYCLE_S)
         );
 
         pendingReservations.forEach(reservation -> {

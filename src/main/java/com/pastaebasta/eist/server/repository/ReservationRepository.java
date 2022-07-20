@@ -19,7 +19,7 @@ public interface ReservationRepository extends PagingAndSortingRepository<Reserv
 	@Query("{email:'?0'}")
 	Reservation getByEmail(String email);
 
-	@Query("{'startDateTime' : {$gte : ?1}, 'endDateTime' : {$lte : ?2}}")
+	@Query("{'startDateTime' : {$gte : ?0}, 'endDateTime' : {$lte : ?1}}")
 	List<Reservation> getReservationsBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
 
 	@Query("{'restaurantId' : '?0','startDateTime' : {$gte : ?1}, 'endDateTime' : {$lte : ?2}}")
