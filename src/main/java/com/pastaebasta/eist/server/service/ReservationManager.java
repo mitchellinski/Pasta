@@ -63,11 +63,10 @@ public class ReservationManager {
             System.out.println("Too many reservations");
             return null;
         }
-
-        customer.addReservation(reservation);
-        System.out.println(customer);
+        Reservation persisted = reservationRepository.save(reservation);
+        customer.addReservation(persisted);
         customerService.saveCustomer(customer);
-        return reservationRepository.save(reservation);
+        return persisted;
     }
 
     /**

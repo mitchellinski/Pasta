@@ -110,7 +110,7 @@ public class DatabaseSeeder {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (int i = 0; i < numberOfRestaurants; i++) {
             Restaurant restaurant = Restaurant.builder()
-                .restaurantId(UUID.randomUUID().toString())
+                .restaurantId("restaurant_"+i)
                 .name(RESTAURANT_NAMES.get(i % RESTAURANT_NAMES.size()))
                 .restaurantGenre(getRandomRestaurantGenre())
                 .address(getRandomAddress() + " " + RNG.nextInt(1,100))

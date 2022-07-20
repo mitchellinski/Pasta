@@ -6,7 +6,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
-group = 'hello.world'
+group = 'com.pastaebasta.eist'
 version = '1.0.0'
 sourceCompatibility = '17'
 compileJava.options.encoding = 'UTF-8'

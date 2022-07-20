@@ -4,6 +4,7 @@ import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.client.helper.EventSchedulingService;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +28,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RestaurantTableScene extends Scene {
 
@@ -100,7 +104,7 @@ public class RestaurantTableScene extends Scene {
         URL restaurantPathUrl = getClass().getClassLoader().getResource(RESTAURANT_MAPS[index]);
         if (restaurantPathUrl == null) {
             throw new IllegalArgumentException(
-                "Please ensure that your resources folder contains the appropriate files for this exercise."
+                "Missing files at resources folder"
             );
         }
         Image image = new Image(restaurantPathUrl.toExternalForm());
@@ -111,7 +115,10 @@ public class RestaurantTableScene extends Scene {
         GridPane.setConstraints(imageView, 0, 0);
         GridPane.setRowSpan(imageView, 11);
         grid.getChildren().add(imageView);
+        grid.setGridLinesVisible(false);
 
+        ArrayList<Reservation> reservations = clientController.getRestaurantReservations(restaurant.getRestaurantId(), startTime, startTime.plusHours(1));
+        System.out.println("RES:" + reservations);
         for (int i = 0; i < RESTAURANT_TABLE_NUM[index]; i++) {
             int tableId = i + 1;
             Button button = new Button("Table " + tableId);
@@ -119,6 +126,10 @@ public class RestaurantTableScene extends Scene {
             button.setAlignment(Pos.CENTER);
             GridPane.setConstraints(button, (i / 10) + 1, i % 10);
             grid.getChildren().add(button);
+
+            if (reservations.stream().anyMatch(x->x.getTableId() == tableId)) {
+                button.setDisable(true);
+            }
         }
         var vBox = new VBox(10, headline, grid, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
@@ -223,7 +234,6 @@ public class RestaurantTableScene extends Scene {
         var vBox = new VBox(10, visitorLabel, visitors[0], addVisitors, dateLabel, datePicker, addDate, timeSlot, timeSlotsBox, addTimeSlot, buttonBox);
         vBox.setAlignment(Pos.CENTER);
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         vBox.setPrefWidth(400);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -258,8 +268,9 @@ public class RestaurantTableScene extends Scene {
 
         Label headline = new Label(reservation  == null ? "An error occurred!" : "Reservation successfully created");
         headline.setFont(new Font("Arial", 20));
-        Text text = new Text(reservation  == null ? "Something went wrong while we were trying to create your reservation. Please try again later."
-                : String.format("Successfully created reservation for %s, on %s. Table: %d. Visitors: %d.\nAddress:%s\nImportant: Please remember to confirm or cancel your reservation up to 12 hours before it begins in the app",
+        Text text = new Text(reservation  == null ? "Something went wrong while we were trying to create your reservation.\n" +
+                "It's possible you have reached the maximum amount of reservations (3 per customer), or the table was already occupied."
+                : String.format("Successfully created reservation for %s, on %s. Table: %d. Visitors: %d.\nAddress: %s\nImportant: Please remember to confirm or cancel your reservation up to 12 hours before it begins in the app",
                 reservation.getRestaurantName(),
                 reservation.getStartDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' HH:mm")),
                 reservation.getTableId(),
@@ -278,7 +289,6 @@ public class RestaurantTableScene extends Scene {
         var vBox = new VBox(10, headline,text, buttonBox);
         vBox.setAlignment(Pos.CENTER);
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -303,7 +313,7 @@ public class RestaurantTableScene extends Scene {
         Label restaurantLabel = new Label("Restaurant:");
         restaurantLabel.setFont(new Font("Arial", 20));
         GridPane.setConstraints(restaurantLabel, 0, 0);
-        Label restaurantValue = new Label(restaurant.getName() + " " + restaurant.getRatingAverage() + "/5");
+        Label restaurantValue = new Label(restaurant.getName() + " " + restaurant.getRatingAverage() + " / 5.0");
         restaurantValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(restaurantValue, 1, 0);
 
@@ -356,25 +366,32 @@ public class RestaurantTableScene extends Scene {
                 .tableId(tableId_Long)
                 .customerId(customerId)
                 .startDateTime(startTime)
+                .numberOfVisitors(numOfVisitors)
                 .endDateTime(endDateTime)
                 .restaurantName(restaurant.getName())
                 .build();
-
-            Reservation persistedReservation = clientController.addReservation(newReservation);
-            resultPopup(persistedReservation);
+            Reservation persistedReservation = null;
             try {
-                eventSchedulingService.createEvent(
-                    "Reservation at " + restaurant.getName(),
-                    restaurant.getAddress(),
-                    "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app or by clicking http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
-                    persistedReservation.getStartDateTime(),
-                    persistedReservation.getEndDateTime()
-                );
-            } catch (IOException e) {
+                persistedReservation = clientController.addReservation(newReservation);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-
-
+            resultPopup(persistedReservation);
+            if (persistedReservation!=null) {
+                try {
+                    eventSchedulingService.createEvent(
+                        "Reservation at " + restaurant.getName(),
+                        restaurant.getAddress(),
+                        "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app or by clicking http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
+                        persistedReservation.getStartDateTime(),
+                        persistedReservation.getEndDateTime()
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            application.showSearchScene();
         });
 
         Button cancelButton = new Button("Cancel");
@@ -386,7 +403,6 @@ public class RestaurantTableScene extends Scene {
         var vBox = new VBox(10, headline, grid, buttonBox);
         vBox.setAlignment(Pos.CENTER);
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         vBox.setPrefWidth(600);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -396,4 +412,5 @@ public class RestaurantTableScene extends Scene {
         popup.show(application.getStage());
         popup.centerOnScreen();
     }
+
 }

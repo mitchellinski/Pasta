@@ -42,9 +42,9 @@ public class RestaurantScene extends Scene {
         backButton.setOnAction(event -> application.showSearchScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
 
-        grid.getChildren().addAll(openHours, reservationButton, backButton);
+        grid.getChildren().addAll(openHours, reservationButton);
 
-        var vBox = new VBox(10, headline, openHours, reservationButton);
+        var vBox = new VBox(10, headline, openHours, reservationButton, backButton);
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }

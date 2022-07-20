@@ -9,6 +9,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,7 +21,7 @@ import java.util.function.Consumer;
 public class ClientController {
 
     private final WebClient webClient;
-    private final List<Reservation> customerReservations;
+    private final List<Reservation> customerReservations = new ArrayList<>();
     private final List<Restaurant> restaurants = new ArrayList<>();
 
     public ClientController() {
@@ -26,8 +30,6 @@ public class ClientController {
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
-
-        customerReservations = new ArrayList<>();
     }
 
     public Customer getCustomerById(String id) {
@@ -75,6 +77,24 @@ public class ClientController {
                     restaurants.addAll(newRestaurants);
                     restaurantsConsumer.accept(restaurants);
                 });
+    }
+
+    public ArrayList<Reservation> getRestaurantReservations(String id, LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("reservations/restaurant/" + id)
+                .queryParam("start", DateTimeFormatter.ISO_DATE_TIME.format(
+                    startLocalDateTime
+                ))
+                .queryParam("end", DateTimeFormatter.ISO_DATE_TIME.format(
+                    endLocalDateTime
+                ))
+                .build()
+            )
+            .retrieve()
+            .bodyToMono(new ParameterizedTypeReference<ArrayList<Reservation>>() {
+            })
+            .block();
     }
 
     public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer) {
