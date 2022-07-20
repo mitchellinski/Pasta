@@ -45,6 +45,32 @@ public class ReservationManager {
         });
     }
 
+    public Reservation createReservation(Reservation reservation) throws IllegalArgumentException {
+        System.out.println(reservation);
+        assert(reservation.getReservationId() != null);
+        assert(reservation.getRestaurantId() != null);
+        assert(reservation.getCustomerId() != null);
+        assert(reservation.getStartDateTime() != null);
+        assert(reservation.getEndDateTime() != null);
+
+        // Check if the table is free
+        if (!reservationService.isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
+            System.out.println("Table not free");
+            return null;
+        }
+
+        Customer customer = customerService.getCustomerById(reservation.getCustomerId());
+        if (customer.getReservationList().size() >= 3) {
+            System.out.println("Too many reservations");
+            return null;
+        }
+
+        customer.addReservation(reservation);
+        System.out.println(customer);
+        customerService.saveCustomer(customer);
+        return reservationRepository.save(reservation);
+    }
+
     /**
      * Gets a customer from the database, if one exists, otherwise creates a new customer.
      * UNSAFE - Testing purposes only

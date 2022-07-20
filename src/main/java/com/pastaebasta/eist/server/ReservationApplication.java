@@ -62,8 +62,8 @@ public class ReservationApplication implements CommandLineRunner {
 		System.out.println("> Server: Running");
 	}
 
-	public void run(String... args) {
 
+	public void test() {
 		customerRepository.deleteAll();
 		reservationRepository.deleteAll();
 
@@ -100,13 +100,13 @@ public class ReservationApplication implements CommandLineRunner {
 			for (int i = 0; i < random.nextInt(5) ; i++) {
 				int restaurantId = random.nextInt(restaurants.size());
 				Reservation newReservation = Reservation.builder()
-					.reservationId(UUID.randomUUID().toString())
-					.customerId(customer.getCustomerId())
-					.startDateTime(LocalDateTime.now())
-					.endDateTime(LocalDateTime.now().plusHours(1))
-					//.tableId(1337L)
-					.restaurantId(restaurants.get(restaurantId).getRestaurantId())
-					.build();
+						.reservationId(UUID.randomUUID().toString())
+						.customerId(customer.getCustomerId())
+						.startDateTime(LocalDateTime.now())
+						.endDateTime(LocalDateTime.now().plusHours(1))
+						//.tableId(1337L)
+						.restaurantId(restaurants.get(restaurantId).getRestaurantId())
+						.build();
 				customer.addReservation(newReservation);
 				reservationRepository.save(newReservation);
 			}
@@ -123,5 +123,8 @@ public class ReservationApplication implements CommandLineRunner {
 			System.out.println(reservation);
 		}
 		System.out.println(customers.get(0));
+	}
+
+	public void run(String... args) {
 	}
 }

@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.List;
  * Requests authorization from user, then creates events in their calendar.
  */
 public class EventSchedulingService {
+	private static final String RFC3339_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 	// If modifying these scopes, delete your previously saved tokens/ folder.
 	private static final String APPLICATION_NAME = "Pasta e Basta Reservation Application";
 	private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
@@ -74,18 +76,24 @@ public class EventSchedulingService {
 		return credential;
 	}
 
-	public Event createEvent(String name, String location, String description, LocalDateTime localDateTimeStart) throws IOException {
+	public String parseRFC3399(LocalDateTime localDateTime) {
+
+		return localDateTime.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(RFC3339_FORMAT));
+	}
+
+	public Event createEvent(String name, String location, String description, LocalDateTime localDateTimeStart, LocalDateTime localDateTimeEnd) throws IOException {
 		Event event = new Event()
 			.setSummary(name)
 			.setLocation(location)
 			.setDescription(description);
-		DateTime startDateTime = new DateTime(localDateTimeStart.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toString());
+
+		DateTime startDateTime = new DateTime(parseRFC3399(localDateTimeStart));
 		EventDateTime start = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(startDateTime);
 
 		event.setStart(start);
-		DateTime endDateTime = new DateTime(localDateTimeStart.plusHours(1).atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toString());
+		DateTime endDateTime = new DateTime(parseRFC3399(localDateTimeEnd));
 		EventDateTime end = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(endDateTime);

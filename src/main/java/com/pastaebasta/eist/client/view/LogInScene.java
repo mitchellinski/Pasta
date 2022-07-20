@@ -88,6 +88,7 @@ public class LogInScene extends Scene {
                 } else {
                     try {
                         Customer customer = clientController.getCustomerByUsername(username);
+
                         if (application.getArgon2PasswordEncoder().matches(password, customer.getCustomerPassword())) {
                             application.setCustomer(customer);
                             application.showHomeScene();

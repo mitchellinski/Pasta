@@ -28,6 +28,7 @@ public class Reservation {
 
     private String customerId;
     private String restaurantId;
+    private String restaurantName;
 
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;

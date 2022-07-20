@@ -2,10 +2,13 @@ package com.pastaebasta.eist.server.controller;
 
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.server.service.CustomerService;
+import com.pastaebasta.eist.shared.model.Reservation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Customer Controller

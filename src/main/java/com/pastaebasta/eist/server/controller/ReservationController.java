@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.server.controller;
 
+import com.pastaebasta.eist.server.service.ReservationManager;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.server.service.ReservationService;
@@ -27,8 +28,8 @@ import java.util.Optional;
 @AllArgsConstructor
 @RequestMapping("/api/v1/reservations")
 public class ReservationController {
-
     private ReservationService reservationService;
+    private ReservationManager reservationManager;
 
     /**
      * Create new reservation.
@@ -41,7 +42,7 @@ public class ReservationController {
     public ResponseEntity<?> createReservation(
             @RequestBody Reservation reservation) {
         try {
-            Reservation persistedReservation = reservationService.saveReservation(reservation);
+            Reservation persistedReservation = reservationManager.createReservation(reservation);
             if (persistedReservation == null) {
                 return ResponseEntity.badRequest().body("Error: Reservation could not be created. " +
                         "It is possible that the table is already reserved during the provided timeslot, " +
@@ -87,13 +88,16 @@ public class ReservationController {
     }
 
     /**
-     * Returns a list of the customer's reservations
+     * Returns a list of all reservations a customer has
+     *
      * @param customerId the customerId of the reservation
-     * @return list of customer reservations
+     * @return the customer, if it exists
      */
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<Customer> getReservationsByCustomerId(@PathVariable String customerId) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
+    public ResponseEntity<List<Reservation>> getCustomerReservations(@PathVariable String customerId) {
+        List<Reservation> reservationList = reservationService.getReservationsByCustomerId(customerId);
+        System.out.println("rs: " + reservationList);
+        return ResponseEntity.ok().body(reservationList);
     }
 
     /**

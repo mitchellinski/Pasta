@@ -116,7 +116,7 @@ public class RegisterScene extends Scene {
                             } catch (RuntimeException emailException) {
                                 String encodedPassword = application.getArgon2PasswordEncoder().encode(password);
                                 Customer newCustomer = new Customer(username, email, encodedPassword);
-                                clientController.addCustomer(newCustomer);
+                                newCustomer = clientController.addCustomer(newCustomer);
                                 application.setCustomer(newCustomer);
                                 application.showHomeScene();
                             }

@@ -23,17 +23,24 @@ public class DatabaseSeeder {
 
     private static final List<Genre> GENRES = List.of(Genre.values());
     private static final List<String> ADDRESSES = List.of(
-            "Sidbury Street", "Hilltop Street", "St Anne's Ridings",
-            "Main Street", "York Street", "Goldcrest Limes");
+        "Sidbury Street", "Hilltop Street", "St Anne's Ridings",
+        "Main Street", "York Street", "Goldcrest Limes");
     private static final List<String> REVIEWS = List.of(
-            "This restaurant is great!", "I think this restaurant is ok.", "OldRestaurant was terrible.",
-            "Not a good restaurant.", "This restaurant is terrible.", "This restaurant is awesome!",
-            "Staff was great.", "Staff was terrible.", "Staff was ok.", "Staff was terrible.");
+        "This restaurant is great!", "I think this restaurant is ok.", "OldRestaurant was terrible.",
+        "Not a good restaurant.", "This restaurant is terrible.", "This restaurant is awesome!",
+        "Staff was great.", "Staff was terrible.", "Staff was ok.", "Staff was terrible.");
     private static final ArrayList<String> IMAGES = new ArrayList<>(List.of(
-            "https://media.istockphoto.com/photos/modern-restaurant-interior-design-picture-id1211547141?k=20&m=1211547141&s=170667a&w=0&h=y__cQKe21f2M_IrBmCRdhxs3dCGfwSrVrQJSQMOeWAg=",
-            "https://media.istockphoto.com/photos/pan-fried-duck-picture-id1081422898?k=20&m=1081422898&s=170667a&w=0&h=iCUEVuKoPANGSO6CECVkWFs5DGPMQVclTa4y7j5W-yE=",
-            "https://media.istockphoto.com/photos/cozy-restaurant-for-gathering-with-friends-picture-id1159992039?k=20&m=1159992039&s=170667a&w=0&h=WCgDcn5ssR3HS0MnIzu5vRcD5_1z8qNLEk-Iq3EbhTs=",
-            "https://media.istockphoto.com/photos/hands-view-of-young-people-eating-brunch-and-drinking-smoothies-bowl-picture-id1198032248?k=20&m=1198032248&s=170667a&w=0&h=QXaINccJXUcKmMbYe7VXF7DPHkl2XR3GOj9zrnjK2q4="
+        "https://media.istockphoto.com/photos/modern-restaurant-interior-design-picture-id1211547141?k=20&m=1211547141&s=170667a&w=0&h=y__cQKe21f2M_IrBmCRdhxs3dCGfwSrVrQJSQMOeWAg=",
+        "https://media.istockphoto.com/photos/pan-fried-duck-picture-id1081422898?k=20&m=1081422898&s=170667a&w=0&h=iCUEVuKoPANGSO6CECVkWFs5DGPMQVclTa4y7j5W-yE=",
+        "https://media.istockphoto.com/photos/cozy-restaurant-for-gathering-with-friends-picture-id1159992039?k=20&m=1159992039&s=170667a&w=0&h=WCgDcn5ssR3HS0MnIzu5vRcD5_1z8qNLEk-Iq3EbhTs=",
+        "https://media.istockphoto.com/photos/hands-view-of-young-people-eating-brunch-and-drinking-smoothies-bowl-picture-id1198032248?k=20&m=1198032248&s=170667a&w=0&h=QXaINccJXUcKmMbYe7VXF7DPHkl2XR3GOj9zrnjK2q4="
+    ));
+    private static final ArrayList<String> RESTAURANT_NAMES = new ArrayList<>(List.of(
+        "The Grand Avenue", "The Jade Fish", "The Abacus Boar", "The Moroccan Peasant", "The Honor Goddess", "Nightowl", "Nirvana", "Aqua", "Melting Pot", "Indigo",
+        "The Caviar After Dark", "The Sushi Fable", "The Greek Brothers", "The Paradise Fridge", "The Light Flavour", "Atlas", "Skyward", "Midnight", "The Monarch", "Bambino",
+        "The Nifty Brothers", "The Silk Port", "The Coriander Avenue", "The Gallery Chef", "The Autumn Bond", "Intermission", "The Smile", "Streetwise", "The Wall", "Alpha",
+        "l'Impératrice des Caraïbes", "le Bistro de Plage", "la Vue du Nain", "le Balcon d'Arôme", "le Chêne de Saphir", "le Lis", "la Voûte", "la Boutique", "l'Ivoire", "Bambino",
+        "The River Bay", "The Curry Grill", "The Light Cottage", "The New House", "The Nifty Exchange", "Citrus", "The Empress", "The Parlour", "The Cave", "The Maple"
     ));
 
     private static final Random RNG = new Random();
@@ -70,7 +77,7 @@ public class DatabaseSeeder {
      * @param numberOfReviews     the number of reviews to seed
      */
     public ArrayList<Restaurant> seedRestaurants(int numberOfRestaurants, int numberOfReviews) {
-        ArrayList<Restaurant> restaurants = generateSimpleRestaurants(numberOfRestaurants, numberOfReviews);
+        ArrayList<Restaurant> restaurants = generateSimpleRestaurants(numberOfRestaurants);
         restaurantRepository.saveAll(restaurants);
         return restaurants;
     }
@@ -97,24 +104,29 @@ public class DatabaseSeeder {
      * @param numberOfRestaurants the number of restaurants to generate
      * @return A list of restaurants
      */
-    private ArrayList<Restaurant> generateSimpleRestaurants(int numberOfRestaurants, int numberOfReviews) {
+    public static ArrayList<Restaurant> generateSimpleRestaurants(int numberOfRestaurants) {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
         for (int i = 0; i < numberOfRestaurants; i++) {
             Restaurant restaurant = Restaurant.builder()
                     .restaurantId(UUID.randomUUID().toString())
-                    .name("Restaurant " + i)
+                    .name(RESTAURANT_NAMES.get(i % RESTAURANT_NAMES.size()) + " " + RNG.nextInt(1,100))
+                    .restaurantGenre(getRandomRestaurantGenre())
+                    .address(getRandomAddress())
+                    .priceCategory(getRandomPriceCategory())
+                    .ratingAverage(RNG.nextInt(1, 11))
                     .build();
             restaurants.add(restaurant);
         }
         return restaurants;
     }
 
+
     /**
      * Uses a RNG to pick a random price category from PriceCategory.
      *
      * @return a random price category
      */
-    private PriceCategory getRandomPriceCategory() {
+    private static PriceCategory getRandomPriceCategory() {
         return PriceCategory.values()[RNG.nextInt(PriceCategory.values().length)];
     }
 
@@ -123,7 +135,7 @@ public class DatabaseSeeder {
      *
      * @return a random restaurant genre
      */
-    private Genre getRandomRestaurantGenre() {
+    private static Genre getRandomRestaurantGenre() {
         return GENRES.get(RNG.nextInt(GENRES.size()));
     }
 
@@ -132,7 +144,7 @@ public class DatabaseSeeder {
      *
      * @return a random address
      */
-    private String getRandomAddress() {
+    private static String getRandomAddress() {
         return ADDRESSES.get(RNG.nextInt(ADDRESSES.size()));
     }
 
@@ -141,7 +153,7 @@ public class DatabaseSeeder {
      *
      * @return an ArrayList of random reviews of length numberOfReviews
      */
-    private ArrayList<String> getRandomReviews(int numberOfReviews) {
+    private static ArrayList<String> getRandomReviews(int numberOfReviews) {
         ArrayList<String> reviews = new ArrayList<>();
         for (int j = 0; j < numberOfReviews; j++) {
             reviews.add(REVIEWS.get(RNG.nextInt(REVIEWS.size())));

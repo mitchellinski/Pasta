@@ -1,10 +1,7 @@
 package com.pastaebasta.eist.server.controller;
 
 
-import com.pastaebasta.eist.shared.model.Customer;
-import com.pastaebasta.eist.shared.model.QueryPlace;
-import com.pastaebasta.eist.shared.model.Reservation;
-import com.pastaebasta.eist.shared.model.Restaurant;
+import com.pastaebasta.eist.shared.model.*;
 import com.pastaebasta.eist.server.service.ReservationManager;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,15 +29,6 @@ import java.util.Optional;
 public class ServerController {
     private ReservationManager reservationService;
 
-    /**
-     * Queries Google Maps API for nearby restaurants.
-     * TODO: implement method
-     * @return List of nearby restaurants.
-     */
-    @GetMapping("/search")
-    public ResponseEntity<String> searchRestaurants() {
-       return ResponseEntity.ok("Yeah!");
-    }
 
     /**
      * Create new reservation.

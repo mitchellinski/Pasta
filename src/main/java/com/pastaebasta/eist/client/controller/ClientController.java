@@ -1,7 +1,6 @@
 package com.pastaebasta.eist.client.controller;
 
-import com.pastaebasta.eist.shared.model.Customer;
-import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.*;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ public class ClientController {
 
     private final WebClient webClient;
     private final List<Reservation> customerReservations;
+    private final List<Restaurant> restaurants = new ArrayList<>();
 
     public ClientController() {
         this.webClient = WebClient.builder()
@@ -26,6 +26,7 @@ public class ClientController {
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
+
         customerReservations = new ArrayList<>();
     }
 
@@ -36,6 +37,7 @@ public class ClientController {
                 .bodyToMono(Customer.class)
                 .block();
     }
+
 
     public Customer getCustomerByUsername(String username) {
         return webClient.get()
@@ -54,9 +56,30 @@ public class ClientController {
                 .block();
     }
 
+    public void search(String query, Genre genre, PriceCategory priceCategory, long distance, Consumer<List<Restaurant>> restaurantsConsumer) {
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                    .path("restaurants/test_search")
+                    .queryParam("query", query)
+                    .queryParam("genre", genre)
+                    .queryParam("price_category", priceCategory)
+                    .queryParam("distance", distance)
+                    .build()
+                )
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<Restaurant>>() {
+                })
+                .onErrorStop()
+                .subscribe(newRestaurants -> {
+                    restaurants.clear();
+                    restaurants.addAll(newRestaurants);
+                    restaurantsConsumer.accept(restaurants);
+                });
+    }
+
     public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer) {
         webClient.get()
-                .uri("customers/" + id + "/reservations")
+                .uri("reservations/customer/" + id)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Reservation>>() {
                 })
@@ -72,13 +95,13 @@ public class ClientController {
 
     }
 
-    public void addCustomer(Customer customer) {
-        webClient.post()
-                .uri("customers")
-                .bodyValue(customer)
-                .retrieve()
-                .bodyToMono(Customer.class)
-                .block();
+    public Customer addCustomer(Customer customer) {
+        return webClient.post()
+            .uri("customers")
+            .bodyValue(customer)
+            .retrieve()
+            .bodyToMono(Customer.class)
+            .block();
     }
 
     public void customerUsernameTaken(String username) {

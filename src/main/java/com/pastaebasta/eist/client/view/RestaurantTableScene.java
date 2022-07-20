@@ -108,8 +108,9 @@ public class RestaurantTableScene extends Scene {
         grid.getChildren().add(imageView);
 
         for (int i = 0; i < RESTAURANT_TABLE_NUM[index]; i++) {
-            Button button = new Button("Table " + (i + 1));
-            button.setOnAction(event -> confirmationPopup(button.getText()));
+            int tableId = i + 1;
+            Button button = new Button("Table " + tableId);
+            button.setOnAction(event -> confirmationPopup(button.getText(), tableId));
             button.setAlignment(Pos.CENTER);
             GridPane.setConstraints(button, (i / 10) + 1, i % 10);
             grid.getChildren().add(button);
@@ -215,7 +216,7 @@ public class RestaurantTableScene extends Scene {
         var vBox = new VBox(10, visitorLabel, visitors[0], addVisitors, dateLabel, datePicker, addDate, timeSlot, timeSlotsBox, addTimeSlot, buttonBox);
         vBox.setAlignment(Pos.CENTER);
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
+        vBox.setBorder(new Border(new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
         vBox.setPrefWidth(400);
         vBox.setPrefHeight(150);
         vBox.setSpacing(50);
@@ -245,7 +246,7 @@ public class RestaurantTableScene extends Scene {
         return timeSlots;
     }
 
-    public void confirmationPopup(String tableName) {
+    public void confirmationPopup(String tableName, int tableId) {
         Popup popup = new Popup();
 
         GridPane grid = new GridPane();
@@ -304,17 +305,26 @@ public class RestaurantTableScene extends Scene {
         confirmButton.setOnAction(event -> {
             String customerId = application.getCustomer().getCustomerId();
             String restaurantId = restaurant.getRestaurantId();
-            LocalDateTime endDateTime = startTime.plusMinutes(30);
-            long tableId = -1;
-            Reservation newReservation = new Reservation(customerId, restaurantId, startTime, endDateTime,
-                    numOfVisitors, tableId);
+            LocalDateTime endDateTime = startTime.plusHours(1);
+            long tableId_Long = Integer.toUnsignedLong(tableId);
+            Reservation newReservation = Reservation.builder()
+                .restaurantId(restaurantId)
+                .tableId(tableId_Long)
+                .customerId(customerId)
+                .startDateTime(startTime)
+                .endDateTime(endDateTime)
+                .restaurantName(restaurant.getName())
+                .build();
+
             Reservation persistedReservation = clientController.addReservation(newReservation);
+            System.out.println(persistedReservation);
             try {
                 eventSchedulingService.createEvent(
-                        "Reservation for " + numOfVisitors + ", at " + restaurant.getName(),
-                        restaurant.getAddress(),
-                        "Please remember to confirm your reservation up to 12 hours before it begins at http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
-                        LocalDateTime.now()
+                    "Reservation at " + restaurant.getName(),
+                    restaurant.getAddress(),
+                    "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app or by clicking http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
+                    persistedReservation.getStartDateTime(),
+                    persistedReservation.getEndDateTime()
                 );
             } catch (IOException e) {
                 e.printStackTrace();

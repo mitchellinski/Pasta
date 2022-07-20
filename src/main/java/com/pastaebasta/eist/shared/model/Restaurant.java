@@ -1,7 +1,9 @@
 package com.pastaebasta.eist.shared.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 @Document("restaurants")
 @Data
 @Builder
+@Jacksonized
 public class Restaurant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +43,5 @@ public class Restaurant {
     private int closingTime;
 
     private ArrayList<String> pictures;
+
 }

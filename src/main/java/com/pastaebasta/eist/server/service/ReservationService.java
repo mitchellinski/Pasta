@@ -18,30 +18,10 @@ public class ReservationService {
 
     public boolean isTableFree(String restaurantId, LocalDateTime start, LocalDateTime end, long tableId) {
         Reservation reservation = reservationRepository.getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(restaurantId, tableId, start, end);
+        System.out.println("Found " + reservation);
         return reservation == null;
     }
 
-    public Reservation saveReservation(Reservation reservation) throws IllegalArgumentException {
-        assert (reservation.getReservationId() != null);
-        assert (reservation.getRestaurantId() != null);
-        assert (reservation.getCustomerId() != null);
-        assert (reservation.getStartDateTime() != null);
-        assert (reservation.getEndDateTime() != null);
-
-        // Check if the table is free
-        if (!isTableFree(reservation.getRestaurantId(), reservation.getStartDateTime(), reservation.getEndDateTime(), reservation.getTableId())) {
-            return null;
-        }
-
-        Customer customer = customerService.getCustomer_FORCE_CREATE(reservation.getCustomerId());
-        if (customer.getReservationList().size() >= 3) {
-            return null;
-        }
-
-        customer.addReservation(reservation);
-        customerService.saveCustomer(customer);
-        return reservationRepository.save(reservation);
-    }
 
     public void confirmReservation(Reservation reservation) {
         reservation.setConfirmationStatus(true);
@@ -58,5 +38,9 @@ public class ReservationService {
 
     public Reservation getReservationById(String reservationId) {
         return reservationRepository.getByReservationId(reservationId);
+    }
+
+    public List<Reservation> getReservationsByCustomerId(String customerId) {
+        return reservationRepository.getAllByCustomerId(customerId);
     }
 }
