@@ -1,6 +1,5 @@
 assignment/src/
 assignment/resources/
-
 *.class
 .idea
 bin
@@ -10,6 +9,9 @@ build
 *.jar
 *.war
 *.ear
+
+/tokens/*
+
 
 #################
 # Eclipse .gitignore
