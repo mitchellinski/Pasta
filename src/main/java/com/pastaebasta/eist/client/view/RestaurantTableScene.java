@@ -65,7 +65,6 @@ public class RestaurantTableScene extends Scene {
     private int numOfVisitors;
     private final boolean backToSearch;
 
-    private EventSchedulingService eventSchedulingService;
 
     public RestaurantTableScene(ClientController clientController, ViewApplication application, Restaurant restaurant, boolean backToSearch) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
@@ -74,9 +73,34 @@ public class RestaurantTableScene extends Scene {
         this.restaurant = restaurant;
         this.backToSearch = backToSearch;
         settingsPopup();
-        if (eventSchedulingService == null) {
-            googlePopout();
+    }
+
+    private String[] getTimeSlots(Restaurant restaurant) {
+        int openingTime = restaurant.getOpeningTime();
+        int closingTime = restaurant.getClosingTime();
+        int diff = closingTime - openingTime;
+        if (diff == 0) {
+            openingTime = 8;
+            closingTime = 22;
+            diff = closingTime - openingTime;
         }
+
+        String[] timeSlots = new String[diff];
+        int time = openingTime;
+        String timeString1;
+        String timeString2;
+        for (int i = 0; i < timeSlots.length; i++) {
+            timeString1 = String.valueOf(time);
+            if (time < 10) {
+                timeString1 = "0".concat(timeString1);
+            }
+            timeString2 = String.valueOf(++time);
+            if (time < 10) {
+                timeString2 = "0".concat(timeString2);
+            }
+            timeSlots[i] = timeString1 + ":00 - " + timeString2 + ":00";
+        }
+        return timeSlots;
     }
 
     private void init() throws FileNotFoundException {
@@ -134,45 +158,6 @@ public class RestaurantTableScene extends Scene {
         setRoot(vBox);
     }
 
-    private void googlePopout() {
-        Popup popup = new Popup();
-
-        Label title = new Label("Warning");
-        title.setFont(new Font("Arial", 20));
-        Text addDate = new Text("To create reservations, you must allow the app to add events to your google calendar.\n" +
-            "After clicking okay, you will be redirected to your browser. Please grant the app permissions.\n\n" +
-            "You may get a warning saying the app has not yet been verified - simply click \"Advanced\", and continue.\n" +
-            "Do not click \"take me back to safety\"!\n\n" +
-            "If you've already done this before, you may ignore this warning.");
-        addDate.setFont(new Font("Arial", 15));
-
-
-        Button confirmButton = new Button("Okay");
-        confirmButton.setOnAction(event -> {
-            popup.hide();
-            try {
-                this.eventSchedulingService = new EventSchedulingService();
-            } catch (IOException | GeneralSecurityException e) {
-                e.printStackTrace();
-            }
-        });
-
-        HBox buttonBox = new HBox(10, confirmButton);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        var vBox = new VBox(10, title, addDate, buttonBox);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), null)));
-        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
-        vBox.setPrefWidth(400);
-        vBox.setPrefHeight(200);
-        vBox.setSpacing(50);
-        vBox.setPadding(new Insets(5));
-
-        popup.getContent().add(vBox);
-        popup.show(application.getStage());
-        popup.centerOnScreen();
-    }
 
     private void settingsPopup() {
         Popup popup = new Popup();
@@ -283,24 +268,7 @@ public class RestaurantTableScene extends Scene {
         popup.centerOnScreen();
     }
 
-    private String[] getTimeSlots(Restaurant restaurant) {
-        String[] timeSlots = new String[restaurant.getClosingTime() - restaurant.getOpeningTime()];
-        int time = restaurant.getOpeningTime();
-        String timeString1;
-        String timeString2;
-        for (int i = 0; i < timeSlots.length; i++) {
-            timeString1 = String.valueOf(time);
-            if (time < 10) {
-                timeString1 = "0".concat(timeString1);
-            }
-            timeString2 = String.valueOf(++time);
-            if (time < 10) {
-                timeString2 = "0".concat(timeString2);
-            }
-            timeSlots[i] = timeString1 + ":00 - " + timeString2 + ":00";
-        }
-        return timeSlots;
-    }
+
 
     public void resultPopup(Reservation reservation) {
         Popup popup = new Popup();
@@ -413,14 +381,13 @@ public class RestaurantTableScene extends Scene {
             Reservation persistedReservation = null;
             try {
                 persistedReservation = clientController.addReservation(newReservation);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
             resultPopup(persistedReservation);
-            if (persistedReservation!=null) {
+            if (persistedReservation!=null && application.isGoogleAuthorized()) {
                 try {
-                    eventSchedulingService.createEvent(
+                    application.getEventSchedulingService().createEvent(
                         "Reservation at " + restaurant.getName(),
                         restaurant.getAddress(),
                         "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app or by clicking http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",

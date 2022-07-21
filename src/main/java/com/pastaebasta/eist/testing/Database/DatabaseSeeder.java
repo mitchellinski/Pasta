@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.testing.Database;
 
+import com.google.maps.model.OpeningHours;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;

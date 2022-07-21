@@ -6,13 +6,20 @@ import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.*;
 import com.pastaebasta.eist.shared.model.GoogleRestaurant;
+import com.pastaebasta.eist.shared.model.Restaurant;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.util.Pair;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class NearbySearchService extends QueryService {
     final String findPlaceURL = "/place/nearbysearch//json?location=";
     private final String blocker = "DO NOT REMOVE UNLESS SEB KNOWS";
@@ -21,7 +28,7 @@ public class NearbySearchService extends QueryService {
     private final String url;
     private PlacesApi placeDetails;
     private PlacesSearchResult[] results;
-    private List<GoogleRestaurant> cleanedRestaurants;
+    private List<Restaurant> cleanedRestaurants;
     private Gson gson;
 
     public NearbySearchService(LatLng location, String query, int radius, PriceLevel minPrice, PriceLevel maxPrice) throws IOException, InterruptedException, ApiException {
@@ -34,18 +41,17 @@ public class NearbySearchService extends QueryService {
         this.runQuery(query, radius, minPrice, maxPrice);
     }
 
-
     public PlacesSearchResponse runQuery(String query, int radius, PriceLevel minPrice, PriceLevel maxPrice) throws IOException {
         PlacesSearchResponse response = new PlacesSearchResponse();
         try {
             response = PlacesApi.nearbySearchQuery(this.getContext(), this.getLocation())
-                    // .keyword(query)
+                   // .keyword(query)
                     .radius(radius)
                     .rankby(RankBy.PROMINENCE)
                     .language("en")
                     .minPrice(minPrice)
                     .maxPrice(maxPrice)
-                    .openNow(true)
+                    //.openNow(true)
                     .type(PlaceType.RESTAURANT)
                     .await();
 
@@ -57,64 +63,39 @@ public class NearbySearchService extends QueryService {
         return response;
     }
 
-    private List<GoogleRestaurant> cleanResults() {
+    private Pair<LocalTime, LocalTime> extractOpeningHours(OpeningHours openingHours) {
+        LocalTime open = LocalTime.of(8,0);
+        LocalTime close = LocalTime.of(22,0);
+
+        if (openingHours != null && openingHours.periods != null) {
+            for (OpeningHours.Period period : openingHours.periods) {
+                open = period.open.time;
+                close = period.close.time;
+                break;
+            }
+        }
+
+        return Pair.of(open, close);
+    }
+
+    private List<Restaurant> cleanResults() {
         PlacesSearchResult[] input = this.getResults();
-        List<GoogleRestaurant> restaurantList = new ArrayList<GoogleRestaurant>();
-        for (PlacesSearchResult curr : input) {
-            GoogleRestaurant tempRestaurant = new GoogleRestaurant(curr.placeId
-                    , curr.name
-                    , curr.formattedAddress
-                    , curr.geometry.location
-                    , Math.round(curr.rating * 10.0) / 10.0
-                    , curr.openingHours
-                    , curr.photos);
+        List<Restaurant> restaurantList = new ArrayList<>();
+
+        for (PlacesSearchResult result : input) {
+            Pair<LocalTime, LocalTime> pair = extractOpeningHours(result.openingHours);
+            Restaurant tempRestaurant = Restaurant.builder()
+                .name(result.name)
+                .address(result.formattedAddress)
+                .coordinates(result.geometry.location)
+                .ratingAverage(result.rating)
+                .openingTime(pair.getFirst().getHour())
+                .closingTime(pair.getSecond().getHour())
+                .pictures(result.photos)
+                .build();
             restaurantList.add(tempRestaurant);
         }
         return restaurantList;
-
     }
 
-    public String getFindPlaceURL() {
-        return findPlaceURL;
-    }
-
-    public GeoApiContext getContext() {
-        return context;
-    }
-
-    public PlacesApi getPlaceDetails() {
-        return placeDetails;
-    }
-
-    public PlacesSearchResult[] getResults() {
-        return results;
-    }
-
-    public void setResults(PlacesSearchResult[] results) {
-        this.results = results;
-    }
-
-    public Gson getGson() {
-        return gson;
-    }
-
-    public void setGson(Gson gson) {
-        this.gson = gson;
-    }
-
-    public LatLng getLocation() {
-        return location;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public List<GoogleRestaurant> getCleanedRestaurants() {
-        return cleanedRestaurants;
-    }
-
-    public void setCleanedRestaurants(List<GoogleRestaurant> cleanedRestaurants) {
-        this.cleanedRestaurants = cleanedRestaurants;
-    }
 }

@@ -2,6 +2,7 @@ package com.pastaebasta.eist.client.view;
 
 import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
+import com.pastaebasta.eist.client.helper.EventSchedulingService;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.application.Application;
@@ -10,11 +11,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class ViewApplication extends Application {
 
     private final ClientController clientController = new ClientController();
@@ -22,6 +27,9 @@ public class ViewApplication extends Application {
     private Customer customer;
     private boolean loggedIn;
     private Restaurant restaurant;
+    private EventSchedulingService eventSchedulingService;
+
+    private boolean googleAuthorized;
 
     private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 

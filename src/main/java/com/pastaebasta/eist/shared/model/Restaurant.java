@@ -1,6 +1,8 @@
 package com.pastaebasta.eist.shared.model;
 
 import com.google.maps.model.LatLng;
+import com.google.maps.model.OpeningHours;
+import com.google.maps.model.Photo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,18 +33,18 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String restaurantId;
 
+    // Google Attributes
+    private OpeningHours openingHours;
+    private LatLng coordinates;
+    private Photo[] pictures;
+    private double ratingAverage;
     private String name;
     private String address;
-    private Genre restaurantGenre;
-    private String coordinates;
 
+    private Genre restaurantGenre;
     private PriceCategory priceCategory;
-    private double ratingAverage;
 
     private int numberOfTables;
     private int openingTime;
     private int closingTime;
-
-    private ArrayList<String> pictures;
-
 }

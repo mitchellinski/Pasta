@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <AnchorPane id="AnchorPane" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/8.0.65"
             xmlns:fx="http://javafx.com/fxml/1">
-<!--    fx:controller="com.pastaebasta.eist.server.service.DynamicMapsService"-->
+<!--    fx:controller="com.pastaebasta.eist.client.helper.DynamicMapsService"-->
     <children>
 <!--        <Label alignment="TOP_CENTER" contentDisplay="RIGHT"-->
 <!--               text="For detailed searching only. Please use the list view for booking reservations."-->

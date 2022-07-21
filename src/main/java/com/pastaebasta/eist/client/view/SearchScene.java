@@ -269,13 +269,14 @@ public class SearchScene extends Scene {
                     System.out.println(address.getText());
                     return;
                 }
-                var temp = new GeocodingService(address.getText()).getResults();
-                this.latLng = new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ApiException e) {
+
+                if ("$test".equalsIgnoreCase(address.getText())) {
+                    this.latLng = new LatLng(48.148849, 11.568000);
+                } else {
+                    var temp = new GeocodingService(address.getText()).getResults();
+                    this.latLng = new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng);
+                }
+            } catch (IOException | InterruptedException | ApiException e) {
                 e.printStackTrace();
             }
             popup.hide();

@@ -44,13 +44,15 @@ public class RestaurantController {
      * @return List of nearby restaurants.
      */
     @GetMapping("/search")
-    public ResponseEntity<List<GoogleRestaurant>> searchRestaurants(@RequestParam(required = true) double lat,
-                                                                    @RequestParam(required = true) double lng,
-                                                                    @RequestParam(defaultValue = "") String name,
-                                                                    @RequestParam(defaultValue = "") String genre,
-                                                                    @RequestParam(defaultValue = "cheap") String min_price_category,
-                                                                    @RequestParam(defaultValue = "very expensive") String max_price_category,
-                                                                    @RequestParam(defaultValue = "5000") int distance) throws IOException, InterruptedException, ApiException {
+    public ResponseEntity<List<Restaurant>> searchRestaurants(
+        @RequestParam(required = true) double lat,
+        @RequestParam(required = true) double lng,
+        @RequestParam(defaultValue = "") String name,
+        @RequestParam(defaultValue = "") String genre,
+        @RequestParam(defaultValue = "cheap") String min_price_category,
+        @RequestParam(defaultValue = "very expensive") String max_price_category,
+        @RequestParam(defaultValue = "5000") int distance) throws IOException, InterruptedException, ApiException {
+
         if (!genre.isBlank()) {
             name = name + " " + genre;
         }
@@ -75,8 +77,8 @@ public class RestaurantController {
     }
 
     /**
-     * Queries Google Maps API for nearby restaurants.
-     * TODO: implement method properly
+     * Test - returns 50 randomly generated restaurants.
+     * IDs and names are not random for testing.
      *
      * @return List of nearby restaurants.
      */
