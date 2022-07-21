@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.client.view;
 
+import com.google.maps.model.Photo;
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.client.helper.EventSchedulingService;
 import com.pastaebasta.eist.shared.model.Restaurant;
@@ -7,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,6 +17,7 @@ import javafx.stage.Popup;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,25 +44,49 @@ public class RestaurantScene extends Scene {
         grid.setPadding(new Insets(20));
         grid.setHgap(10);
         grid.setVgap(10);
+
         Label headline = new Label(restaurant.getName());
         headline.setFont(new Font("Arial", 20));
 
-        Label openHours = new Label("Open Hours: " + '\n'
-                + "Monday - Sunday: "+restaurant.getOpeningTime() + " - " +restaurant.getClosingTime() + "pm");
-        openHours.setFont(new Font("Arial", 20));
-        GridPane.setConstraints(openHours, 0, 0);
+        Photo[] photos = restaurant.getPictures();
+        Photo profilePhoto;
+        if(photos.length > 0) {
+            profilePhoto = photos[0];
+        }
+ //       Image image = new Image(profilePhoto.photoReference);
+
+        Label addressLabel = new Label("Address: ");
+        addressLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(addressLabel, 0, 0);
+        Label addressValue = new Label(restaurant.getAddress());
+        addressValue.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(addressValue, 1, 0);
+
+        Label ratingLabel = new Label("Rating: ");
+        ratingLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(ratingLabel, 0, 1);
+        Label ratingValue = new Label(String.valueOf(restaurant.getRatingAverage()));
+        ratingValue.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(ratingValue, 1, 1);
+
+        Label openLabel = new Label("Currently Open: ");
+        openLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(openLabel, 0, 2);
+        Label openValue = new Label(restaurant.getOpeningHours().openNow.toString());
+        openValue.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(openValue, 1, 2);
 
         Button reservationButton = new Button("Reserve a table");
         reservationButton.setOnAction(event -> application.showRestaurantTableScene(restaurant, false));
-        GridPane.setConstraints(reservationButton, 0, 1);
 
         Button backButton = new Button("Back");
-        backButton.setOnAction(event -> application.showSearchScene(null));
+        backButton.setOnAction(event -> application.showSearchScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
 
-        grid.getChildren().addAll(openHours, reservationButton);
+        grid.getChildren().addAll(addressLabel, addressValue, ratingLabel, ratingValue, openLabel, openValue);
+        grid.setAlignment(Pos.CENTER);
 
-        var vBox = new VBox(10, headline, openHours, reservationButton, backButton);
+        var vBox = new VBox(10, headline, grid, reservationButton, backButton);
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }

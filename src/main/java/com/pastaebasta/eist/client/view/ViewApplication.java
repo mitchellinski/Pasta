@@ -28,6 +28,7 @@ public class ViewApplication extends Application {
     private boolean loggedIn;
     private Restaurant restaurant;
     private EventSchedulingService eventSchedulingService;
+    private LatLng latLng;
 
     private boolean googleAuthorized;
 
@@ -44,6 +45,7 @@ public class ViewApplication extends Application {
     }
 
     public void showHomeScene() {
+        latLng = null;
         stage.setScene(new HomeScene(this));
     }
 
@@ -55,11 +57,11 @@ public class ViewApplication extends Application {
         stage.setScene(new PastReservationsScene(clientController, this));
     }
 
-    public void showSearchScene(LatLng latLng) {
+    public void showSearchScene() {
         stage.setScene(new SearchScene(clientController, this, latLng));
     }
 
-    public void showMapsScene(LatLng latLng) throws IOException {
+    public void showMapsScene() throws IOException {
         stage.setScene(new MapsScene(clientController, this, latLng));
     }
 
@@ -121,5 +123,13 @@ public class ViewApplication extends Application {
 
     public Argon2PasswordEncoder getArgon2PasswordEncoder() {
         return argon2PasswordEncoder;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public LatLng getLatLng() {
+        return this.latLng;
     }
 }

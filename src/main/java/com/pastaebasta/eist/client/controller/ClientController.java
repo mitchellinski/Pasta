@@ -160,14 +160,6 @@ public class ClientController {
                 .block();
     }
 
-    public BufferedImage getMap() {
-        return webClient.get()
-                .uri("restaurants/map")
-                .retrieve()
-                .bodyToMono(BufferedImage.class)
-                .block();
-    }
-
     public void confirmReservation(Reservation reservation) {
          webClient.patch()
             .uri("reservations/"+reservation.getReservationId()+"/confirm");

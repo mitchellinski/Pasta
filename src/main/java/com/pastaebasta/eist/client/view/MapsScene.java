@@ -36,7 +36,7 @@ public class MapsScene extends Scene {
         headline.setFont(new Font("Arial", 20));
 
         Button switchToListButton = new Button("Switch to List View");
-        switchToListButton.setOnAction(event -> application.showSearchScene(latLng));
+        switchToListButton.setOnAction(event -> application.showSearchScene());
 
         URL url = new File("src/main/resources/Scene.fxml").toURI().toURL();
         FXMLLoader loader = new FXMLLoader(url);

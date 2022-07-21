@@ -34,11 +34,11 @@ public class PastReservationsScene extends Scene {
     private final ObservableList<Reservation> pastReservations;
     private TableView<Reservation> activeTable = new TableView<>();
     private TableView<Reservation> pastTable;
-    double w;
+    double width;
 
     public PastReservationsScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
-        int width = (int) application.getStage().getScene().getWidth();
+        width = application.getStage().getScene().getWidth() / 7.0;
         this.clientController = clientController;
         this.application = application;
         this.activeReservations = FXCollections.observableArrayList();
@@ -49,7 +49,6 @@ public class PastReservationsScene extends Scene {
 
         Label headline = new Label("My Reservations");
         headline.setFont(new Font("Arial", 20));
-        w = width / 6.0;
 
 //        var buttonColumn = new TableColumn<Reservation, String>("ID");
 //        buttonColumn.setSortable(false);
@@ -84,13 +83,13 @@ public class PastReservationsScene extends Scene {
 
         var idColumn = new TableColumn<Reservation, String>("ID");
         idColumn.setSortable(false);
-        idColumn.setPrefWidth(w);
+        idColumn.setPrefWidth(width);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
         var dateColumn = new TableColumn<Reservation, String>("Date");
         dateColumn.setSortable(true);
-        dateColumn.setPrefWidth(w);
+        dateColumn.setPrefWidth(width);
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
-        dateColumn.setPrefWidth(w);
+        dateColumn.setPrefWidth(width);
         dateColumn.setCellValueFactory(param -> {
             LocalDateTime time = param.getValue().getStartDateTime();
             String day = addZero(String.valueOf(time.getDayOfMonth()));
@@ -104,18 +103,18 @@ public class PastReservationsScene extends Scene {
 
         var nameColumn = new TableColumn<Reservation, String>("Restaurant");
         nameColumn.setSortable(true);
-        nameColumn.setPrefWidth(w);
+        nameColumn.setPrefWidth(width);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantName"));
         var visitorColumn = new TableColumn<Reservation, String>("Visitors");
         visitorColumn.setSortable(true);
-        visitorColumn.setPrefWidth(w);
+        visitorColumn.setPrefWidth(width);
         visitorColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfVisitors"));
         var confirmationColumn = new TableColumn<Reservation, String>("Confirmation Status");
         confirmationColumn.setSortable(true);
-        confirmationColumn.setPrefWidth(w);
+        confirmationColumn.setPrefWidth(width);
         confirmationColumn.setCellValueFactory(new PropertyValueFactory<>("confirmed"));
         table.getColumns().addAll(idColumn, dateColumn, nameColumn, visitorColumn, confirmationColumn);
-        addButtonToTable(w);
+        addButtonToTable();
 
         return table;
     }
@@ -212,7 +211,7 @@ public class PastReservationsScene extends Scene {
         popup.centerOnScreen();
     }
 
-    private void addButtonToTable(double width) {
+    private void addButtonToTable() {
         TableColumn<Reservation, Void> colBtn = new TableColumn("Reservation");
         colBtn.setPrefWidth(width);
 

@@ -35,12 +35,12 @@ public class SearchScene extends Scene {
     private final ViewApplication application;
     private final ObservableList<Restaurant> restaurants = FXCollections.observableArrayList();
     private TableView<Restaurant> table;
-    private int width;
+    private double width;
     private LatLng latLng;
 
     public SearchScene(ClientController clientController, ViewApplication application, LatLng latLng) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
-        width = (int) application.getStage().getScene().getWidth();
+        width = application.getStage().getScene().getWidth() / 7.0;
         this.clientController = clientController;
         this.application = application;
         this.latLng = latLng;
@@ -58,42 +58,41 @@ public class SearchScene extends Scene {
         Button switchToMapButton = new Button("Switch to Map View");
         switchToMapButton.setOnAction(event -> {
             try {
-                application.showMapsScene(latLng);
+                application.showMapsScene();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
 
-//        clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
         this.table = new TableView<>(restaurants);
-
-        double w = width / 6.0;
 
         var nameColumn = new TableColumn<Restaurant, String>("Name");
         nameColumn.setSortable(true);
-        nameColumn.setPrefWidth(w);
+        nameColumn.setPrefWidth(width);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         var addressColumn = new TableColumn<Restaurant, String>("Address");
         addressColumn.setSortable(true);
-        addressColumn.setPrefWidth(w);
+        addressColumn.setPrefWidth(width);
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
-        var genreColumn = new TableColumn<Restaurant, String>("Genre");
+        var genreColumn = new TableColumn<Restaurant, String>("Type");
         genreColumn.setSortable(true);
-        genreColumn.setPrefWidth(w);
+        genreColumn.setPrefWidth(width);
         genreColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantGenre"));
         var priceColumn = new TableColumn<Restaurant, String>("Price Category");
         priceColumn.setSortable(true);
-        priceColumn.setPrefWidth(w);
+        priceColumn.setPrefWidth(width);
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("priceCategory"));
-
         var ratingColumn = new TableColumn<Restaurant, String>("Rating");
         ratingColumn.setSortable(true);
-        ratingColumn.setPrefWidth(w);
+        ratingColumn.setPrefWidth(width);
         ratingColumn.setCellValueFactory(new PropertyValueFactory<>("ratingAverage"));
+        var distanceColumn = new TableColumn<Restaurant, Double>("Distance (in meters)");
+        distanceColumn.setSortable(true);
+        distanceColumn.setPrefWidth(width);
+        distanceColumn.setCellValueFactory(new PropertyValueFactory<>("distance"));
 
-
-        table.getColumns().addAll(nameColumn, addressColumn, genreColumn, priceColumn, ratingColumn);
-        addButtonToTable(w);
+        table.getColumns().addAll(nameColumn, addressColumn, genreColumn, priceColumn, ratingColumn, distanceColumn);
+        addButtonToTable(width);
 
         var vBox = new VBox(10, headline, switchToMapButton, createSearchBar(), table, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
@@ -178,6 +177,7 @@ public class SearchScene extends Scene {
                         .map(String::toLowerCase)
                         .toList();
         minPriceBox.getItems().addAll(categories);
+        minPriceBox.setValue("cheap");
         GridPane.setConstraints(minPriceBox, 2, 1);
 
         Label maxPriceLabel = new Label("Max Price Category");
@@ -195,10 +195,10 @@ public class SearchScene extends Scene {
         TextField distanceField = new TextField("2000");
         distanceField.setPrefWidth(50);
         GridPane.setConstraints(distanceField, 5, 1);
-        Slider slider = new Slider(0, 5000, 2000);
+        Slider slider = new Slider(0, 50000, 20000);
         slider.setPrefWidth(200);
         slider.setShowTickMarks(true);
-        slider.setMajorTickUnit(1000);
+        slider.setMajorTickUnit(5000);
         slider.setMinorTickCount(3);
         slider.setShowTickLabels(true);
         slider.valueProperty().addListener(new ChangeListener<Number>() {
@@ -274,7 +274,8 @@ public class SearchScene extends Scene {
                     this.latLng = new LatLng(48.148849, 11.568000);
                 } else {
                     var temp = new GeocodingService(address.getText()).getResults();
-                    this.latLng = new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng);
+                    application.setLatLng(new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng));
+                    this.latLng = application.getLatLng();
                 }
             } catch (IOException | InterruptedException | ApiException e) {
                 e.printStackTrace();
