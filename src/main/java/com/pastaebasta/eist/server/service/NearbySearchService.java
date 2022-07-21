@@ -88,7 +88,7 @@ public class NearbySearchService extends QueryService {
                 .name(result.name)
                 .address(result.formattedAddress)
                 .coordinates(result.geometry.location)
-                .ratingAverage(result.rating)
+                .ratingAverage(Math.round(result.rating * 10.0) / 10.0)
                 .openingTime(pair.getFirst().getHour())
                 .closingTime(pair.getSecond().getHour())
                 .pictures(result.photos)
