@@ -39,7 +39,7 @@ public class NearbySearchService extends QueryService {
         PlacesSearchResponse response = new PlacesSearchResponse();
         try {
             response = PlacesApi.nearbySearchQuery(this.getContext(), this.getLocation())
-                   // .keyword(query)
+                    // .keyword(query)
                     .radius(radius)
                     .rankby(RankBy.PROMINENCE)
                     .language("en")
@@ -65,7 +65,7 @@ public class NearbySearchService extends QueryService {
                     , curr.name
                     , curr.formattedAddress
                     , curr.geometry.location
-                    , curr.rating
+                    , Math.round(curr.rating * 10.0) / 10.0
                     , curr.openingHours
                     , curr.photos);
             restaurantList.add(tempRestaurant);

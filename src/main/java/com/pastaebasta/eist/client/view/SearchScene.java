@@ -4,15 +4,15 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.server.service.GeocodingService;
-import com.pastaebasta.eist.server.service.NearbySearchService;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -143,10 +143,10 @@ public class SearchScene extends Scene {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
         grid.setVgap(5);
-        grid.setHgap(5);
+        grid.setHgap(15);
 
         Label searchLabel = new Label("Search for a Restaurant");
-        searchLabel.setFont(new Font("Arial", 20));
+        searchLabel.setFont(new Font("Arial", 10));
         GridPane.setConstraints(searchLabel, 0, 0);
 
         TextField searchField = new TextField();
@@ -154,7 +154,7 @@ public class SearchScene extends Scene {
         GridPane.setConstraints(searchField, 0, 1);
 
         Label genreLabel = new Label("Type");
-        genreLabel.setFont(new Font("Arial", 20));
+        genreLabel.setFont(new Font("Arial", 10));
         GridPane.setConstraints(genreLabel, 1, 0);
 
         ChoiceBox<String> genreBox = new ChoiceBox<>();
@@ -168,7 +168,7 @@ public class SearchScene extends Scene {
 
 
         Label minPriceLabel = new Label("Min Price Category");
-        minPriceLabel.setFont(new Font("Arial", 20));
+        minPriceLabel.setFont(new Font("Arial", 10));
         GridPane.setConstraints(minPriceLabel, 2, 0);
 
         ChoiceBox<String> minPriceBox = new ChoiceBox<>();
@@ -181,24 +181,43 @@ public class SearchScene extends Scene {
         GridPane.setConstraints(minPriceBox, 2, 1);
 
         Label maxPriceLabel = new Label("Max Price Category");
-        maxPriceLabel.setFont(new Font("Arial", 20));
+        maxPriceLabel.setFont(new Font("Arial", 10));
         GridPane.setConstraints(maxPriceLabel, 3, 0);
 
         ChoiceBox<String> maxPriceBox = new ChoiceBox<>();
         maxPriceBox.getItems().addAll(categories);
         GridPane.setConstraints(maxPriceBox, 3, 1);
 
-        Label distanceLabel = new Label("Set the distance");
-        distanceLabel.setFont(new Font("Arial", 20));
+        Label distanceLabel = new Label("Set the distance (in meter)");
+        distanceLabel.setFont(new Font("Arial", 10));
         GridPane.setConstraints(distanceLabel, 4, 0);
-        Slider distanceField = new Slider(0, 20000, 5000);
-        GridPane.setConstraints(distanceField, 4, 1);
-
+        GridPane.setColumnSpan(distanceLabel, 2);
+        TextField distanceField = new TextField("2000");
+        distanceField.setPrefWidth(50);
+        GridPane.setConstraints(distanceField, 5, 1);
+        Slider slider = new Slider(0, 5000, 2000);
+        slider.setPrefWidth(200);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(1000);
+        slider.setMinorTickCount(3);
+        slider.setShowTickLabels(true);
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                distanceField.setText(String.valueOf(newValue.intValue()));
+            }
+        });
+        distanceField.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                slider.setValue(Integer.parseInt(distanceField.getText().trim()));
+            }
+        });
+        GridPane.setConstraints(slider, 4, 1);
         Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
 //                clientController.search(searchField.getText(), Genre.GERMAN, minPriceBox.getValue(), 5000, this::setRestaurants)
             clientController.search(this.latLng, searchField.getText(), genreBox.getValue()
-                    , minPriceBox.getValue(), maxPriceBox.getValue(), (int) distanceField.getValue(), this::setRestaurants);
+                    , minPriceBox.getValue(), maxPriceBox.getValue(), Integer.parseInt(distanceField.getText().trim()), this::setRestaurants);
         });
 //        searchField.setOnKeyPressed(event -> {
 //            if (event.getCode() == KeyCode.ENTER) {
@@ -206,10 +225,10 @@ public class SearchScene extends Scene {
 //                        5000, this::setRestaurants);
 //            }
 //        });
-        GridPane.setConstraints(searchButton, 5, 1);
+        GridPane.setConstraints(searchButton, 6, 1);
 
         grid.getChildren().addAll(searchLabel, searchField, genreLabel, genreBox, minPriceLabel, minPriceBox,
-                maxPriceLabel, maxPriceBox, distanceLabel, distanceField, searchButton);
+                maxPriceLabel, maxPriceBox, distanceLabel, slider, distanceField, searchButton);
         grid.setAlignment(Pos.TOP_CENTER);
 
         return grid;

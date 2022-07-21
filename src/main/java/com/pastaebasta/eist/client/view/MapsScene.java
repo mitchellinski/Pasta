@@ -11,23 +11,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 
 public class MapsScene extends Scene {
 
@@ -56,6 +47,5 @@ public class MapsScene extends Scene {
         vBox.setAlignment(Pos.CENTER);
 
         setRoot(vBox);
-//        setRoot(FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml")))
     }
 }
