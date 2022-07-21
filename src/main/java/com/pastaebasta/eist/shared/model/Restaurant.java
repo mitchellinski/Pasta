@@ -3,6 +3,7 @@ package com.pastaebasta.eist.shared.model;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.OpeningHours;
 import com.google.maps.model.Photo;
+import com.google.maps.model.PlaceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -50,7 +50,6 @@ public class SearchScene extends Scene {
         init();
     }
 
-
     private void init() {
         Label headline = new Label("Search for Restaurant");
         headline.setFont(new Font("Arial", 20));
@@ -186,6 +185,7 @@ public class SearchScene extends Scene {
 
         ChoiceBox<String> maxPriceBox = new ChoiceBox<>();
         maxPriceBox.getItems().addAll(categories);
+        maxPriceBox.setValue("very expensive");
         GridPane.setConstraints(maxPriceBox, 3, 1);
 
         Label distanceLabel = new Label("Set the distance (in meter)");
@@ -208,7 +208,7 @@ public class SearchScene extends Scene {
             }
         });
         distanceField.setOnKeyPressed(event -> {
-            if(event.getCode() == KeyCode.ENTER) {
+            if (event.getCode() == KeyCode.ENTER) {
                 slider.setValue(Integer.parseInt(distanceField.getText().trim()));
             }
         });

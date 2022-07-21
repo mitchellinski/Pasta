@@ -1,15 +1,5 @@
 package com.pastaebasta.eist.testing;
 
-import com.google.api.client.json.Json;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.PriceLevel;
-import com.pastaebasta.eist.server.service.GeocodingService;
-import com.pastaebasta.eist.server.service.NearbySearchService;
-import com.pastaebasta.eist.server.service.StaticMapsService;
-
-import java.io.IOException;
-
 public class Main {
 
     public static void main(String[] args) {

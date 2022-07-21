@@ -6,7 +6,6 @@ import com.google.maps.model.PriceLevel;
 import com.pastaebasta.eist.server.service.NearbySearchService;
 import com.pastaebasta.eist.server.service.RestaurantService;
 import com.pastaebasta.eist.shared.model.Genre;
-import com.pastaebasta.eist.shared.model.GoogleRestaurant;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
@@ -45,13 +44,13 @@ public class RestaurantController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<Restaurant>> searchRestaurants(
-        @RequestParam(required = true) double lat,
-        @RequestParam(required = true) double lng,
-        @RequestParam(defaultValue = "") String name,
-        @RequestParam(defaultValue = "") String genre,
-        @RequestParam(defaultValue = "cheap") String min_price_category,
-        @RequestParam(defaultValue = "very expensive") String max_price_category,
-        @RequestParam(defaultValue = "5000") int distance) throws IOException, InterruptedException, ApiException {
+            @RequestParam(required = true) double lat,
+            @RequestParam(required = true) double lng,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") String genre,
+            @RequestParam(defaultValue = "cheap") String min_price_category,
+            @RequestParam(defaultValue = "very expensive") String max_price_category,
+            @RequestParam(defaultValue = "5000") int distance) throws IOException, InterruptedException, ApiException {
 
         if (!genre.isBlank()) {
             name = name + " " + genre;

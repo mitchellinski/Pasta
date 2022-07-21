@@ -5,7 +5,6 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.*;
-import com.pastaebasta.eist.shared.model.GoogleRestaurant;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
 import lombok.Getter;
@@ -25,7 +24,8 @@ import java.util.Random;
 public class NearbySearchService extends QueryService {
 
     final String findPlaceURL = "/place/nearbysearch//json?location=";
-    private final String blocker = "DO NOT REMOVE UNLESS SEB KNOWS";
+    private static final Random RANDOM = new Random();
+
     private final GeoApiContext context;
     private final LatLng location;
     private final String url;
@@ -47,7 +47,11 @@ public class NearbySearchService extends QueryService {
                 .build();
         this.results = new ArrayList<>();
         this.url = getBase_url() + findPlaceURL + URLEncoder.encode(String.valueOf(location), StandardCharsets.UTF_8);
-        this.runQuery(query, radius, minPrice, maxPrice);
+        this.query = query;
+        this.radius = radius;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+        this.placeType = placeType;
     }
 
     public List<Restaurant> runSearch() throws IOException {
@@ -70,18 +74,16 @@ public class NearbySearchService extends QueryService {
         return restaurants;
     }
 
-    public PlacesSearchResponse runQuery(String query, int radius, PriceLevel minPrice, PriceLevel maxPrice) throws IOException {
+    public List<PlacesSearchResult> runQuery(String query, int radius, PriceLevel minPrice, PriceLevel maxPrice, PlaceType placeType) throws IOException {
         PlacesSearchResponse response = new PlacesSearchResponse();
         try {
             response = PlacesApi.nearbySearchQuery(this.getContext(), this.getLocation())
-                   // .keyword(query)
                     .radius(radius)
                     .rankby(RankBy.PROMINENCE)
                     .language("en")
                     .minPrice(minPrice)
                     .maxPrice(maxPrice)
-                    //.openNow(true)
-                    .type(PlaceType.RESTAURANT)
+                    .type(placeType)
                     .await();
         } catch (Exception e) {
             System.out.println("Something went wrong");
