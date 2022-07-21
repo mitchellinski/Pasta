@@ -40,11 +40,26 @@ public class Restaurant {
     private double ratingAverage;
     private String name;
     private String address;
+    private String restaurantGenre;
 
-    private Genre restaurantGenre;
+    //private Genre restaurantGenre;
     private PriceCategory priceCategory;
 
     private int numberOfTables;
     private int openingTime;
     private int closingTime;
+
+    private double distance;
+
+    public static int IdToInteger(String id) {
+        return Math.abs(id.hashCode());
+    }
+
+    public int getPseudoHash(String id) {
+        return "".equals(restaurantId) ? 0 : IdToInteger(id);
+    }
+
+    public int getPseudoHash() {
+        return "".equals(restaurantId) ? 0 : IdToInteger(restaurantId);
+    }
 }

@@ -121,8 +121,8 @@ public class RestaurantTableScene extends Scene {
         if (restaurant == null) {
             return;
         }
-        byte[] bytes = restaurant.getRestaurantId().getBytes();
-        int index = Math.abs(bytes[0] % RESTAURANT_MAPS.length);
+        int index = Math.abs(restaurant.getPseudoHash() % RESTAURANT_MAPS.length);
+
         URL restaurantPathUrl = getClass().getClassLoader().getResource(RESTAURANT_MAPS[index]);
         if (restaurantPathUrl == null) {
             throw new IllegalArgumentException(
@@ -185,7 +185,7 @@ public class RestaurantTableScene extends Scene {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                setDisable(item.isBefore(LocalDate.now()));
+                setDisable(item.isBefore(LocalDate.now().plusDays(1)));
             }
         });
 

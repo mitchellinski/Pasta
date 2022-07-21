@@ -131,7 +131,17 @@ public class DatabaseSeeder {
      *
      * @return a random price category
      */
-    private static PriceCategory getRandomPriceCategory() {
+    public static PriceCategory getRandomPriceCategory() {
+        return PriceCategory.values()[RNG.nextInt(PriceCategory.values().length)];
+    }
+
+    /**
+     * Uses a RNG to pick a random price category from PriceCategory.
+     *
+     * @return a random price category
+     */
+    public static PriceCategory getSeededRandomPriceCategory(long seed) {
+        RNG.setSeed(seed);
         return PriceCategory.values()[RNG.nextInt(PriceCategory.values().length)];
     }
 
@@ -140,8 +150,8 @@ public class DatabaseSeeder {
      *
      * @return a random restaurant genre
      */
-    private static Genre getRandomRestaurantGenre() {
-        return GENRES.get(RNG.nextInt(GENRES.size()));
+    private static String getRandomRestaurantGenre() {
+        return GENRES.get(RNG.nextInt(GENRES.size())).toString();
     }
 
     /**

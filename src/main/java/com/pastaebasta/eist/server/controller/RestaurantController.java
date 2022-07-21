@@ -73,7 +73,7 @@ public class RestaurantController {
             default -> throw new IllegalStateException("Unexpected value: " + max_price_category);
         }
         var result = new NearbySearchService(new LatLng(lat, lng), name, distance, minPriceLevel, maxPriceLevel);
-        return ResponseEntity.ok(result.getCleanedRestaurants());
+        return ResponseEntity.ok(result.runSearch());
     }
 
     /**
