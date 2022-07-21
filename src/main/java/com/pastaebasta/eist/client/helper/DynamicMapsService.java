@@ -1,4 +1,4 @@
-package com.pastaebasta.eist.server.service;
+package com.pastaebasta.eist.client.helper;
 
 
 import com.dlsc.gmapsfx.GoogleMapView;

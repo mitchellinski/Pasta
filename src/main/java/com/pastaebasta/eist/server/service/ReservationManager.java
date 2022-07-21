@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * PASTA E BASTA - Reservation Manager
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationManager {
     private static final int MAXIMUM_RESERVATION_AMOUNT_PER_CUSTOMER = 3;
-    public static final int RESERVATION_CHECK_CYCLE_S = 5000;
+    public static final int RESERVATION_CHECK_CYCLE_MINUTES = 5;
 
     private final RestaurantRepository restaurantRepository;
     private final CustomerRepository customerRepository;
@@ -30,11 +31,10 @@ public class ReservationManager {
     private final CustomerService customerService;
     private final ReservationService reservationService;
 
-    @Scheduled(fixedRate = RESERVATION_CHECK_CYCLE_S * 1000)
+    @Scheduled(fixedRate = RESERVATION_CHECK_CYCLE_MINUTES, timeUnit = TimeUnit.MINUTES)
     public void notifyPendingReservations() {
-        List<Reservation> pendingReservations = reservationRepository.getReservationsBetween(
-            LocalDateTime.now().plusHours(12).minusSeconds(RESERVATION_CHECK_CYCLE_S),
-            LocalDateTime.now().plusHours(12).plusSeconds(RESERVATION_CHECK_CYCLE_S)
+        List<Reservation> pendingReservations = reservationRepository.getReservationsBefore(
+            LocalDateTime.now().plusHours(12).minusSeconds(5)
         );
 
         pendingReservations.forEach(reservation -> {

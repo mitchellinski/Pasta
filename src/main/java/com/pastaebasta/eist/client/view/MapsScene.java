@@ -2,7 +2,7 @@ package com.pastaebasta.eist.client.view;
 
 import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
-import com.pastaebasta.eist.server.service.DynamicMapsService;
+import com.pastaebasta.eist.client.helper.DynamicMapsService;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import javafx.embed.swing.SwingFXUtils;

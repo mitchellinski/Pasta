@@ -139,7 +139,7 @@ public class PastReservationsScene extends Scene {
         Label headline = new Label("Edit reservation");
         headline.setFont(new Font("Arial", 20));
         Text text = new Text(
-            String.format("Reservation for %s, on %s. Table: %d. Visitors: %d.\nImportant: Please remember to confirm or cancel your reservation up to 12 hours before it begins in the app",
+            String.format("Reservation for %s, on %s. Table: %d. Visitors: %d.\nImportant: Please remember to confirm or cancel your reservation up to 12 hours before it begins in the app. You may not cancel a reservation after you have already confirmed it!",
             reservation.getRestaurantName(),
             reservation.getStartDateTime().format(DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' HH:mm")),
             reservation.getTableId(),
@@ -169,7 +169,7 @@ public class PastReservationsScene extends Scene {
         Button cancelButton = new Button("Cancel reservation");
         cancelButton.setOnAction(event -> {
             if (reservation.isConfirmed()) {
-                warning.setText("Your reservation starts in less than 12 hours, you may no longer cancel this reservation!");
+                warning.setText("You may not cancel a reservation after you have already confirmed it!");
                 warning.setVisible(true);
                 return;
             }
