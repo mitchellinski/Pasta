@@ -30,11 +30,11 @@ import java.util.List;
 public class PastReservationsScene extends Scene {
     private final ClientController clientController;
     private final ViewApplication application;
-    private double w;
     private final ObservableList<Reservation> activeReservations;
     private final ObservableList<Reservation> pastReservations;
-    private final TableView<Reservation> activeTable;
-    private final TableView<Reservation> pastTable;
+    private TableView<Reservation> activeTable = new TableView<>();
+    private TableView<Reservation> pastTable;
+    double w;
 
     public PastReservationsScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
@@ -51,10 +51,10 @@ public class PastReservationsScene extends Scene {
         headline.setFont(new Font("Arial", 20));
         w = width / 6.0;
 
-        var buttonColumn = new TableColumn<Reservation, String>("ID");
-        buttonColumn.setSortable(false);
-        buttonColumn.setPrefWidth(w);
-        buttonColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
+//        var buttonColumn = new TableColumn<Reservation, String>("ID");
+//        buttonColumn.setSortable(false);
+//        buttonColumn.setPrefWidth(w);
+//        buttonColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
 
         Label activeLabel = new Label("Active Reservations");
         activeLabel.setFont(new Font("Arial", 20));

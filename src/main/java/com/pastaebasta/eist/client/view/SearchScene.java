@@ -19,10 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Popup;
@@ -49,9 +46,8 @@ public class SearchScene extends Scene {
         this.latLng = latLng;
         if (this.latLng == null) {
             createpop();
-        } else {
-            init();
         }
+        init();
     }
 
 
@@ -202,9 +198,7 @@ public class SearchScene extends Scene {
         searchButton.setOnAction(event -> {
 //                clientController.search(searchField.getText(), Genre.GERMAN, minPriceBox.getValue(), 5000, this::setRestaurants)
             clientController.search(this.latLng, searchField.getText(), genreBox.getValue()
-                    , PriceCategory.valueOf(minPriceBox.getValue().replace(" ", "_").toUpperCase())
-                    , PriceCategory.valueOf(maxPriceBox.getValue().replace(" ", "_").toUpperCase())
-                    , distanceField.getValue(), this::setRestaurants);
+                    , minPriceBox.getValue(), maxPriceBox.getValue(), (int) distanceField.getValue(), this::setRestaurants);
         });
 //        searchField.setOnKeyPressed(event -> {
 //            if (event.getCode() == KeyCode.ENTER) {
@@ -249,9 +243,13 @@ public class SearchScene extends Scene {
         });
         GridPane.setConstraints(backButton, 0, 1);
 
-        Button searchButton = new Button("search");
+        Button searchButton = new Button("Search");
         searchButton.setOnAction(event -> {
             try {
+                if (address.getText().isBlank()) {
+                    System.out.println(address.getText());
+                    return;
+                }
                 var temp = new GeocodingService(address.getText()).getResults();
                 this.latLng = new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng);
             } catch (IOException e) {
@@ -272,11 +270,11 @@ public class SearchScene extends Scene {
         var vBox = new VBox(10, grid);
         vBox.setAlignment(Pos.CENTER);
 
-        vBox.setPrefWidth(application.getStage().getScene().getWidth());
-        vBox.setPrefHeight(application.getStage().getScene().getHeight() - 40);
+        vBox.setPrefWidth(800);
+        vBox.setPrefHeight(200);
         vBox.isResizable();
         vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
         popup.getContent().add(vBox);
         popup.show(application.getStage());
         popup.centerOnScreen();

@@ -62,16 +62,16 @@ public class ClientController {
                 .block();
     }
 
-    public void search(LatLng latLng, String name, String genre, PriceCategory minPriceCategory, PriceCategory maxPriceCategory, double distance,
+    public void search(LatLng latLng, String name, String genre, String minPriceCategory, String maxPriceCategory, int distance,
                        Consumer<List<Restaurant>> restaurantsConsumer) {
-
 
         webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("restaurants/search")
-                        .queryParam("latLng", latLng)
-                        .queryParam("name", name)
-                        .queryParam("genre", genre)
+                        .queryParam("lat", latLng.lat)
+                        .queryParam("lng", latLng.lng)
+//                        .queryParam("name", name)
+//                        .queryParam("genre", genre)
                         .queryParam("min_price_category", minPriceCategory)
                         .queryParam("max_price_category", maxPriceCategory)
                         .queryParam("distance", distance)

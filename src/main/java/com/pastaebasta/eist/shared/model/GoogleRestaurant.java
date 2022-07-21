@@ -1,7 +1,9 @@
 package com.pastaebasta.eist.shared.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.OpeningHours;
+import com.google.maps.model.Photo;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -32,29 +34,24 @@ public class GoogleRestaurant {
 
     private String name;
     private String address;
-    private Genre restaurantGenre;
+    @JsonIgnore
     private LatLng coordinates;
-
-    private PriceCategory priceCategory;
     private double ratingAverage;
 
-    private int numberOfTables;
+    @JsonIgnore
     private OpeningHours openingHours;
 
     //TODO: Import PlacePhotos and replace
-    private String[] pictures;
+    @JsonIgnore
+    private Photo[] pictures;
 
-    public GoogleRestaurant(String restaurantId, String name, String address, Genre restaurantGenre, LatLng coordinates
-            , PriceCategory priceCategory, double ratingAverage, int numberOfTables, OpeningHours openingHours
-            , String[] pictures) {
+    public GoogleRestaurant(String restaurantId, String name, String address, LatLng coordinates
+            , double ratingAverage, OpeningHours openingHours, Photo[] pictures) {
         this.restaurantId = restaurantId;
         this.name = name;
         this.address = address;
-        this.restaurantGenre = restaurantGenre;
         this.coordinates = coordinates;
-        this.priceCategory = priceCategory;
         this.ratingAverage = ratingAverage;
-        this.numberOfTables = numberOfTables;
         this.openingHours = openingHours;
         this.pictures = pictures;
     }

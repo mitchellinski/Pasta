@@ -48,7 +48,6 @@ public class DynamicMapsService implements Initializable {
 
     protected void configureMap() {
         MapOptions mapOptions = new MapOptions();
-
         mapOptions.center(new LatLong(this.latLng.lat, this.latLng.lng))
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .overviewMapControl(true)

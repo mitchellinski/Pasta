@@ -44,32 +44,33 @@ public class RestaurantController {
      * @return List of nearby restaurants.
      */
     @GetMapping("/search")
-    public ResponseEntity<List<GoogleRestaurant>> searchRestaurants(@RequestParam(required = true) LatLng latLng,
-                                                                    @RequestParam(required = false) String name,
-                                                                    @RequestParam(required = false) String genre,
-                                                                    @RequestParam(required = false) PriceCategory min_price_category,
-                                                                    @RequestParam(required = false) PriceCategory max_price_category,
-                                                                    @RequestParam(required = false) long distance) throws IOException, InterruptedException, ApiException {
+    public ResponseEntity<List<GoogleRestaurant>> searchRestaurants(@RequestParam(required = true) double lat,
+                                                                    @RequestParam(required = true) double lng,
+                                                                    @RequestParam(defaultValue = "") String name,
+                                                                    @RequestParam(defaultValue = "") String genre,
+                                                                    @RequestParam(defaultValue = "cheap") String min_price_category,
+                                                                    @RequestParam(defaultValue = "very expensive") String max_price_category,
+                                                                    @RequestParam(defaultValue = "5000") int distance) throws IOException, InterruptedException, ApiException {
         if (!genre.isBlank()) {
             name = name + " " + genre;
         }
         PriceLevel minPriceLevel;
         PriceLevel maxPriceLevel;
         switch (min_price_category) {
-            case CHEAP -> minPriceLevel = PriceLevel.INEXPENSIVE;
-            case NORMAL -> minPriceLevel = PriceLevel.MODERATE;
-            case EXPENSIVE -> minPriceLevel = PriceLevel.EXPENSIVE;
-            case VERY_EXPENSIVE -> minPriceLevel = PriceLevel.VERY_EXPENSIVE;
+            case "cheap" -> minPriceLevel = PriceLevel.INEXPENSIVE;
+            case "normal" -> minPriceLevel = PriceLevel.MODERATE;
+            case "expensive" -> minPriceLevel = PriceLevel.EXPENSIVE;
+            case "very expensive" -> minPriceLevel = PriceLevel.VERY_EXPENSIVE;
             default -> throw new IllegalStateException("Unexpected value: " + min_price_category);
         }
         switch (max_price_category) {
-            case CHEAP -> maxPriceLevel = PriceLevel.INEXPENSIVE;
-            case NORMAL -> maxPriceLevel = PriceLevel.MODERATE;
-            case EXPENSIVE -> maxPriceLevel = PriceLevel.EXPENSIVE;
-            case VERY_EXPENSIVE -> maxPriceLevel = PriceLevel.VERY_EXPENSIVE;
+            case "cheap" -> maxPriceLevel = PriceLevel.INEXPENSIVE;
+            case "normal" -> maxPriceLevel = PriceLevel.MODERATE;
+            case "expensive" -> maxPriceLevel = PriceLevel.EXPENSIVE;
+            case "very expensive" -> maxPriceLevel = PriceLevel.VERY_EXPENSIVE;
             default -> throw new IllegalStateException("Unexpected value: " + max_price_category);
         }
-        var result = new NearbySearchService(latLng, name, (int) distance, minPriceLevel, maxPriceLevel);
+        var result = new NearbySearchService(new LatLng(lat, lng), name, distance, minPriceLevel, maxPriceLevel);
         return ResponseEntity.ok(result.getCleanedRestaurants());
     }
 
