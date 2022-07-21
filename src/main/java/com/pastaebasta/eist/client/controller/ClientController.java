@@ -1,6 +1,10 @@
 package com.pastaebasta.eist.client.controller;
 
-import com.pastaebasta.eist.shared.model.*;
+import com.google.maps.model.LatLng;
+import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.PriceCategory;
+import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.awt.image.BufferedImage;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -40,7 +45,6 @@ public class ClientController {
                 .block();
     }
 
-
     public Customer getCustomerByUsername(String username) {
         return webClient.get()
                 .uri("customers/username/" + username)
@@ -58,15 +62,20 @@ public class ClientController {
                 .block();
     }
 
-    public void search(String query, Genre genre, PriceCategory priceCategory, long distance, Consumer<List<Restaurant>> restaurantsConsumer) {
+    public void search(LatLng latLng, String name, String genre, String minPriceCategory, String maxPriceCategory, int distance,
+                       Consumer<List<Restaurant>> restaurantsConsumer) {
+
         webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                    .path("restaurants/test_search")
-                    .queryParam("query", query)
-                    .queryParam("genre", genre)
-                    .queryParam("price_category", priceCategory)
-                    .queryParam("distance", distance)
-                    .build()
+                        .path("restaurants/search")
+                        .queryParam("lat", latLng.lat)
+                        .queryParam("lng", latLng.lng)
+//                        .queryParam("name", name)
+//                        .queryParam("genre", genre)
+                        .queryParam("min_price_category", minPriceCategory)
+                        .queryParam("max_price_category", maxPriceCategory)
+                        .queryParam("distance", distance)
+                        .build()
                 )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Restaurant>>() {
@@ -97,9 +106,13 @@ public class ClientController {
             .block();
     }
 
-    public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer) {
+    public void getCustomerReservations(String id, Consumer<List<Reservation>> reservationsConsumer, boolean active) {
         webClient.get()
-                .uri("reservations/customer/" + id)
+                .uri(uriBuilder -> uriBuilder
+                        .path("reservations/customer/" + id)
+                        .queryParam("active", active)
+                        .build()
+                )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<Reservation>>() {
                 })
@@ -112,16 +125,16 @@ public class ClientController {
     }
 
     public void updateCustomer(Customer customer) {
-
+        //TODO implement
     }
 
     public Customer addCustomer(Customer customer) {
         return webClient.post()
-            .uri("customers")
-            .bodyValue(customer)
-            .retrieve()
-            .bodyToMono(Customer.class)
-            .block();
+                .uri("customers")
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
     }
 
     public void customerUsernameTaken(String username) {
@@ -140,11 +153,19 @@ public class ClientController {
 
     public Reservation addReservation(Reservation reservation) {
         return webClient.post()
-            .uri("reservations")
-            .bodyValue(reservation)
-            .retrieve()
-            .bodyToMono(Reservation.class)
-            .block();
+                .uri("reservations")
+                .bodyValue(reservation)
+                .retrieve()
+                .bodyToMono(Reservation.class)
+                .block();
+    }
+
+    public BufferedImage getMap() {
+        return webClient.get()
+                .uri("restaurants/map")
+                .retrieve()
+                .bodyToMono(BufferedImage.class)
+                .block();
     }
 
     public void confirmReservation(Reservation reservation) {

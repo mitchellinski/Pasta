@@ -259,7 +259,7 @@ public class RestaurantTableScene extends Scene {
             popup.hide();
 
             if (backToSearch) {
-                application.showSearchScene();
+                application.showSearchScene(null);
                 return;
             }
 
@@ -431,7 +431,7 @@ public class RestaurantTableScene extends Scene {
                     e.printStackTrace();
                 }
             }
-            application.showSearchScene();
+            application.showSearchScene(null);
         });
 
         Button cancelButton = new Button("Cancel");

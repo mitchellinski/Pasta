@@ -1,9 +1,12 @@
 package com.pastaebasta.eist.client.view;
 
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
+import com.pastaebasta.eist.server.service.GeocodingService;
+import com.pastaebasta.eist.server.service.NearbySearchService;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
-import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,11 +19,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,21 +33,38 @@ public class SearchScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
-    private final TableView<Restaurant> table;
     private final ObservableList<Restaurant> restaurants = FXCollections.observableArrayList();
+    private TableView<Restaurant> table;
+    private int width;
+    private LatLng latLng;
 
-
-
-    public SearchScene(ClientController clientController, ViewApplication application) {
+    public SearchScene(ClientController clientController, ViewApplication application, LatLng latLng) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
-        int width = (int) application.getStage().getScene().getWidth();
+        width = (int) application.getStage().getScene().getWidth();
         this.clientController = clientController;
         this.application = application;
+        this.latLng = latLng;
+        if (this.latLng == null) {
+            createpop();
+        }
+        init();
+    }
 
+
+    private void init() {
         Label headline = new Label("Search for Restaurant");
         headline.setFont(new Font("Arial", 20));
 
-        clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
+        Button switchToMapButton = new Button("Switch to Map View");
+        switchToMapButton.setOnAction(event -> {
+            try {
+                application.showMapsScene(latLng);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+//        clientController.search(null, Genre.GERMAN, PriceCategory.NORMAL, 5000, this::setRestaurants);
         this.table = new TableView<>(restaurants);
 
         double w = width / 6.0;
@@ -73,7 +95,7 @@ public class SearchScene extends Scene {
         table.getColumns().addAll(nameColumn, addressColumn, genreColumn, priceColumn, ratingColumn);
         addButtonToTable(w);
 
-        var vBox = new VBox(10, headline, createSearchBar(), table, application.createBackButton());
+        var vBox = new VBox(10, headline, switchToMapButton, createSearchBar(), table, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }
@@ -87,6 +109,7 @@ public class SearchScene extends Scene {
             public TableCell<Restaurant, Void> call(final TableColumn<Restaurant, Void> param) {
                 final TableCell<Restaurant, Void> cell = new TableCell<>() {
                     private final Button btn = new Button("Reserve");
+
                     {
                         btn.setPrefWidth(width);
                         btn.setOnAction((ActionEvent event) -> {
@@ -143,31 +166,117 @@ public class SearchScene extends Scene {
         genreBox.getItems().addAll(genres);
         GridPane.setConstraints(genreBox, 1, 1);
 
-        Label priceLabel = new Label("Price Category");
-        priceLabel.setFont(new Font("Arial", 20));
-        GridPane.setConstraints(priceLabel, 2, 0);
 
-        ChoiceBox<PriceCategory> priceBox = new ChoiceBox<>();
-        priceBox.getItems().addAll(PriceCategory.values());
-        GridPane.setConstraints(priceBox, 2, 1);
+        Label minPriceLabel = new Label("Min Price Category");
+        minPriceLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(minPriceLabel, 2, 0);
+
+        ChoiceBox<String> minPriceBox = new ChoiceBox<>();
+        List<String> categories =
+                Arrays.stream(PriceCategory.values())
+                        .map(p -> p.toString().replace('_', ' '))
+                        .map(String::toLowerCase)
+                        .toList();
+        minPriceBox.getItems().addAll(categories);
+        GridPane.setConstraints(minPriceBox, 2, 1);
+
+        Label maxPriceLabel = new Label("Max Price Category");
+        maxPriceLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(maxPriceLabel, 3, 0);
+
+        ChoiceBox<String> maxPriceBox = new ChoiceBox<>();
+        maxPriceBox.getItems().addAll(categories);
+        GridPane.setConstraints(maxPriceBox, 3, 1);
+
+        Label distanceLabel = new Label("Set the distance");
+        distanceLabel.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(distanceLabel, 4, 0);
+        Slider distanceField = new Slider(0, 20000, 5000);
+        GridPane.setConstraints(distanceField, 4, 1);
 
         Button searchButton = new Button("Search");
-        searchButton.setOnAction(event ->
-            clientController.search(searchField.getText(), Genre.GERMAN, priceBox.getValue(), 5000, this::setRestaurants)
-        );
-        searchField.setOnKeyPressed( event -> {
-            if( event.getCode() == KeyCode.ENTER ) {
-                clientController.search(searchField.getText(), Genre.GERMAN, priceBox.getValue(), 5000, this::setRestaurants);
-            }
+        searchButton.setOnAction(event -> {
+//                clientController.search(searchField.getText(), Genre.GERMAN, minPriceBox.getValue(), 5000, this::setRestaurants)
+            clientController.search(this.latLng, searchField.getText(), genreBox.getValue()
+                    , minPriceBox.getValue(), maxPriceBox.getValue(), (int) distanceField.getValue(), this::setRestaurants);
         });
-        GridPane.setConstraints(searchButton, 3, 1);
+//        searchField.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER) {
+//                clientController.search(searchField.getText(), Genre.GERMAN, minPriceBox.getValue(), maxPriceBox.getValue(),
+//                        5000, this::setRestaurants);
+//            }
+//        });
+        GridPane.setConstraints(searchButton, 5, 1);
 
-        grid.getChildren().addAll(searchLabel, searchField, genreLabel, genreBox, priceLabel, priceBox, searchButton);
+        grid.getChildren().addAll(searchLabel, searchField, genreLabel, genreBox, minPriceLabel, minPriceBox,
+                maxPriceLabel, maxPriceBox, distanceLabel, distanceField, searchButton);
         grid.setAlignment(Pos.TOP_CENTER);
 
         return grid;
     }
+
     private void setRestaurants(List<Restaurant> restaurants) {
         Platform.runLater(() -> this.restaurants.setAll(restaurants));
+    }
+
+    private void createpop() {
+        Popup popup = new Popup();
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20));
+        grid.setVgap(5);
+        grid.setHgap(5);
+
+        Label headline = new Label("Please enter an address/zip-code to start searching from: ");
+        headline.setFont(new Font("Arial", 20));
+        GridPane.setConstraints(headline, 1, 0);
+
+        TextField address = new TextField();
+        address.setPromptText("Address");
+        address.setPrefWidth(150);
+        GridPane.setConstraints(address, 1, 1);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> {
+            popup.hide();
+            application.showHomeScene();
+        });
+        GridPane.setConstraints(backButton, 0, 1);
+
+        Button searchButton = new Button("Search");
+        searchButton.setOnAction(event -> {
+            try {
+                if (address.getText().isBlank()) {
+                    System.out.println(address.getText());
+                    return;
+                }
+                var temp = new GeocodingService(address.getText()).getResults();
+                this.latLng = new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+            popup.hide();
+            init();
+        });
+        GridPane.setConstraints(searchButton, 2, 1);
+
+        grid.getChildren().addAll(headline, address, backButton, searchButton);
+        grid.setAlignment(Pos.CENTER);
+
+        var vBox = new VBox(10, grid);
+        vBox.setAlignment(Pos.CENTER);
+
+        vBox.setPrefWidth(800);
+        vBox.setPrefHeight(200);
+        vBox.isResizable();
+        vBox.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        vBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), new BorderWidths(1))));
+        popup.getContent().add(vBox);
+        popup.show(application.getStage());
+        popup.centerOnScreen();
     }
 }

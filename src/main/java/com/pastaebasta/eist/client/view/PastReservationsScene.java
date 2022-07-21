@@ -2,8 +2,12 @@ package com.pastaebasta.eist.client.view;
 
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.Table;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -26,27 +30,57 @@ import java.util.List;
 public class PastReservationsScene extends Scene {
     private final ClientController clientController;
     private final ViewApplication application;
-    private final ObservableList<Reservation> reservations;
-
-    private final TableView<Reservation> table;
+    private final ObservableList<Reservation> activeReservations;
+    private final ObservableList<Reservation> pastReservations;
+    private TableView<Reservation> activeTable = new TableView<>();
+    private TableView<Reservation> pastTable;
+    double w;
 
     public PastReservationsScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         int width = (int) application.getStage().getScene().getWidth();
         this.clientController = clientController;
         this.application = application;
-        this.reservations = FXCollections.observableArrayList();
-        clientController.getCustomerReservations(application.getCustomer().getCustomerId(), this::setReservations);
-        table = new TableView<>(reservations);
+        this.activeReservations = FXCollections.observableArrayList();
+        this.pastReservations = FXCollections.observableArrayList();
 
-        Label headline = new Label("Past Reservations");
+        clientController.getCustomerReservations(application.getCustomer().getCustomerId(), this::setActiveReservations, true);
+        clientController.getCustomerReservations(application.getCustomer().getCustomerId(), this::setPastReservations, false);
+
+        Label headline = new Label("My Reservations");
         headline.setFont(new Font("Arial", 20));
-        double w = width / 6.0;
+        w = width / 6.0;
 
-        var buttonColumn = new TableColumn<Reservation, String>("ID");
-        buttonColumn.setSortable(false);
-        buttonColumn.setPrefWidth(w);
-        buttonColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
+//        var buttonColumn = new TableColumn<Reservation, String>("ID");
+//        buttonColumn.setSortable(false);
+//        buttonColumn.setPrefWidth(w);
+//        buttonColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
+
+        Label activeLabel = new Label("Active Reservations");
+        activeLabel.setFont(new Font("Arial", 20));
+
+        activeTable = createTable(activeReservations);
+
+        Label pastLabel = new Label("Past Reservations");
+        pastLabel.setFont(new Font("Arial", 20));
+
+        pastTable = createTable(pastReservations);
+
+        var vBox = new VBox(10, headline, activeLabel, activeTable, pastLabel, pastTable, application.createBackButton());
+        vBox.setAlignment(Pos.CENTER);
+        setRoot(vBox);
+    }
+
+    private void setActiveReservations(List<Reservation> reservations) {
+        Platform.runLater(() -> this.activeReservations.setAll(reservations));
+    }
+
+    private void setPastReservations(List<Reservation> reservations) {
+        Platform.runLater(() -> this.pastReservations.setAll(reservations));
+    }
+
+    private TableView<Reservation> createTable(ObservableList<Reservation> reservations) {
+        TableView<Reservation> table = new TableView<>(reservations);
 
         var idColumn = new TableColumn<Reservation, String>("ID");
         idColumn.setSortable(false);
@@ -56,6 +90,18 @@ public class PastReservationsScene extends Scene {
         dateColumn.setSortable(true);
         dateColumn.setPrefWidth(w);
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        dateColumn.setPrefWidth(w);
+        dateColumn.setCellValueFactory(param -> {
+            LocalDateTime time = param.getValue().getStartDateTime();
+            String day = addZero(String.valueOf(time.getDayOfMonth()));
+            String month = addZero(String.valueOf(time.getMonthValue()));
+            String year = String.valueOf(time.getYear());
+            String startTime = reformatTime(param.getValue().getStartDateTime());
+            String endTime = reformatTime(param.getValue().getEndDateTime());
+            String formattedDate = day + "." + month + "." + year + " " + startTime + " - " + endTime;
+            return new ReadOnlyStringWrapper(formattedDate);
+        });
+
         var nameColumn = new TableColumn<Reservation, String>("Restaurant");
         nameColumn.setSortable(true);
         nameColumn.setPrefWidth(w);
@@ -71,9 +117,20 @@ public class PastReservationsScene extends Scene {
         table.getColumns().addAll(idColumn, dateColumn, nameColumn, visitorColumn, confirmationColumn);
         addButtonToTable(w);
 
-        var vBox = new VBox(10, headline, table, application.createBackButton());
-        vBox.setAlignment(Pos.CENTER);
-        setRoot(vBox);
+        return table;
+    }
+
+    private String reformatTime(LocalDateTime time) {
+        String hour = addZero(String.valueOf(time.getHour()));
+        String minute = addZero(String.valueOf(time.getMinute()));
+        return hour + ":" + minute;
+    }
+
+    private String addZero(String time) {
+        if (time.length() < 2) {
+            time = "0".concat(time);
+        }
+        return time;
     }
 
     public void editPopup(Reservation reservation) {
@@ -101,7 +158,7 @@ public class PastReservationsScene extends Scene {
                 reservation.setConfirmed(true);
                 warning.setVisible(false);
                 popup.hide();
-                table.refresh();
+                activeTable.refresh();
                 return;
             }
 
@@ -122,7 +179,7 @@ public class PastReservationsScene extends Scene {
                 reservation.setConfirmed(false);
                 warning.setVisible(false);
                 popup.hide();
-                table.refresh();
+                activeTable.refresh();
                 return;
             }
 
@@ -135,7 +192,7 @@ public class PastReservationsScene extends Scene {
         closeButton.setOnAction(event -> {
             warning.setVisible(false);
             popup.hide();
-            table.refresh();
+            activeTable.refresh();
         });
 
         HBox buttonBox = new HBox(10, confirmButton, cancelButton,closeButton );
@@ -184,11 +241,7 @@ public class PastReservationsScene extends Scene {
             }
         };
         colBtn.setCellFactory(cellFactory);
-        table.getColumns().add(colBtn);
-    }
-
-    private void setReservations(List<Reservation> reservations) {
-        Platform.runLater(() -> this.reservations.setAll(reservations));
+        activeTable.getColumns().add(colBtn);
     }
 
 

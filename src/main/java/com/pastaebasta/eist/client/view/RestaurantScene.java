@@ -30,7 +30,7 @@ public class RestaurantScene extends Scene {
         headline.setFont(new Font("Arial", 20));
 
         Label openHours = new Label("Open Hours: " + '\n'
-                + "Monday - Sunday: "+restaurant.getOpeningTime() + "am - " +restaurant.getClosingTime() + "pm");
+                + "Monday - Sunday: "+restaurant.getOpeningTime() + " - " +restaurant.getClosingTime() + "pm");
         openHours.setFont(new Font("Arial", 20));
         GridPane.setConstraints(openHours, 0, 0);
 
@@ -39,7 +39,7 @@ public class RestaurantScene extends Scene {
         GridPane.setConstraints(reservationButton, 0, 1);
 
         Button backButton = new Button("Back");
-        backButton.setOnAction(event -> application.showSearchScene());
+        backButton.setOnAction(event -> application.showSearchScene(null));
         backButton.setAlignment(Pos.BASELINE_CENTER);
 
         grid.getChildren().addAll(openHours, reservationButton);

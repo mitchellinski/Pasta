@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.client.view;
 
+import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Restaurant;
@@ -11,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class ViewApplication extends Application {
@@ -45,8 +47,12 @@ public class ViewApplication extends Application {
         stage.setScene(new PastReservationsScene(clientController, this));
     }
 
-    public void showSearchScene() {
-        stage.setScene(new SearchScene(clientController, this));
+    public void showSearchScene(LatLng latLng) {
+        stage.setScene(new SearchScene(clientController, this, latLng));
+    }
+
+    public void showMapsScene(LatLng latLng) throws IOException {
+        stage.setScene(new MapsScene(clientController, this, latLng));
     }
 
     public void showRegisterScene() {
@@ -67,6 +73,10 @@ public class ViewApplication extends Application {
 
     public void showRestaurantScene(Restaurant restaurant) {
         stage.setScene(new RestaurantScene(clientController, this, restaurant));
+    }
+
+    public void showRegisterRestaurantScene() {
+        stage.setScene(new RegisterRestaurantScene(clientController, this));
     }
 
     public Stage getStage() {

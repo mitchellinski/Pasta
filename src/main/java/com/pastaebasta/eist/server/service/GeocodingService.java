@@ -26,7 +26,7 @@ public class GeocodingService extends QueryService {
                 .apiKey(super.getApiKey())
                 .build();
         this.results = new GeocodingResult[0];
-        this.url = getBase_url() + geoURL + URLEncoder.encode(query, StandardCharsets.UTF_8) + blocker;
+        this.url = getBase_url() + geoURL + URLEncoder.encode(query, StandardCharsets.UTF_8);
         this.runQuery();
     }
 
@@ -41,8 +41,8 @@ public class GeocodingService extends QueryService {
             e.printStackTrace();
         }
         this.setGson(new GsonBuilder().setPrettyPrinting().create());
-        System.out.println(this.gson.toJson(results[0].addressComponents));
-        System.out.println(this.gson.toJson(results[0].geometry));
+//        System.out.println(this.gson.toJson(results[0].addressComponents));
+//        System.out.println(this.gson.toJson(results[0].geometry));
         context.shutdown();
         return this.getGson();
     }

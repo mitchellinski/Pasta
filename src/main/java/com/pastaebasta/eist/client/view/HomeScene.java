@@ -49,7 +49,7 @@ public class HomeScene extends Scene {
 
         if (application.isLoggedIn()) {
             Button searchButton = new Button("Search for Restaurants");
-            searchButton.setOnAction(event -> application.showSearchScene());
+            searchButton.setOnAction(event -> application.showSearchScene(null));
             vBox.getChildren().add(searchButton);
 
             Button reservationsButton = new Button("Show past Reservations");
@@ -82,6 +82,10 @@ public class HomeScene extends Scene {
          */
 
 
+
+        Button registerRestaurant = new Button("Restaurant Registration");
+        registerRestaurant.setOnAction(event -> application.showRegisterRestaurantScene());
+        vBox.getChildren().add(registerRestaurant);
 
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);

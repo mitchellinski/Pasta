@@ -1,5 +1,6 @@
 package com.pastaebasta.eist.shared.model;
 
+import com.google.maps.model.LatLng;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
