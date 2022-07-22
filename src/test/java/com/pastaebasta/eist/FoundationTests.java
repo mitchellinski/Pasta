@@ -11,8 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
+
 public class FoundationTests {
 	@Test
 	public void testCreateReservation() {
@@ -20,7 +19,7 @@ public class FoundationTests {
 	}
 
 	@Test
-	public void test(@Autowired MongoTemplate mongoTemplate) {
+	public void test() {
 
 	}
 }
