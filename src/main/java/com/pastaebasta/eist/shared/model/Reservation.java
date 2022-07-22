@@ -57,6 +57,11 @@ public class Reservation {
         Reservation that = (Reservation) o;
         return Objects.equals(reservationId, that.reservationId);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reservationId, customerId, restaurantId, restaurantName, startDateTime, endDateTime, numberOfVisitors, confirmed, tableId);
+    }
 }
 
 
