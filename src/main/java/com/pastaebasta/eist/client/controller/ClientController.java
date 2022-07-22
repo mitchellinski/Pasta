@@ -261,8 +261,13 @@ public class ClientController {
      * @param reservation
      */
     public void confirmReservation(Reservation reservation) {
+        System.out.println("Confirm :" +reservation);
          webClient.patch()
-            .uri("reservations/"+reservation.getReservationId()+"/confirm");
+             .uri("reservations/"+reservation.getReservationId()+"/confirm")
+             .retrieve()
+             .bodyToMono(String.class)
+             .subscribe(System.out::println);
+
     }
 
     /**
@@ -274,7 +279,12 @@ public class ClientController {
      * @param reservation
      */
     public void cancelReservation(Reservation reservation) {
+        System.out.println("Cancel :" +reservation);
+
         webClient.delete()
-                .uri("reservations/"+reservation.getReservationId()+"/cancel");
+            .uri("reservations/"+reservation.getReservationId()+"/cancel")
+            .retrieve()
+            .bodyToMono(String.class)
+            .subscribe(System.out::println);
     }
 }

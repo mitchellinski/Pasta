@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Reservation - Data Model
@@ -48,6 +49,13 @@ public class Reservation {
         this.numberOfVisitors = numberOfVisitors;
         this.confirmed = false;
         this.tableId = tableId;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return Objects.equals(reservationId, that.reservationId);
     }
 }
 

@@ -136,13 +136,6 @@ public class ViewApplication extends Application {
     }
 
     /**
-     * Shows the restaurant registration page
-     */
-    public void showRegisterRestaurantScene() {
-        stage.setScene(new RegisterRestaurantScene(clientController, this));
-    }
-
-    /**
      * Sets a new customer and updates the loggedIn field
      * @param customer
      */

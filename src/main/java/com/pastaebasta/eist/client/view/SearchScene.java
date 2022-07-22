@@ -306,11 +306,15 @@ public class SearchScene extends Scene {
                 if ("$test".equalsIgnoreCase(address.getText())) {
                     this.latLng = new LatLng(48.148849, 11.568000);
                 } else {
-                    var temp = new GeocodingService(address.getText()).getResults();
-                    application.setLatLng(new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng));
+                    try {
+                        var temp = new GeocodingService(address.getText()).getResults();
+                        application.setLatLng(new LatLng(temp[0].geometry.location.lat, temp[0].geometry.location.lng));
+                    } catch (Exception e) {
+                        application.setLatLng(new LatLng(48.148849, 11.568000));
+                    }
                     this.latLng = application.getLatLng();
                 }
-            } catch (IOException | InterruptedException | ApiException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             popup.hide();
