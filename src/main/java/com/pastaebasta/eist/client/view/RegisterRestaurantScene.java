@@ -21,13 +21,24 @@ import javafx.scene.text.Font;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Scene - Register Restaurant
+ *
+ *
+ *
+ * Scene allows a user register a reservation at a restaurant for a given time
+ */
 public class RegisterRestaurantScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
     private Customer customer;
 
-
+    /**
+     * Constructs scene for restaurant registration
+     * @param clientController
+     * @param application
+     */
     public RegisterRestaurantScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
@@ -36,6 +47,9 @@ public class RegisterRestaurantScene extends Scene {
         page1();
     }
 
+    /**
+     * Shows the first pane of restaurant times
+     */
     private void page1() {
 
         GridPane grid = new GridPane();
@@ -107,6 +121,9 @@ public class RegisterRestaurantScene extends Scene {
         draw(grid, nextButton, application.createBackButton());
     }
 
+    /**
+     * Via pagination, shows next page of restaurant timeslots
+     */
     private void page2() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -244,6 +261,12 @@ public class RegisterRestaurantScene extends Scene {
         draw(grid, registerButton, backButton);
     }
 
+    /**
+     * Draws Restaurant image
+     * @param grid
+     * @param registerButton
+     * @param backButton
+     */
     private void draw(GridPane grid, Button registerButton, Button backButton) {
         Label headline = new Label("Register your Restaurant");
         headline.setFont(new Font("Arial", 20));

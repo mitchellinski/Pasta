@@ -14,8 +14,8 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * SERVICE - Geocoding Service
- * <p>
- * <p>
+ *
+ *
  * Handles the conversion of a search by a user into Lat/Lng coordinates.
  * Used as baseline for assuming user list/map search position.
  *

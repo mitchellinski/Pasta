@@ -13,13 +13,18 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Scene - Edit Password
+ *
+ * This class is for a user to edit their password of their account, which propagates into the backend server
+ */
 public class EditPasswordScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
     /**
-     * Allows the User to edit password in their account
+     * Constructs the password editing view
      *
      *
      * @param clientController

@@ -15,11 +15,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
+/**
+ * Scene - Log In
+ *
+ * Scene allows a user to login. Checks user profiles in the backend DB to verify if a user can log in.
+ */
 public class LogInScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
+
+    /**
+     * Constructs Login View
+     * @param clientController
+     * @param application
+     */
     public LogInScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;

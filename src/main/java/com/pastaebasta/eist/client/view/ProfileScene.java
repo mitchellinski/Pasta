@@ -11,12 +11,23 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
-
+/**
+ * Scene - Profile Scene
+ *
+ *
+ *
+ * Scene allows a user to view their profile
+ */
 public class ProfileScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
+    /**
+     * Generates a profile scene with a user's email, and hidden password
+     * @param clientController
+     * @param application
+     */
     public ProfileScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
