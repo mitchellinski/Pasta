@@ -77,7 +77,7 @@ public class EditUsernameScene extends Scene {
                         takenUsername.setVisible(true);
                     } catch (RuntimeException e) {
                         customer.setCustomerUsername(newUsername);
-                        clientController.updateCustomer(customer);
+                        application.setCustomer(clientController.updateCustomer(customer));
                         application.showProfileScene();
                     }
                 }

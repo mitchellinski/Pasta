@@ -189,8 +189,13 @@ public class ClientController {
                 });
     }
 
-    public void updateCustomer(Customer customer) {
-        // This method does not really do anything...
+    public Customer updateCustomer(Customer customer) {
+        return webClient.put()
+                .uri("customers/" + customer.getCustomerId())
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
     }
 
     /**
@@ -209,30 +214,6 @@ public class ClientController {
                 .retrieve()
                 .bodyToMono(Customer.class)
                 .block();
-    }
-
-    /**
-     * customerUsernameTaken
-     * Test if customer username is taken
-     * @param username
-     */
-    public void customerUsernameTaken(String username) {
-        webClient.get()
-                .uri("customers/username/" + username)
-                .retrieve()
-                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Username already taken")));
-    }
-
-    /**
-     * customerEmailTaken
-     * Test if email is already taken
-     * @param email
-     */
-    public void customerEmailTaken(String email) {
-        webClient.get()
-                .uri("customers/email/" + email)
-                .retrieve()
-                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Email already taken")));
     }
 
     /**

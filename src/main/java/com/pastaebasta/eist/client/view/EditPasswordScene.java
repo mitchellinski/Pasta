@@ -99,8 +99,7 @@ public class EditPasswordScene extends Scene {
                     if (application.getArgon2PasswordEncoder().matches(oldPasswordValue, customer.getCustomerPassword())) {
                         String encodedPassword = application.getArgon2PasswordEncoder().encode(newPasswordValue);
                         customer.setCustomerPassword(encodedPassword);
-                        clientController.updateCustomer(customer);
-                        application.showProfileScene();
+                        application.setCustomer(clientController.updateCustomer(customer));
                         application.showProfileScene();
                     } else {
                         wrongPassword.setVisible(true);
