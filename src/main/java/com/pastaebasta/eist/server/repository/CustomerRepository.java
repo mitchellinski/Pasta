@@ -15,7 +15,6 @@ import java.util.Optional;
  * @author Hisashi
  */
 public interface CustomerRepository extends MongoRepository<Customer, String> {
-
 	@Query(value="{customerId:'?0'}", fields="{customerId:1, customerUsername:1, customerEmail:1, reservationList:1}")
 	List<Customer> getAll(String id);
 

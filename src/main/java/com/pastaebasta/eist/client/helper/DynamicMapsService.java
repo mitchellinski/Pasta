@@ -2,8 +2,6 @@ package com.pastaebasta.eist.client.helper;
 
 
 import com.dlsc.gmapsfx.GoogleMapView;
-import com.dlsc.gmapsfx.javascript.event.GMapMouseEvent;
-import com.dlsc.gmapsfx.javascript.event.UIEventType;
 import com.dlsc.gmapsfx.javascript.object.GoogleMap;
 import com.dlsc.gmapsfx.javascript.object.LatLong;
 import com.dlsc.gmapsfx.javascript.object.MapOptions;

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+// TODO: Can this be deleted?
 public class FindPlaceService extends QueryService {
     private final String findPlaceURL = "/place/findplacefromtext/json?input=";
     private final String blocker = "DO NOT REMOVE UNLESS SEB KNOWS";
@@ -31,8 +32,9 @@ public class FindPlaceService extends QueryService {
                 .build();
         this.results = new PlacesSearchResult[0];
         this.url = getBase_url() + findPlaceURL + URLEncoder.encode(query, StandardCharsets.UTF_8) + blocker;
+
         this.runQuery();
-//                PlaceDetails placeDetails = PlacesApi.placeDetails()
+        //PlaceDetails placeDetails = PlacesApi.placeDetails()
     }
 
     public PlacesSearchResult runQuery() throws IOException {

@@ -1,12 +1,12 @@
 package com.pastaebasta.eist.server;
 
-import com.pastaebasta.eist.shared.model.Customer;
-import com.pastaebasta.eist.shared.model.Reservation;
-import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.server.repository.CustomerRepository;
 import com.pastaebasta.eist.server.repository.ReservationRepository;
 import com.pastaebasta.eist.server.repository.RestaurantRepository;
 import com.pastaebasta.eist.server.service.ReservationManager;
+import com.pastaebasta.eist.shared.model.Customer;
+import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.Restaurant;
 import com.pastaebasta.eist.testing.Database.DatabaseSeeder;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -23,10 +23,13 @@ import java.util.UUID;
 
 
 /**
- * PASTA E BASTA - Server Application
- * The PBServerApplication starts the Spring modules on the server side,
+ * Pasta e Basta - EIST 2022
+ *
+ * Reservation Application
+ * The Reservation Application starts the Spring modules on the server side,
  * which will auto-wire components of the project.
  *
+ * @author Hisashi
  */
 @SpringBootApplication
 @EnableMongoRepositories
@@ -34,7 +37,6 @@ import java.util.UUID;
 @EnableScheduling
 public class ReservationApplication implements CommandLineRunner {
 	ReservationManager reservationService;
-
 	RestaurantRepository restaurantRepository;
 	CustomerRepository customerRepository;
 	ReservationRepository reservationRepository;
@@ -62,8 +64,13 @@ public class ReservationApplication implements CommandLineRunner {
 		System.out.println("> Server: Running");
 	}
 
-
-	public void test() {
+	/**
+	 * WARNING: do NOT use in production
+	 * WARNING: this method will DELETE ALL entries in the database
+	 *
+	 * Database testing method, used to clear and repopulate database.
+	 */
+	private void test() {
 		customerRepository.deleteAll();
 		reservationRepository.deleteAll();
 
@@ -111,8 +118,6 @@ public class ReservationApplication implements CommandLineRunner {
 				reservationRepository.save(newReservation);
 			}
 		}).forEach(customerRepository::save);
-
-
 
 		System.out.println("------------------------------------------------------");
 		List<Reservation> r = reservationService.getReservationsDuringTimeSlot(

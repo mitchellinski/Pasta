@@ -1,14 +1,11 @@
 package com.pastaebasta.eist.server.controller;
 
-import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.server.service.CustomerService;
-import com.pastaebasta.eist.shared.model.Reservation;
+import com.pastaebasta.eist.shared.model.Customer;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Customer Controller
@@ -17,15 +14,19 @@ import java.util.List;
  * This is used internally by Spring Boot to map requests automatically.
  *
  * @version 1.0
- * @author Hisashi & Michael
+ * @author Hisashi
+ * @author Michael
  */
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/customers")
 public class CustomerController {
-
     private CustomerService customerService;
 
+    /**
+     * Gets all the customers in the database
+     * @return Iterable of customers
+     */
     @GetMapping
     public ResponseEntity<Iterable<Customer>> getAllCustomers() {
         return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
@@ -47,6 +48,11 @@ public class CustomerController {
         return ResponseEntity.ok().body(customer);
     }
 
+    /**
+     * Gets a customer by username, if found
+     * @param username customer username
+     * @return Customer, or null
+     */
     @GetMapping("/username/{username}")
     public ResponseEntity<Customer> getCustomerByUsername(@PathVariable String username) {
         Customer customer = customerService.getCustomerByUsername(username);
@@ -56,6 +62,11 @@ public class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
+    /**
+     * Gets a custoemr by e-mail, if found
+     * @param email customer e-mail
+     * @return Customer, or null
+     */
     @GetMapping("/email/{email}")
     public ResponseEntity<Customer> getCustomerByEmail(@PathVariable String email) {
         Customer customer = customerService.getCustomerByEmail(email);
@@ -65,6 +76,11 @@ public class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
+    /**
+     * Saves/adds a customer to the database
+     * @param newCustomer Customer to be added
+     * @return Persisted Customer
+     */
     @PostMapping
     public ResponseEntity<Customer> saveCustomer(@RequestBody Customer newCustomer) {
         return new ResponseEntity<>(customerService.saveCustomer(newCustomer), HttpStatus.CREATED);

@@ -1,12 +1,8 @@
 package com.pastaebasta.eist.client.view;
 
 import com.pastaebasta.eist.client.controller.ClientController;
-import com.pastaebasta.eist.client.helper.EventSchedulingService;
 import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.shared.model.Restaurant;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,15 +18,11 @@ import javafx.stage.Popup;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class RestaurantTableScene extends Scene {
 

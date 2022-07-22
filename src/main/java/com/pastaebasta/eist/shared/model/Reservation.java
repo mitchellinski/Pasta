@@ -1,16 +1,18 @@
 package com.pastaebasta.eist.shared.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 
 /**
- * Reservation Data Model
+ * Reservation - Data Model
  * Represents a reservation in the database
  *
  * This class uses lombok to generate a constructor, getters and setters for the fields.

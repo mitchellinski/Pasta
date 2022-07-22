@@ -11,6 +11,7 @@ import java.util.List;
  * Repository for the Restaurant Data Model
  *
  * This class uses Spring Data MongoDB to generate a repository for the Restaurant Data Model.
+ * @author Hisashi
  */
 public interface RestaurantRepository extends MongoRepository<Restaurant, String> {
 	@Query("{name:'?0'}")

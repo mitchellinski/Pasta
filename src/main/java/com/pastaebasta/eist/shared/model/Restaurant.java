@@ -3,8 +3,6 @@ package com.pastaebasta.eist.shared.model;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.OpeningHours;
 import com.google.maps.model.Photo;
-import com.google.maps.model.PlaceType;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
@@ -13,17 +11,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.util.ArrayList;
 
 /**
  * Restaurant is a class that represents a restaurant.
  * It is used to store the information about a restaurant in the database.
- * <p>
+ *
  * This class uses lombok annotations to make it simpler/shorter. (https://projectlombok.org/)
  * If you can any questions, ask on discord.
  *
  * @version 1.0
- * @authors Hisashi, Ilja, Sebastian
+ * @author Hisashi
+ * @author Ilja
+ * @author Sebastian
  */
 @Document("restaurants")
 @Data
@@ -52,14 +51,21 @@ public class Restaurant {
 
     private double distance;
 
+    /**
+     * Turns ID into an integer by using its returned hashcode
+     * Usually used as seed for pseudo RNG.
+     * @param id
+     * @return
+     */
     public static int IdToInteger(String id) {
         return Math.abs(id.hashCode());
     }
 
-    public int getPseudoHash(String id) {
-        return "".equals(restaurantId) ? 0 : IdToInteger(id);
-    }
-
+    /**
+     * Get a simple "hash", used for consistently creating
+     * the interior map of a restaurant.
+     * @return
+     */
     public int getPseudoHash() {
         return "".equals(restaurantId) ? 0 : IdToInteger(restaurantId);
     }

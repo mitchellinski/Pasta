@@ -1,10 +1,5 @@
 package com.pastaebasta.eist.client.view;
 
-import com.pastaebasta.eist.shared.model.Genre;
-import com.pastaebasta.eist.shared.model.PriceCategory;
-import com.pastaebasta.eist.shared.model.Restaurant;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,8 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Popup;
-
-import java.time.LocalDateTime;
 
 public class HomeScene extends Scene {
 

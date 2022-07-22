@@ -1,4 +1,5 @@
 package com.pastaebasta.eist.client.helper;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -12,7 +13,10 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.*;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.EventReminder;
+import com.google.api.services.calendar.model.Events;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,7 +32,7 @@ import java.util.List;
 
 /**
  * EventSchedulingService
- * Acts as a wrapper for the Google Calendar API
+ * Acts as a wrapper for the Google Calendar API.
  *
  * Requests authorization from user, then creates events in their calendar.
  */
@@ -43,6 +47,12 @@ public class EventSchedulingService {
 
 	public static Calendar calendar;
 
+	/**
+	 * Initializes the EventSchedulingService, along with the Google Calendar class.
+	 *
+	 * @throws IOException
+	 * @throws GeneralSecurityException
+	 */
 	public EventSchedulingService() throws IOException, GeneralSecurityException {
 		final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
 		calendar = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -76,24 +86,40 @@ public class EventSchedulingService {
 		return credential;
 	}
 
-	public String parseRFC3399(LocalDateTime localDateTime) {
-
+	/**
+	 * Formats a given LocalDateTime as a RFC3339-valid string
+	 * @param localDateTime LocalDateTime to be formatted
+	 * @return RFC3339-formatted string
+	 */
+	public String parseRFC3339(LocalDateTime localDateTime) {
 		return localDateTime.atZone(ZoneOffset.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern(RFC3339_FORMAT));
 	}
 
+	/**
+	 * Creates a new event in a user's Google Calendar.
+	 * Requires user authentication.
+	 *
+	 * @param name Event name
+	 * @param location Event location
+	 * @param description Event description
+	 * @param localDateTimeStart Event start datetime
+	 * @param localDateTimeEnd Event end datetime
+	 * @return Event
+	 * @throws IOException
+	 */
 	public Event createEvent(String name, String location, String description, LocalDateTime localDateTimeStart, LocalDateTime localDateTimeEnd) throws IOException {
 		Event event = new Event()
 			.setSummary(name)
 			.setLocation(location)
 			.setDescription(description);
 
-		DateTime startDateTime = new DateTime(parseRFC3399(localDateTimeStart));
+		DateTime startDateTime = new DateTime(parseRFC3339(localDateTimeStart));
 		EventDateTime start = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(startDateTime);
 
 		event.setStart(start);
-		DateTime endDateTime = new DateTime(parseRFC3399(localDateTimeEnd));
+		DateTime endDateTime = new DateTime(parseRFC3339(localDateTimeEnd));
 		EventDateTime end = new EventDateTime()
 			.setTimeZone("Europe/Berlin")
 			.setDateTime(endDateTime);
@@ -111,10 +137,15 @@ public class EventSchedulingService {
 		return calendar.events().insert(calendarId, event).execute();
 	}
 
-	public void getUpcomingEvents() throws IOException {
+	/**
+	 * Gets the n latest events a user has on their calendar.
+	 * @param n Number of max events to be returned
+	 * @throws IOException
+	 */
+	public void getUpcomingEvents(int n) throws IOException {
 		DateTime now = new DateTime(System.currentTimeMillis());
 		Events events = calendar.events().list("primary")
-				.setMaxResults(10)
+				.setMaxResults(n)
 				.setTimeMin(now)
 				.setOrderBy("startTime")
 				.setSingleEvents(true)

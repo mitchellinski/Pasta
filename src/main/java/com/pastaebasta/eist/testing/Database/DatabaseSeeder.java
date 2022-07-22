@@ -1,22 +1,25 @@
 package com.pastaebasta.eist.testing.Database;
 
-import com.google.maps.model.OpeningHours;
+import com.pastaebasta.eist.server.repository.CustomerRepository;
+import com.pastaebasta.eist.server.repository.RestaurantRepository;
 import com.pastaebasta.eist.shared.model.Customer;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;
-import com.pastaebasta.eist.server.repository.CustomerRepository;
-import com.pastaebasta.eist.server.repository.RestaurantRepository;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * A class to seed/populate the database with data.
- * <p>
+ *
  * Disclaimer: this class should only be used for testing purposes.
  *
  * @version 1.0
+ * @author Hisashi
  */
 public class DatabaseSeeder {
     private static final int DEFAULT_NUMBER_OF_RESTAURANTS = 10;

@@ -1,47 +1,38 @@
 package com.pastaebasta.eist.server.service;
 
-import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.server.repository.ReservationRepository;
+import com.pastaebasta.eist.shared.model.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * SERVICE - Reservation Service
+ *
+ * Handles high-level actions on Reservation:
+ * find, get, add, delete, update, etc
+ */
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
-
     private final ReservationRepository reservationRepository;
-    private final CustomerService customerService;
 
-    public boolean isTableFree(String restaurantId, LocalDateTime start, LocalDateTime end, long tableId) {
-        Reservation reservation = reservationRepository.getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(restaurantId, tableId, start, end);
-        System.out.println("Found " + reservation);
-        return reservation == null;
-    }
-
-
-    public void confirmReservation(Reservation reservation) {
-        reservation.setConfirmed(true);
-        reservationRepository.save(reservation);
-    }
-
-    public boolean cancelReservation(Reservation reservation) {
-        if (reservation.isConfirmed()) {
-            return false;
-        }
-        reservationRepository.deleteById(reservation.getReservationId());
-        return true;
+    public Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
     public List<Reservation> getReservationsDuringTimeSlot(String restaurantId, LocalDateTime start, LocalDateTime end) {
-        System.out.println(restaurantId);
-        System.out.println(start);
-        System.out.println(end);
-        List<Reservation> reservations = reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, start, end);
-        System.out.println(reservations);
-        return reservations;
+        return reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, start, end);
+    }
+
+    public Reservation getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(String restaurantId, long tableId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return reservationRepository.getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(restaurantId, tableId, startDateTime, endDateTime);
+    }
+
+    public List<Reservation> getByRestaurantIdAndStartDateTimeAndEndDateTime(String restaurantId, LocalDateTime startDateTime, LocalDateTime endDateTime){
+        return reservationRepository.getByRestaurantIdAndStartDateTimeAndEndDateTime(restaurantId, startDateTime, endDateTime);
     }
 
     public Reservation getReservationById(String reservationId) {
@@ -50,5 +41,13 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByCustomerId(String customerId) {
         return reservationRepository.getAllByCustomerId(customerId);
+    }
+
+    public void deleteById(String id) {
+        reservationRepository.deleteById(id);
+    }
+
+    public List<Reservation> getReservationsBefore(LocalDateTime localDateTime) {
+        return reservationRepository.getReservationsBefore(localDateTime);
     }
 }

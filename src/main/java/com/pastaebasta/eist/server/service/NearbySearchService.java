@@ -19,12 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * NearbySearchService
+ * Acts as an Adapter for the Google Maps API.
+ *
+ * This class has to be initialized with the specific query parameters
+ * To run the query, call runSearch(), which will return a list of restaurants.
+ */
 @Getter
 @Setter
 public class NearbySearchService extends QueryService {
-
-    final String findPlaceURL = "/place/nearbysearch//json?location=";
+    private static final String findPlaceURL = "/place/nearbysearch//json?location=";
     private static final Random RANDOM = new Random();
+    private static final PlaceType[] types = {
+            PlaceType.RESTAURANT, PlaceType.BAR, PlaceType.CAFE,
+            PlaceType.BAKERY, PlaceType.MEAL_TAKEAWAY
+    };
 
     private final GeoApiContext context;
     private final LatLng location;
@@ -51,15 +61,15 @@ public class NearbySearchService extends QueryService {
         this.radius = radius;
         this.minPrice = minPrice;
         this.maxPrice = maxPrice;
-        this.placeType = placeType;
     }
 
+    /**
+     * Executes a search, using the Google API, with the provided query parameters.
+     * Will go through all types, unless there are already 50 restaurants.
+     * @return List of Restaurants
+     * @throws IOException
+     */
     public List<Restaurant> runSearch() throws IOException {
-        PlaceType[] types = {
-                PlaceType.RESTAURANT, PlaceType.BAR, PlaceType.CAFE,
-                PlaceType.BAKERY, PlaceType.MEAL_TAKEAWAY
-        };
-
         for (PlaceType type : types) {
             if (results.size() > 50) {
                 break;
@@ -74,17 +84,28 @@ public class NearbySearchService extends QueryService {
         return restaurants;
     }
 
+    /**
+     * Formats and ships request to google.
+     * Returns a list of PlaceSearchResult
+     * @param query query string
+     * @param radius maximum radius
+     * @param minPrice min price
+     * @param maxPrice maximum price
+     * @param placeType place type
+     * @return List of PlaceSearchResult
+     * @throws IOException
+     */
     public List<PlacesSearchResult> runQuery(String query, int radius, PriceLevel minPrice, PriceLevel maxPrice, PlaceType placeType) throws IOException {
         PlacesSearchResponse response = new PlacesSearchResponse();
         try {
             response = PlacesApi.nearbySearchQuery(this.getContext(), this.getLocation())
-                    .radius(radius)
-                    .rankby(RankBy.PROMINENCE)
-                    .language("en")
-                    .minPrice(minPrice)
-                    .maxPrice(maxPrice)
-                    .type(placeType)
-                    .await();
+                .radius(radius)
+                .rankby(RankBy.PROMINENCE)
+                .language("en")
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
+                .type(placeType)
+                .await();
         } catch (Exception e) {
             System.out.println("Something went wrong");
         }
@@ -92,6 +113,11 @@ public class NearbySearchService extends QueryService {
         return placesSearchResultsToList(response.results);
     }
 
+    /**
+     * Transforms array of PlaceSearchResult into a list for better data manipulation.
+     * @param array array to be transformed
+     * @return List of PlaceSearchResult
+     */
     private List<PlacesSearchResult> placesSearchResultsToList(PlacesSearchResult[] array) {
         List<PlacesSearchResult> result = new ArrayList<>();
         for(PlacesSearchResult r : array) {
@@ -100,6 +126,12 @@ public class NearbySearchService extends QueryService {
         return result;
     }
 
+    /**
+     * Calculates the distance between two given LatLng values
+     * @param a first coordinate tuple
+     * @param b second coordinate tuple
+     * @return
+     */
     private double distanceBetweenCoordinates(LatLng a, LatLng b) {
         double pi = Math.PI;
         double r2d = 180.0D / pi;
@@ -110,6 +142,12 @@ public class NearbySearchService extends QueryService {
         return Math.acos(Math.sin(x) * Math.sin(y) + Math.cos(x) * Math.cos(y) * Math.cos(d2r * (a.lng - b.lng))) * d2km;
     }
 
+    /**
+     * Transform PlaceSearchResult list into a restaurant list.
+     * Creates necessary coordinates, formats rating, gets a price category, etc
+     * @param input PlaceSearchResult list
+     * @return Restaurant List
+     */
     private List<Restaurant> transformResultsIntoRestaurantList(List<PlacesSearchResult> input) {
         List<Restaurant> restaurantList = new ArrayList<>();
         for (PlacesSearchResult result : input) {
@@ -136,6 +174,12 @@ public class NearbySearchService extends QueryService {
         return restaurantList;
     }
 
+    /**
+     * Helper to get a place's opening hours.
+     * Defaults to 8am-10pm
+     * @param openingHours
+     * @return
+     */
     private Pair<LocalTime, LocalTime> extractOpeningHours(OpeningHours openingHours) {
         LocalTime open = LocalTime.of(8,0);
         LocalTime close = LocalTime.of(22,0);
@@ -150,6 +194,4 @@ public class NearbySearchService extends QueryService {
 
         return Pair.of(open, close);
     }
-
-
 }

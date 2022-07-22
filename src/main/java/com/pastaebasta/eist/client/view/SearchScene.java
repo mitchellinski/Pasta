@@ -3,7 +3,7 @@ package com.pastaebasta.eist.client.view;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.pastaebasta.eist.client.controller.ClientController;
-import com.pastaebasta.eist.server.service.GeocodingService;
+import com.pastaebasta.eist.client.helper.GeocodingService;
 import com.pastaebasta.eist.shared.model.Genre;
 import com.pastaebasta.eist.shared.model.PriceCategory;
 import com.pastaebasta.eist.shared.model.Restaurant;

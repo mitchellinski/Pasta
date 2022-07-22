@@ -1,8 +1,8 @@
 package com.pastaebasta.eist.server.controller;
 
 import com.pastaebasta.eist.server.service.ReservationManager;
-import com.pastaebasta.eist.shared.model.Reservation;
 import com.pastaebasta.eist.server.service.ReservationService;
+import com.pastaebasta.eist.shared.model.Reservation;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,11 @@ import java.util.stream.Collectors;
 /**
  * Reservation Controller
  * Exposes API to the client, which is used to communicate with the server.
- * <p>
+ *
  * This is used internally by Spring Boot to map requests automatically.
  *
- * @author Hisashi & Michael
+ * @author Hisashi
+ * @author Michael
  * @version 1.0
  */
 @RestController
@@ -55,6 +56,13 @@ public class ReservationController {
         }
     }
 
+    /**
+     * Confirm a reservation
+     * Sets reservation confirmed status to true
+     *
+     * @param reservationId Reservation ID
+     * @return Response Code OK, if updated, BAD_REQUEST otherwise
+     */
     @PatchMapping("/{reservationId}/confirm")
     public ResponseEntity<?> confirmReservation(@PathVariable String reservationId) {
         try {
@@ -62,15 +70,21 @@ public class ReservationController {
             if (reservation == null) {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }
-            reservationService.confirmReservation(reservation);
+            reservationManager.confirmReservation(reservation);
 
-            return ResponseEntity.ok("yes worked!!!");
+            return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
     }
 
+    /**
+     * Cancel a reservation
+     * DELETES a reservation from the database.
+     * @param reservationId Reservation ID
+     * @return Response Code OK, if updated, BAD_REQUEST otherwise
+     */
     @DeleteMapping("/{reservationId}/cancel")
     public ResponseEntity<?> cancelReservation(@PathVariable String reservationId) {
         try {
@@ -79,7 +93,7 @@ public class ReservationController {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }
 
-            boolean cancelled = reservationService.cancelReservation(reservation);
+            boolean cancelled = reservationManager.cancelReservation(reservation);
             return cancelled ? ResponseEntity.badRequest().build() : ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.pastaebasta.eist.server.service;
+package com.pastaebasta.eist.client.helper;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,6 +6,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
+import com.pastaebasta.eist.server.service.QueryService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
