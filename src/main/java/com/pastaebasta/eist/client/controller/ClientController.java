@@ -241,7 +241,7 @@ public class ClientController {
      *
      * Attempts to create a new reservation on the database.
      * @param reservation
-     * @return
+     * @return Reservation
      */
     public Reservation addReservation(Reservation reservation) {
         return webClient.post()

@@ -130,7 +130,7 @@ public class NearbySearchService extends QueryService {
      * Calculates the distance between two given LatLng values
      * @param a first coordinate tuple
      * @param b second coordinate tuple
-     * @return
+     * @return distance between coordinates
      */
     private double distanceBetweenCoordinates(LatLng a, LatLng b) {
         double pi = Math.PI;
