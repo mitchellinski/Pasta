@@ -2,6 +2,55 @@
 
 ----
 
+## Introduction
+
+Our group has chosen the **Reservation System** problem statement. 
+We have split our implementation in different packages under `src.main.java.com.pastaebasta.eist`:
+
+- `client` - Client side of the implementation: can be executed by running `main()` in `StartClientApplication.java`
+- `server` - The server side of the implementation: can be started by running the `main()` 
+method in `ReservationApplication.java`
+- `shared` - Shared services, which would be present in both `client` and `server`.
+- `testing` - Mostly debugging tools, data seeders or generic test helpers, which would not be present
+in a real-world scenario, but due to the nature of the problem statement, had to be included.
+
+## Problem Solution
+To solve the problem statement, we have decided to use:
+- [Spring Boot](https://spring.io/projects/spring-boot) as requested by the problem statement
+- [JavaFX](https://openjfx.io/) as our user interface framework
+- [MongoDB](mongodb.com/) as our database
+- [Project Lombok](https://projectlombok.org/) for less boilerplate and cleaner code
+- [Google Calendar API](https://developers.google.com/calendar/api) for creating events
+- [Google Maps API](https://developers.google.com/maps/) for retrieving real world data
+
+### Building the project
+We require you to use `JDK 17` or newer! If you're using IntelliJ, we personally
+recommend you create a single `configuration` using a `Compound`, which starts the server and client simultaneously.
+
+**WARNING:** Sometimes the server may take a while to start, meaning the client may throw connection errors.
+To avoid these, you just have to wait a little longer. This should not affect the project, otherwise.
+
+### Important: Google Calendar API
+If you wish to use the program, you will need to use a Google account to use the event scheduling feature.
+Once you try to make a reservation, a browser window should open, asking you to give us permission
+to create events on your calendar. **Please make sure to allow these**. 
+
+- If you receive a warning saying the application has not yet been verified, simply click `Advanced` and
+trust the authors.
+
+### Debugging
+For debugging or testing the application, you may log-in with: 
+- Username: `user`
+- Password `user`
+
+You may alternatively create your own account. The passwords are stored in our database with [Argon2](https://github.com/P-H-C/phc-winner-argon2), 
+but since this is not part of the _Requirements_, this part of the application has **NOT** been
+extensively tested or maintained. 
+
+- ⚠ As always, you should follow proper password creation etiquette, and, 
+you should be extra mindful of the passwords you choose:
+**do not reuse passwords you use for other applications**!
+
 ## Problem Statement Reservation System
 1. The Problem
 
@@ -10,6 +59,9 @@
 
 
 2. Scenarios
+
+<details>
+<summary>Click to expand</summary>
 
    Hans lives in Munich and knows that all the restaurants are really crowded over the weekend
    and getting a reservation spontaneously is almost impossible. He wants to visit an Italian
@@ -26,9 +78,11 @@
    the reservation and sees that he must confirm the table again, so the reservation does not
    get canceled. On Saturday, Hans receives a notification at 16:00. He opens the map to
    navigate to the restaurant.
-
+</details>
 
 3. Requirements
+<details>
+<summary>Click to expand</summary>
 
    The following functional requirements (FR) and nonfunctional requirements (NFR) must be
    addressed in the project.
@@ -62,7 +116,7 @@
      - The version control system must be git.
      - Source Code Documentation must be in HTML format.
      - The server system must use the Spring Boot framework.
-
+</details>
 
 4. Target Environment
 
