@@ -82,7 +82,7 @@ public class EditEmailScene extends Scene {
                         takenEmail.setVisible(true);
                     } catch (RuntimeException e) {
                         customer.setCustomerEmail(newEmail);
-                        clientController.updateCustomer(customer);
+                        application.setCustomer(clientController.updateCustomer(customer));
                         application.showProfileScene();
                     }
                 }

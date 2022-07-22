@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Customer Controller
  * Exposes API to the client, which is used to communicate with the server.
- *
+ * <p>
  * This is used internally by Spring Boot to map requests automatically.
  *
- * @version 1.0
  * @author Hisashi
  * @author Michael
+ * @version 1.0
  */
 @RestController
 @AllArgsConstructor
@@ -25,11 +25,12 @@ public class CustomerController {
 
     /**
      * Gets all the customers in the database
+     *
      * @return Iterable of customers
      */
     @GetMapping
     public ResponseEntity<Iterable<Customer>> getAllCustomers() {
-        return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
+        return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
     /**
@@ -50,6 +51,7 @@ public class CustomerController {
 
     /**
      * Gets a customer by username, if found
+     *
      * @param username customer username
      * @return Customer, or null
      */
@@ -57,13 +59,14 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerByUsername(@PathVariable String username) {
         Customer customer = customerService.getCustomerByUsername(username);
         if (customer == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+        return ResponseEntity.ok(customer);
     }
 
     /**
      * Gets a custoemr by e-mail, if found
+     *
      * @param email customer e-mail
      * @return Customer, or null
      */
@@ -71,18 +74,27 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerByEmail(@PathVariable String email) {
         Customer customer = customerService.getCustomerByEmail(email);
         if (customer == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+        return ResponseEntity.ok(customer);
     }
 
     /**
      * Saves/adds a customer to the database
+     *
      * @param newCustomer Customer to be added
      * @return Persisted Customer
      */
     @PostMapping
     public ResponseEntity<Customer> saveCustomer(@RequestBody Customer newCustomer) {
         return new ResponseEntity<>(customerService.saveCustomer(newCustomer), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer updatedCustomer, @PathVariable String id) {
+        if (!updatedCustomer.getCustomerId().equals(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(customerService.saveCustomer(updatedCustomer));
     }
 }

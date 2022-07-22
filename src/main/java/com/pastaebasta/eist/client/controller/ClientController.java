@@ -21,8 +21,9 @@ import java.util.function.Consumer;
 /**
  * ClientController
  * Executes requests from the client to the server.
- *
+ * <p>
  * Acts as the client Networking Layer, using Spring's WebClient
+ *
  * @author Michael
  * @author Hisashi
  */
@@ -48,8 +49,9 @@ public class ClientController {
     /**
      * getCustomerById
      * GET Request
-     *
+     * <p>
      * Gets customer by their ID
+     *
      * @param id
      * @return
      */
@@ -64,8 +66,9 @@ public class ClientController {
     /**
      * getCustomerByUsername
      * GET Request
-     *
+     * <p>
      * Gets customer by username
+     *
      * @param username
      * @return
      */
@@ -81,8 +84,9 @@ public class ClientController {
     /**
      * getCustomerByEmail
      * GET Request
-     *
+     * <p>
      * Gets customer by their e-mail
+     *
      * @param email
      * @return
      */
@@ -97,15 +101,15 @@ public class ClientController {
     /**
      * search
      * GET Request
-     *
+     * <p>
      * Executes a search query, using the Google API. Returns a list of restaurants, which match the query.
      *
-     * @param latLng Geometric coordinates
-     * @param name Restaurant name
-     * @param genre Restaurant genre
-     * @param minPriceCategory Lowest price category
-     * @param maxPriceCategory Highest price category
-     * @param distance Maximum distance radius
+     * @param latLng              Geometric coordinates
+     * @param name                Restaurant name
+     * @param genre               Restaurant genre
+     * @param minPriceCategory    Lowest price category
+     * @param maxPriceCategory    Highest price category
+     * @param distance            Maximum distance radius
      * @param restaurantsConsumer Consumer to be used to write returned list
      */
     public void search(LatLng latLng, String name, String genre, String minPriceCategory, String maxPriceCategory, int distance,
@@ -136,37 +140,38 @@ public class ClientController {
     /**
      * getRestaurantReservations
      * GET Request
-     *
+     * <p>
      * Gets all the reservations in the restaurant, with given id, between startLocalDateTime and endLocalDateTime.
      *
-     * @param id Restaurant id
+     * @param id                 Restaurant id
      * @param startLocalDateTime Time reservation starts
-     * @param endLocalDateTime Time reservation ends
+     * @param endLocalDateTime   Time reservation ends
      * @return List of reservations matching the query
      */
     public ArrayList<Reservation> getRestaurantReservations(String id, LocalDateTime startLocalDateTime, LocalDateTime endLocalDateTime) {
         return webClient.get()
-            .uri(uriBuilder -> uriBuilder
-                .path("reservations/restaurant/" + id)
-                .queryParam("start", DateTimeFormatter.ISO_DATE_TIME.format(
-                    startLocalDateTime
-                ))
-                .queryParam("end", DateTimeFormatter.ISO_DATE_TIME.format(
-                    endLocalDateTime
-                ))
-                .build()
-            )
-            .retrieve()
-            .bodyToMono(new ParameterizedTypeReference<ArrayList<Reservation>>() {
-            })
-            .block();
+                .uri(uriBuilder -> uriBuilder
+                        .path("reservations/restaurant/" + id)
+                        .queryParam("start", DateTimeFormatter.ISO_DATE_TIME.format(
+                                startLocalDateTime
+                        ))
+                        .queryParam("end", DateTimeFormatter.ISO_DATE_TIME.format(
+                                endLocalDateTime
+                        ))
+                        .build()
+                )
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ArrayList<Reservation>>() {
+                })
+                .block();
     }
 
     /**
      * getCustomerReservations
      * GET Request
-     *
+     * <p>
      * Gets all the reservations the customer (with given id) has.
+     *
      * @param id
      * @param reservationsConsumer
      * @param active
@@ -189,14 +194,19 @@ public class ClientController {
                 });
     }
 
-    public void updateCustomer(Customer customer) {
-        // This method does not really do anything...
+    public Customer updateCustomer(Customer customer) {
+        return webClient.put()
+                .uri("customers/" + customer.getCustomerId())
+                .bodyValue(customer)
+                .retrieve()
+                .bodyToMono(Customer.class)
+                .block();
     }
 
     /**
      * addCustomer
      * POST Request
-     *
+     * <p>
      * Attempts to create a new customer in the database
      *
      * @param customer
@@ -212,34 +222,11 @@ public class ClientController {
     }
 
     /**
-     * customerUsernameTaken
-     * Test if customer username is taken
-     * @param username
-     */
-    public void customerUsernameTaken(String username) {
-        webClient.get()
-                .uri("customers/username/" + username)
-                .retrieve()
-                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Username already taken")));
-    }
-
-    /**
-     * customerEmailTaken
-     * Test if email is already taken
-     * @param email
-     */
-    public void customerEmailTaken(String email) {
-        webClient.get()
-                .uri("customers/email/" + email)
-                .retrieve()
-                .onStatus(HttpStatus::is2xxSuccessful, response -> Mono.error(new RuntimeException("Email already taken")));
-    }
-
-    /**
      * addReservation
      * POST Request
-     *
+     * <p>
      * Attempts to create a new reservation on the database.
+     *
      * @param reservation
      * @return Reservation
      */
@@ -255,26 +242,26 @@ public class ClientController {
     /**
      * confirmReservation
      * PATCH Request
-     *
+     * <p>
      * Attempts to confirm a reservation
      *
      * @param reservation
      */
     public void confirmReservation(Reservation reservation) {
-         webClient.patch()
-            .uri("reservations/"+reservation.getReservationId()+"/confirm");
+        webClient.patch()
+                .uri("reservations/" + reservation.getReservationId() + "/confirm");
     }
 
     /**
      * cancelReservation
      * DELETE Request
-     *
+     * <p>
      * Attempts to cancel a reservation. This will DELETE the reservation permanently!
      *
      * @param reservation
      */
     public void cancelReservation(Reservation reservation) {
         webClient.delete()
-                .uri("reservations/"+reservation.getReservationId()+"/cancel");
+                .uri("reservations/" + reservation.getReservationId() + "/cancel");
     }
 }
