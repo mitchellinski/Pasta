@@ -73,4 +73,12 @@ public class Customer {
     public void addReservation(Reservation reservation) {
         this.reservationList.add(reservation);
     }
+
+    /**
+     * removes reservation from list
+     * @param reservation reservation to be removed
+     */
+    public void deleteReservation(Reservation reservation) {
+        this.reservationList.remove(reservation);
+    }
 }

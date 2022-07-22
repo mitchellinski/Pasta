@@ -25,23 +25,48 @@ public class ReservationManager {
     private final ReservationService reservationService;
     private final CustomerService customerService;
 
+    /**
+     * Checks to see if the table is free
+     * @param restaurantId
+     * @param start
+     * @param end
+     * @param tableId
+     * @return
+     */
     public boolean isTableFree(String restaurantId, LocalDateTime start, LocalDateTime end, long tableId) {
         Reservation reservation = reservationService.getByRestaurantIdAndTableIdAndStartDateTimeAndEndDateTime(restaurantId, tableId, start, end);
-        System.out.println("Found " + reservation);
         return reservation == null;
     }
 
 
+    /**
+     * Confirms reservation
+     * @param reservation Reservation to be confirmed
+     */
     public void confirmReservation(Reservation reservation) {
         reservation.setConfirmed(true);
+        System.out.println("status:" + reservation);
         reservationService.save(reservation);
     }
 
+    /**
+     * Cancels reservation, deletes it from all databases!
+     * @param reservation Reservation to be cancelled
+     * @return true if cancelled, false otherwise
+     */
     public boolean cancelReservation(Reservation reservation) {
         if (reservation.isConfirmed()) {
             return false;
         }
+
         reservationService.deleteById(reservation.getReservationId());
+
+        Customer customer = customerService.getCustomerById(reservation.getCustomerId());
+        if (customer != null) {
+            customer.deleteReservation(reservation);
+            customerService.saveCustomer(customer);
+        }
+
         return true;
     }
 

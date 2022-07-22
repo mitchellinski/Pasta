@@ -195,13 +195,13 @@ public class RestaurantTableScene extends Scene {
         Label dateLabel = new Label("Choose a date");
         dateLabel.setFont(new Font("Arial", 20));
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker datePicker = new DatePicker(LocalDate.now().plusDays(2));
         datePicker.setPromptText("dd.mm.yyyy");
         datePicker.setDayCellFactory(date -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                setDisable(item.isBefore(LocalDate.now().plusDays(1)));
+                setDisable(item.isBefore(LocalDate.now().plusDays(2)));
             }
         });
 
@@ -414,7 +414,7 @@ public class RestaurantTableScene extends Scene {
                     application.getEventSchedulingService().createEvent(
                         "Reservation at " + restaurant.getName(),
                         restaurant.getAddress(),
-                        "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app or by clicking http://localhost:8080/api/v1/reservations/"+persistedReservation.getReservationId()+"/confirm",
+                        "Table: " + tableId + "\nVisitors: "+ numOfVisitors + "\nImportant: Please remember to confirm your reservation up to 12 hours before it begins in the app",
                         persistedReservation.getStartDateTime(),
                         persistedReservation.getEndDateTime()
                     );
@@ -422,7 +422,7 @@ public class RestaurantTableScene extends Scene {
                     e.printStackTrace();
                 }
             }
-            application.showSearchScene();
+            application.showHomeScene();
         });
 
         Button cancelButton = new Button("Cancel");

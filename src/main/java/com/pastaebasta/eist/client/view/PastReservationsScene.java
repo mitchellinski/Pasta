@@ -209,7 +209,7 @@ public class PastReservationsScene extends Scene {
                 reservation.setConfirmed(false);
                 warning.setVisible(false);
                 popup.hide();
-                activeTable.refresh();
+                application.showPastReservationsScene();
                 return;
             }
 

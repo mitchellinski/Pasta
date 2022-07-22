@@ -71,7 +71,6 @@ public class ReservationController {
                 return ResponseEntity.badRequest().body("No reservations with the provided ID were found.");
             }
             reservationManager.confirmReservation(reservation);
-
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -94,7 +93,7 @@ public class ReservationController {
             }
 
             boolean cancelled = reservationManager.cancelReservation(reservation);
-            return cancelled ? ResponseEntity.badRequest().build() : ResponseEntity.ok().build();
+            return cancelled ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(null);

@@ -56,7 +56,7 @@ public class HomeScene extends Scene {
             searchButton.setOnAction(event -> application.showSearchScene());
             vBox.getChildren().add(searchButton);
 
-            Button reservationsButton = new Button("Show past Reservations");
+            Button reservationsButton = new Button("See my Reservations");
             reservationsButton.setOnAction(event -> application.showPastReservationsScene());
             vBox.getChildren().add(reservationsButton);
 
@@ -68,10 +68,6 @@ public class HomeScene extends Scene {
             logOutButton.setOnAction(event -> createPopup());
             vBox.getChildren().add(logOutButton);
         }
-
-        Button registerRestaurant = new Button("Restaurant Registration");
-        registerRestaurant.setOnAction(event -> application.showRegisterRestaurantScene());
-        vBox.getChildren().add(registerRestaurant);
 
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
