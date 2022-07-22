@@ -17,6 +17,8 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import java.io.IOException;
 
+
+
 @Getter
 @Setter
 public class ViewApplication extends Application {

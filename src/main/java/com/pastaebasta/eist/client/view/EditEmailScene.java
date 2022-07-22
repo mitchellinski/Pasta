@@ -13,11 +13,21 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Scene - Edit Email
+ *
+ * This class is for a user to edit their email of their account, which propagates into the backend server
+ */
 public class EditEmailScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
+    /**
+     * Constructs the initial view for this scene
+     * @param clientController
+     * @param application
+     */
     public EditEmailScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;

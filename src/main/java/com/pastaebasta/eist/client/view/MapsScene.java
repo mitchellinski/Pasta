@@ -16,12 +16,26 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Scene - Maps
+ *
+ *
+ *
+ * Scene allows a user to view a map based on their Lat/Lng.
+ */
 public class MapsScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
     private final LatLng latLng;
 
+    /**
+     * Constructs map view
+     * @param clientController
+     * @param application
+     * @param latLng
+     * @throws IOException
+     */
     public MapsScene(ClientController clientController, ViewApplication application, LatLng latLng) throws IOException {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;

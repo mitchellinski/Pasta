@@ -24,6 +24,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
+/**
+ * Scene - Past Reservation
+ *
+ *
+ *
+ * Scene allows a user to view past reservations
+ */
 public class PastReservationsScene extends Scene {
     private final ClientController clientController;
     private final ViewApplication application;
@@ -33,6 +40,11 @@ public class PastReservationsScene extends Scene {
     private TableView<Reservation> pastTable;
     double width;
 
+    /**
+     * Past Reservation Constructor
+     * @param clientController
+     * @param application
+     */
     public PastReservationsScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         width = application.getStage().getScene().getWidth() / 7.0;
@@ -46,11 +58,6 @@ public class PastReservationsScene extends Scene {
 
         Label headline = new Label("My Reservations");
         headline.setFont(new Font("Arial", 20));
-
-//        var buttonColumn = new TableColumn<Reservation, String>("ID");
-//        buttonColumn.setSortable(false);
-//        buttonColumn.setPrefWidth(w);
-//        buttonColumn.setCellValueFactory(new PropertyValueFactory<>("restaurantId"));
 
         Label activeLabel = new Label("Active Reservations");
         activeLabel.setFont(new Font("Arial", 20));
@@ -67,14 +74,27 @@ public class PastReservationsScene extends Scene {
         setRoot(vBox);
     }
 
+    /**
+     * Setter for active reservations
+     * @param reservations
+     */
     private void setActiveReservations(List<Reservation> reservations) {
         Platform.runLater(() -> this.activeReservations.setAll(reservations));
     }
 
+    /**
+     * Setter for Past Reservations
+     * @param reservations
+     */
     private void setPastReservations(List<Reservation> reservations) {
         Platform.runLater(() -> this.pastReservations.setAll(reservations));
     }
 
+    /**
+     * Creates tables based on a list of reservations
+     * @param reservations
+     * @return TableView of Reservations
+     */
     private TableView<Reservation> createTable(ObservableList<Reservation> reservations) {
         TableView<Reservation> table = new TableView<>(reservations);
 
@@ -116,12 +136,22 @@ public class PastReservationsScene extends Scene {
         return table;
     }
 
+    /**
+     * Edits time to be stylized
+     * @param time
+     * @return String of time
+     */
     private String reformatTime(LocalDateTime time) {
         String hour = addZero(String.valueOf(time.getHour()));
         String minute = addZero(String.valueOf(time.getMinute()));
         return hour + ":" + minute;
     }
 
+    /**
+     * Adds zeros to time
+     * @param time
+     * @return String of time
+     */
     private String addZero(String time) {
         if (time.length() < 2) {
             time = "0".concat(time);
@@ -129,6 +159,10 @@ public class PastReservationsScene extends Scene {
         return time;
     }
 
+    /**
+     * Creates edit popup of reservation
+     * @param reservation
+     */
     public void editPopup(Reservation reservation) {
         Popup popup = new Popup();
 
@@ -208,6 +242,10 @@ public class PastReservationsScene extends Scene {
         popup.centerOnScreen();
     }
 
+
+    /**
+     * Adds button to table list dynamically based on number of tables in restaurant
+     */
     private void addButtonToTable() {
         TableColumn<Reservation, Void> colBtn = new TableColumn("Reservation");
         colBtn.setPrefWidth(width);

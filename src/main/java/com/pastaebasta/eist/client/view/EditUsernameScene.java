@@ -13,6 +13,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Scene - Edit Username
+ *
+ * This class is for a user to edit their username of their account, which propagates into the backend server
+ */
 public class EditUsernameScene extends Scene {
 
     private final ClientController clientController;

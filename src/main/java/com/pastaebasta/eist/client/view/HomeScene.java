@@ -11,10 +11,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Popup;
 
+/**
+ * Scene - Home
+ *
+ * This scene is the initial screen a user sees once they login into their account successfully.
+ * Shows options for different navigation possibilities.
+ */
+
 public class HomeScene extends Scene {
 
     private final ViewApplication application;
 
+    /**
+     * Constructs Home view
+     * @param application
+     */
     public HomeScene(ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.application = application;
@@ -57,24 +68,6 @@ public class HomeScene extends Scene {
             logOutButton.setOnAction(event -> createPopup());
             vBox.getChildren().add(logOutButton);
         }
-        /*
-        //START TESTING!!!!!
-        Genre genre = Genre.AMERICAN;
-        PriceCategory priceCategory = PriceCategory.VERY_EXPENSIVE;
-        Restaurant testRestaurant = Restaurant.builder().restaurantId("restaurantId_1").name("Test Name").address("Test Address").restaurantGenre(genre).coordinates("0, 0").priceCategory(priceCategory)
-                .ratingAverage(5.0).numberOfTables(3).openingTime(8).closingTime(22).build();
-        //END TESTING!!!!
-
-        Button tables = new Button("Tables");
-        tables.setOnAction(event -> application.showRestaurantTableScene(testRestaurant, false));
-        vBox.getChildren().add(tables);
-
-        Button restaurant = new Button("Restaurant");
-        restaurant.setOnAction(event -> application.showRestaurantScene(testRestaurant));
-        vBox.getChildren().add(restaurant);
-         */
-
-
 
         Button registerRestaurant = new Button("Restaurant Registration");
         registerRestaurant.setOnAction(event -> application.showRegisterRestaurantScene());
@@ -84,6 +77,9 @@ public class HomeScene extends Scene {
         setRoot(vBox);
     }
 
+    /**
+     * Create popup to log out
+     */
     private void createPopup() {
         Popup popup = new Popup();
 
