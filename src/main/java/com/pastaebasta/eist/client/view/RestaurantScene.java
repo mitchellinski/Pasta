@@ -60,7 +60,6 @@ public class RestaurantScene extends Scene {
         if(photos.length > 0) {
             profilePhoto = photos[0];
         }
- //       Image image = new Image(profilePhoto.photoReference);
 
         Label addressLabel = new Label("Address: ");
         addressLabel.setFont(new Font("Arial", 20));

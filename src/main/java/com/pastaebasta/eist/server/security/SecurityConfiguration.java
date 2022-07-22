@@ -8,8 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
-     *
-     *
+     *Configures security for web address lookups
      * @param http
      * @throws Exception
      */
