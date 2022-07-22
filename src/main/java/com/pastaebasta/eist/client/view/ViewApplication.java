@@ -112,10 +112,24 @@ public class ViewApplication extends Application {
     }
 
     /**
-     * Shows the settings page
+     * Shows the username editing page
      */
-    public void showSettingsScene() {
-        stage.setScene(new SettingsScene(clientController, this));
+    public void showEditUsernameScene() {
+        stage.setScene(new EditUsernameScene(clientController, this));
+    }
+
+    /**
+     * Shows the email editing page
+     */
+    public void showEditEmailScene() {
+        stage.setScene(new EditEmailScene(clientController, this));
+    }
+
+    /**
+     * Shows the password editing page
+     */
+    public void showEditPasswordScene() {
+        stage.setScene(new EditPasswordScene(clientController, this));
     }
 
     /**

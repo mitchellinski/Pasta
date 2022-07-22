@@ -49,6 +49,9 @@ public class ProfileScene extends Scene {
         Label usernameValue = new Label(customer.getCustomerUsername());
         usernameValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(usernameValue, 1, 0);
+        Button editUsernameButton = new Button("Edit");
+        editUsernameButton.setOnAction(event -> application.showEditUsernameScene());
+        GridPane.setConstraints(editUsernameButton, 2, 0);
 
         Label email = new Label("E-Mail:");
         email.setFont(new Font("Arial", 20));
@@ -56,6 +59,9 @@ public class ProfileScene extends Scene {
         Label emailValue = new Label(customer.getCustomerEmail());
         emailValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(emailValue, 1, 1);
+        Button editEmailButton = new Button("Edit");
+        editEmailButton.setOnAction(event -> application.showEditEmailScene());
+        GridPane.setConstraints(editEmailButton, 2, 1);
 
         Label password = new Label("Password:");
         password.setFont(new Font("Arial", 20));
@@ -63,15 +69,14 @@ public class ProfileScene extends Scene {
         Label passwordValue = new Label("********");
         passwordValue.setFont(new Font("Arial", 20));
         GridPane.setConstraints(passwordValue, 1, 2);
+        Button editPasswordButton = new Button("Edit");
+        editPasswordButton.setOnAction(event -> application.showEditPasswordScene());
+        GridPane.setConstraints(editPasswordButton, 2, 2);
 
-        Button changeButton = new Button("Change");
-        changeButton.setOnAction(event -> application.showSettingsScene());
-        changeButton.setAlignment(Pos.CENTER);
-
-        grid.getChildren().addAll(username, usernameValue, email, emailValue, password, passwordValue);
+        grid.getChildren().addAll(username, usernameValue, editUsernameButton, email, emailValue, editEmailButton, password, passwordValue, editPasswordButton);
         grid.setAlignment(Pos.CENTER);
 
-        var vBox = new VBox(10, headline, grid, changeButton, application.createBackButton());
+        var vBox = new VBox(10, headline, grid, application.createBackButton());
         vBox.setAlignment(Pos.CENTER);
         setRoot(vBox);
     }
