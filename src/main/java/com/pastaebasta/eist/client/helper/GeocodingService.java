@@ -12,16 +12,30 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * SERVICE - Geocoding Service
+ * <p>
+ * <p>
+ * Handles the conversion of a search by a user into Lat/Lng coordinates.
+ * Used as baseline for assuming user list/map search position.
+ *
+ * @author Sebastian
+ */
 public class GeocodingService extends QueryService {
     private final String geoURL = "/geocode/json?address=";
-    //BELOW TO BLOCK API CALLS, these are a fraction of a cent per request
-    private final String blocker = "DO NOT REMOVE UNLESS SEB KNOWS";
     private final GeoApiContext context;
+    private final String url;
     private GeocodingResult[] results;
     private Gson gson;
-    private String query;
-    private final String url;
 
+    /**
+     * Initializes a context and runs a query based on a user string, pulls in API key and constructs path for searching.
+     *
+     * @param query Any user input (text)
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ApiException
+     */
     public GeocodingService(String query) throws IOException, InterruptedException, ApiException {
         this.context = new GeoApiContext.Builder()
                 .apiKey(super.getApiKey())
@@ -31,6 +45,11 @@ public class GeocodingService extends QueryService {
         this.runQuery();
     }
 
+    /**
+     * Runs a query based on URL and context from constructor, saves to Gson.
+     *
+     * @return Gson Returns google JSON variant
+     */
     public Gson runQuery() {
         try {
             this.setResults(GeocodingApi.geocode(this.getContext(), this.getUrl()).await());
@@ -42,40 +61,69 @@ public class GeocodingService extends QueryService {
             e.printStackTrace();
         }
         this.setGson(new GsonBuilder().setPrettyPrinting().create());
-//        System.out.println(this.gson.toJson(results[0].addressComponents));
-//        System.out.println(this.gson.toJson(results[0].geometry));
         context.shutdown();
         return this.getGson();
     }
 
+    /**
+     * Gets Google URL constructed in constructor
+     *
+     * @return String of URL
+     */
     public String getGeoURL() {
         return geoURL;
     }
 
+    /**
+     * Gets context for running queries
+     *
+     * @return GeoAPIContext with API key used for calling
+     */
     public GeoApiContext getContext() {
         return context;
     }
 
+    /**
+     * Gets an array of results from the query run
+     *
+     * @return Array of results
+     */
     public GeocodingResult[] getResults() {
         return results;
     }
 
+    /**
+     * Set GeocodingResults to a new query run
+     *
+     * @param results
+     */
     public void setResults(GeocodingResult[] results) {
         this.results = results;
     }
 
+    /**
+     * Gets Gson of results
+     *
+     * @return Gson
+     */
     public Gson getGson() {
         return gson;
     }
 
+    /**
+     * Sets Gson to another Gson
+     *
+     * @param gson
+     */
     public void setGson(Gson gson) {
         this.gson = gson;
     }
 
-    public String getQuery() {
-        return query;
-    }
-
+    /**
+     * Get google URL constructed
+     *
+     * @return url
+     */
     public String getUrl() {
         return url;
     }
