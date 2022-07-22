@@ -15,6 +15,14 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
+/**
+ * SERVICE - Dynamic Maps Service
+ * <p>
+ * Handles the map implementation in conjunction with an .fxml file to:
+ * Display a GUI map, along with allowing for searching, filtering, scrolling, and individual place investigations
+ *
+ * @author Sebastian
+ */
 public class DynamicMapsService implements Initializable {
     private final String apiKey = "AIzaSyDs-IHgDUlF3ZHzK2ATjLiGZs9_NnYXr6U";
 
@@ -37,6 +45,12 @@ public class DynamicMapsService implements Initializable {
         this.latLng = latLng;
     }
 
+    /**
+     * Initializes the map, pulls in the API key and resources needed
+     *
+     * @param url
+     * @param rb
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         googleMapView.setVisible(true);
@@ -44,6 +58,9 @@ public class DynamicMapsService implements Initializable {
         googleMapView.addMapInitializedListener(() -> configureMap());
     }
 
+    /**
+     * Configures map options, calling the dynamic user Lat/Lng input and allowing certain levels of control.
+     */
     protected void configureMap() {
         MapOptions mapOptions = new MapOptions();
         mapOptions.center(new LatLong(this.latLng.lat, this.latLng.lng))
@@ -60,48 +77,6 @@ public class DynamicMapsService implements Initializable {
                 .zoom(12);
 
         map = googleMapView.createMap(mapOptions, false);
-
-//        map.addMouseEventHandler(UIEventType.click, (GMapMouseEvent event) -> {
-//            LatLong latLong = event.getLatLong();
-//            latitudeLabel.setText(formatter.format(latLong.getLatitude()));
-//            longitudeLabel.setText(formatter.format(latLong.getLongitude()));
-//        });
-//
-//        //Add markers to the map
-//        MarkerOptions markerOptions1 = new MarkerOptions();
-//        markerOptions1.position(joeSmithLocation);
-//
-//        MarkerOptions markerOptions2 = new MarkerOptions();
-//        markerOptions2.position(joshAndersonLocation);
-//
-//        MarkerOptions markerOptions3 = new MarkerOptions();
-//        markerOptions3.position(bobUnderwoodLocation);
-//
-//        MarkerOptions markerOptions4 = new MarkerOptions();
-//        markerOptions4.position(tomChoiceLocation);
-//
-//        MarkerOptions markerOptions5 = new MarkerOptions();
-//        markerOptions5.position(fredWilkieLocation);
-//
-//        Marker joeSmithMarker = new Marker(markerOptions1);
-//        Marker joshAndersonMarker = new Marker(markerOptions2);
-//        Marker bobUnderwoodMarker = new Marker(markerOptions3);
-//        Marker tomChoiceMarker = new Marker(markerOptions4);
-//        Marker fredWilkieMarker = new Marker(markerOptions5);
-//
-//        map.addMarker(joeSmithMarker);
-//        map.addMarker(joshAndersonMarker);
-//        map.addMarker(bobUnderwoodMarker);
-//        map.addMarker(tomChoiceMarker);
-//        map.addMarker(fredWilkieMarker);
-//
-//        InfoWindowOptions infoWindowOptions = new InfoWindowOptions();
-//        infoWindowOptions.content("<h2>Fred Wilkie</h2>"
-//                + "Current Location: Safeway<br>"
-//                + "ETA: 45 minutes");
-//
-//        InfoWindow fredWilkeInfoWindow = new InfoWindow(infoWindowOptions);
-//        fredWilkeInfoWindow.open(map, fredWilkieMarker);
 
     }
 

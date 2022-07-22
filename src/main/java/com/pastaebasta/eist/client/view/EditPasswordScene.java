@@ -18,6 +18,13 @@ public class EditPasswordScene extends Scene {
     private final ClientController clientController;
     private final ViewApplication application;
 
+    /**
+     * Allows the User to edit password in their account
+     *
+     *
+     * @param clientController
+     * @param application
+     */
     public EditPasswordScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
