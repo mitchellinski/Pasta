@@ -21,13 +21,6 @@ public class FoundationTests {
 
 	@Test
 	public void test(@Autowired MongoTemplate mongoTemplate) {
-		DBObject objectToSave = BasicDBObjectBuilder.start()
-				.add("key", "value")
-				.get();
-
-		// when
-		mongoTemplate.save(objectToSave, "collection");
-
 
 	}
 }
