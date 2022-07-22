@@ -189,6 +189,15 @@ public class ClientController {
                 });
     }
 
+    /**
+     * updateCustomer
+     * PUT Request
+     *
+     * Updates the given customer in the database
+     * @param customer the updated customer
+     * @return the updated customer
+     */
+
     public Customer updateCustomer(Customer customer) {
         return webClient.put()
                 .uri("customers/" + customer.getCustomerId())
