@@ -24,10 +24,16 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * RestaurantTableScene
+ * Represents the interior map of a restaurant
+ *
+ * Can be used to pick a table, and further reservation options.
+ * Finally, it sends the reservation request, using the ViewApplication.
+ */
 public class RestaurantTableScene extends Scene {
 
     private static final int MAXIMUM_AMOUNT_OF_VISITORS = 4;
-    private static final String GOOGLE_WARNING_PATH_IMAGE = "warning.png";
 
     private static final String[] RESTAURANT_MAPS = new String[]{
             ///src/main/resources/
@@ -57,7 +63,14 @@ public class RestaurantTableScene extends Scene {
     private int numOfVisitors;
     private final boolean backToSearch;
 
-
+    /**
+     * Constructor
+     * Triggers the settings view to popup.
+     * @param clientController
+     * @param application
+     * @param restaurant
+     * @param backToSearch
+     */
     public RestaurantTableScene(ClientController clientController, ViewApplication application, Restaurant restaurant, boolean backToSearch) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
@@ -67,6 +80,12 @@ public class RestaurantTableScene extends Scene {
         settingsPopup();
     }
 
+    /**
+     * Gets the timeslots for a restaurant, using the given opening and closing times
+     * Uses 8am and 10pm as default values.
+     * @param restaurant Restaurant to create timeslots for
+     * @return Array of strings
+     */
     private String[] getTimeSlots(Restaurant restaurant) {
         int openingTime = restaurant.getOpeningTime();
         int closingTime = restaurant.getClosingTime();
@@ -95,6 +114,10 @@ public class RestaurantTableScene extends Scene {
         return timeSlots;
     }
 
+    /**
+     * Set up the basic scene, and gets the interior map, sets tables view, creates a button for each table.
+     * @throws FileNotFoundException
+     */
     private void init() throws FileNotFoundException {
         Label headline = new Label("Choose a Table");
         headline.setFont(new Font("Arial", 20));
@@ -150,10 +173,11 @@ public class RestaurantTableScene extends Scene {
         setRoot(vBox);
     }
 
-
+    /**
+     * Creates a new settings popup
+     */
     private void settingsPopup() {
         Popup popup = new Popup();
-        System.out.println(restaurant);
 
         Label visitorLabel = new Label("How many visitors?");
         visitorLabel.setFont(new Font("Arial", 20));
@@ -260,8 +284,11 @@ public class RestaurantTableScene extends Scene {
         popup.centerOnScreen();
     }
 
-
-
+    /**
+     * Creates a result popup, which includes whether the reservation was created or not.
+     * It also gives the user a short reminder to confirm or cancel his reservation.
+     * @param reservation Persisted reservation
+     */
     public void resultPopup(Reservation reservation) {
         Popup popup = new Popup();
 
@@ -299,6 +326,11 @@ public class RestaurantTableScene extends Scene {
         popup.centerOnScreen();
     }
 
+    /**
+     * Creates a popup for the client to confirm the input and dispatch the request to the server
+     * @param tableName Table name (e.g "Table 1")
+     * @param tableId Table id (e.g 1.0L)
+     */
     public void confirmationPopup(String tableName, int tableId) {
         Popup popup = new Popup();
 

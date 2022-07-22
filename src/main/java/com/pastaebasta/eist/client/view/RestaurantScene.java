@@ -19,12 +19,24 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 
+/**
+ * RestaurantScene
+ * Represents the restaurant scene, it also gives some details about the restaurant.
+ */
 public class RestaurantScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
     private final Restaurant restaurant;
 
+    /**
+     * Constructor
+     * If client is not logged in with Google, triggers googlePopout().
+     * Also initializes a small table with information about the restaurant
+     * @param clientController Client controller
+     * @param application View application
+     * @param restaurant Restaurant to get information from
+     */
     public RestaurantScene(ClientController clientController, ViewApplication application, Restaurant restaurant) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;
@@ -86,6 +98,9 @@ public class RestaurantScene extends Scene {
         setRoot(vBox);
     }
 
+    /**
+     * If the user is not yet logged in with their Google account, this popup will let them know how to do so.
+     */
     private void googlePopout() {
         Popup popup = new Popup();
 

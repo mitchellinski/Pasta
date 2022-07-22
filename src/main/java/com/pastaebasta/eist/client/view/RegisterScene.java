@@ -15,11 +15,22 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * RegisterScene
+ * Represents the page for the client to create a new user (log-on, register, etc)
+ *
+ * User can give their username, password and email.
+ */
 public class RegisterScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
+    /**
+     * Constructor creates basic information input grid
+     * @param clientController Client Controller
+     * @param application View Aplication
+     */
     public RegisterScene(ClientController clientController, ViewApplication application) {
 
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());

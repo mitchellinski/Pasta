@@ -17,6 +17,18 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import java.io.IOException;
 
+/**
+ * Application
+ * JavaFX Application wrapper
+ *
+ * Serves as a unifying service for the client View.
+ * It can be used to access the controllers, and thus gain access to the server.
+ *
+ * It is also used to setore information about the current customer, their log-in data,
+ * address, and calendar.
+ *
+ * @author Michael
+ */
 @Getter
 @Setter
 public class ViewApplication extends Application {
@@ -33,6 +45,10 @@ public class ViewApplication extends Application {
 
     private final Argon2PasswordEncoder argon2PasswordEncoder = new Argon2PasswordEncoder();
 
+    /**
+     * Sets up the views
+     * @param primaryStage first Stage
+     */
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
@@ -43,92 +59,107 @@ public class ViewApplication extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Show the homepage
+     */
     public void showHomeScene() {
         latLng = null;
         stage.setScene(new HomeScene(this));
     }
 
+    /**
+     * Show log-in page
+     */
     public void showLogInScene() {
         stage.setScene(new LogInScene(clientController, this));
     }
 
+    /**
+     * Show past reservations page
+     */
     public void showPastReservationsScene() {
         stage.setScene(new PastReservationsScene(clientController, this));
     }
 
+    /**
+     * Shows the search page
+     */
     public void showSearchScene() {
         stage.setScene(new SearchScene(clientController, this, latLng));
     }
 
+    /**
+     * Shows the embedded Google Maps page
+     * @throws IOException
+     */
     public void showMapsScene() throws IOException {
         stage.setScene(new MapsScene(clientController, this, latLng));
     }
 
+    /**
+     * Shows the user account registration page
+     */
     public void showRegisterScene() {
         stage.setScene(new RegisterScene(clientController, this));
     }
 
+
+    /**
+     * Shows the user profile page
+     */
     public void showProfileScene() {
         stage.setScene(new ProfileScene(clientController, this));
     }
 
+    /**
+     * Shows the settings page
+     */
     public void showSettingsScene() {
         stage.setScene(new SettingsScene(clientController, this));
     }
 
+    /**
+     * Shows the interior of a restaurant
+     * @param restaurant
+     * @param backToSearch
+     */
     public void showRestaurantTableScene(Restaurant restaurant, boolean backToSearch) {
         stage.setScene(new RestaurantTableScene(clientController, this, restaurant, backToSearch));
     }
 
+    /**
+     * Shows you details about the restaurant
+     * @param restaurant
+     */
     public void showRestaurantScene(Restaurant restaurant) {
         stage.setScene(new RestaurantScene(clientController, this, restaurant));
     }
 
+    /**
+     * Shows the restaurant registration page
+     */
     public void showRegisterRestaurantScene() {
         stage.setScene(new RegisterRestaurantScene(clientController, this));
     }
 
-    public Stage getStage() {
-        return stage;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
+    /**
+     * Sets a new customer and updates the loggedIn field
+     * @param customer
+     */
     public void setCustomer(Customer customer) {
         this.customer = customer;
         loggedIn = customer != null;
     }
 
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
 
+    /**
+     * Creates a return button
+     * @return Button
+     */
     Button createBackButton() {
         Button backButton = new Button("Home");
         backButton.setOnAction(event -> showHomeScene());
         backButton.setAlignment(Pos.BASELINE_CENTER);
         return backButton;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
-
-    public Argon2PasswordEncoder getArgon2PasswordEncoder() {
-        return argon2PasswordEncoder;
-    }
-
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
-    }
-
-    public LatLng getLatLng() {
-        return this.latLng;
     }
 }

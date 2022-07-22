@@ -13,11 +13,23 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 
+/**
+ * SettingsScene represents the settings page, where the client can
+ * update their user data.
+ * @author Michael
+ */
 public class SettingsScene extends Scene {
 
     private final ClientController clientController;
     private final ViewApplication application;
 
+    /**
+     * Constructor
+     *
+     * Sets up the settings scene and connects buttons to actions within the application.
+     * @param clientController ClientController
+     * @param application ViewApplicaiton
+     */
     public SettingsScene(ClientController clientController, ViewApplication application) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         this.clientController = clientController;

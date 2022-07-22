@@ -29,6 +29,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * SearchScene
+ *
+ * Represents the main search view, where the client may search and query restaurants
+ * @author Michael
+ * @author Hisashi
+ */
 public class SearchScene extends Scene {
 
     private final ClientController clientController;
@@ -38,6 +45,13 @@ public class SearchScene extends Scene {
     private double width;
     private LatLng latLng;
 
+    /**
+     * Constructor
+     * Creates the search scene, creates a popup if an address has not yet been set.
+     * @param clientController
+     * @param application
+     * @param latLng
+     */
     public SearchScene(ClientController clientController, ViewApplication application, LatLng latLng) {
         super(new VBox(), application.getStage().getScene().getWidth(), application.getStage().getScene().getHeight());
         width = application.getStage().getScene().getWidth() / 7.0;
@@ -50,6 +64,10 @@ public class SearchScene extends Scene {
         init();
     }
 
+    /**
+     * Create view elements, such as labels, and the table view.
+     * Creates map button
+     */
     private void init() {
         Label headline = new Label("Search for Restaurant");
         headline.setFont(new Font("Arial", 20));
@@ -98,6 +116,10 @@ public class SearchScene extends Scene {
         setRoot(vBox);
     }
 
+    /**
+     * Creates a table column composed of Buttons
+     * @param width width of the column
+     */
     private void addButtonToTable(double width) {
         TableColumn<Restaurant, Void> colBtn = new TableColumn("Reservation");
         colBtn.setPrefWidth(width);
@@ -136,7 +158,11 @@ public class SearchScene extends Scene {
         table.getColumns().add(colBtn);
     }
 
-
+    /**
+     * Creates the search bar grid, which contains
+     * the settings to the query parameters
+     * @return GridPane
+     */
     private GridPane createSearchBar() {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20));
@@ -234,10 +260,17 @@ public class SearchScene extends Scene {
         return grid;
     }
 
+    /**
+     * Sets the Restaurant list, updating the table view
+     * @param restaurants restaurant list to be used
+     */
     private void setRestaurants(List<Restaurant> restaurants) {
         Platform.runLater(() -> this.restaurants.setAll(restaurants));
     }
 
+    /**
+     * Creates a new popup, to get the client's address
+     */
     private void createpop() {
         Popup popup = new Popup();
 
